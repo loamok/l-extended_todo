@@ -1,0 +1,7 @@
+plop:
+    email: plop@example.com
+    clear: tagada
+    roles:
+        - admin
+        - proprietary
+        

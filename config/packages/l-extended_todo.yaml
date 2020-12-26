@@ -1,0 +1,8 @@
+doctrine:
+    dbal:
+        types:
+            # LET special type to utc DateTime
+            datetime: App\DBAL\Types\UTCDateTimeType
+    orm:
+        dql:
+            numeric_functions:
