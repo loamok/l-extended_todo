@@ -34,6 +34,7 @@ trait Timestampable {
      * @var bool
      */
     private $localizedCreatedAt = false;
+    
     /**
      * @var bool
      */
@@ -94,6 +95,10 @@ trait Timestampable {
         return $this->parentGetUpdatedAt();
     }
     
+    /**
+     * 
+     * @return string|null
+     */
     public function getTimezone() : ?string {
         return $this->timezone;
     }

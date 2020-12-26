@@ -1,0 +1,6 @@
+temps_travail:
+    code: work_track
+    label: Suivi du temps de travail
+temps_perso:
+    code: home_track
+    label: événements perso et familliaux

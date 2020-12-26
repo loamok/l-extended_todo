@@ -59,6 +59,10 @@ trait SoftDeleteable {
         return $this->parentGetDeletedAt();
     }
     
+    /**
+     * 
+     * @return string|null
+     */
     public function getTimezone() : ?string {
         return $this->timezone;
     }

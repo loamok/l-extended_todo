@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Entity\BehavioursTraits;
 
 use Doctrine\ORM\Mapping as ORM;
@@ -30,6 +31,10 @@ trait UuidIdentifiable {
         return $this->id;
     }
     
+    /**
+     * 
+     * @return string
+     */
     public function __toString() : string {
         return $this->getId()->__toString();
     }
