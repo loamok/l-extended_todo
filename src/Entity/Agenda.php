@@ -30,7 +30,15 @@ use DateInterval;
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
-/*
+
+/**
+ * @todo configurer les extensions et compléter les champs et relations
+ * 
+ * @ApiResource(
+ *     attributes={
+ *          "security"="is_granted('ROLE_USER')", 
+ *          "pagination_items_per_page"=20
+ *     },
  *     collectionOperations={
  *          "get" = { "security_post_denormalize" = "is_granted('list', object)" }, 
  *          "post"= { "security_post_denormalize" = "is_granted('create', object)" }
@@ -39,17 +47,6 @@ use DateTimeZone;
  *          "get" = { "security" = "is_granted('read', object)" },
  *          "put" = { "security" = "is_granted('update', object)" },
  *          "delete" = { "security" = "is_granted('delete', object)" }
- *     },
- * 
- */
-/**
- * @todo configurer les extensions et compléter les champs et relations
- * @todo implémenter les délégations et la sécurité par voters
- * 
- * @ApiResource(
- *     attributes={
- *          "security"="is_granted('ROLE_USER')", 
- *          "pagination_items_per_page"=20
  *     },
  *     normalizationContext={ "jsonld_embed_context"=true },
  *     input={"class"=AgendaInput::class,"name"="Agenda", "iri"="Agenda"},
@@ -94,6 +91,11 @@ class Agenda {
     private $type;
 
     /**
+     * @ORM\OneToMany(targetEntity=Delegation::class, mappedBy="agenda", orphanRemoval=true)
+     */
+    private $delegations;
+    
+    /**
      * 
      * @return string
      */
@@ -102,7 +104,7 @@ class Agenda {
     }
     
     public function __construct() {
-//        $this->delegations = new ArrayCollection();
+        $this->delegations = new ArrayCollection();
 //        $this->events = new ArrayCollection();
 //        $this->todos = new ArrayCollection();
     }
@@ -164,4 +166,41 @@ class Agenda {
         return $this;
     }
     
+    /**
+     * @return Collection|Delegation[]
+     */
+    public function getDelegations(): Collection {
+        return $this->delegations;
+    }
+
+    /**
+     * 
+     * @param Delegation $delegation
+     * @return self
+     */
+    public function addDelegation(Delegation $delegation): self {
+        if (!$this->delegations->contains($delegation)) {
+            $this->delegations[] = $delegation;
+            $delegation->setAgenda($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * 
+     * @param Delegation $delegation
+     * @return self
+     */
+    public function removeDelegation(Delegation $delegation): self {
+        if ($this->delegations->removeElement($delegation)) {
+            // set the owning side to null (unless already changed)
+            if ($delegation->getAgenda() === $this) {
+                $delegation->setAgenda(null);
+            }
+        }
+
+        return $this;
+    }
+
 }

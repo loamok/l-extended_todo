@@ -1,0 +1,30 @@
+create:
+    code: create
+    label: Create a resource
+list:
+    code: list
+    label: List resources
+read:
+    code: read
+    label: Read a not opaque resource
+read_full:
+    code: read_full
+    label: Read a resource including opaque's
+update:
+    code: update
+    label: Update a resource
+delete:
+    code: delete
+    label: Delete a resource
+history_list:
+    code: history_list
+    label: List the history of a resource
+history_read:
+    code: history_read
+    label: Read the history of a resource
+history_restore:
+    code: history_restore
+    label: Restore a resource from it's history
+history_delete:
+    code: history_delete
+    label: Delete the history of a resource

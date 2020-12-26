@@ -12,19 +12,6 @@ use Symfony\Bridge\Doctrine\IdGenerator\UuidV4Generator;
 use Symfony\Component\Uid\AbstractUid;
 use Symfony\Component\Uid\UuidV4;
 
-/*
- *     collectionOperations={
- *          "get" = { "security_post_denormalize" = "is_granted('list', object)" }, 
- *          "post"= { "security_post_denormalize" = "is_granted('create', object)" }
- *     },
- *     itemOperations={
- *          "get" = { "security" = "is_granted('read', object)" },
- *          "put" = { "security" = "is_granted('update', object)" },
- *          "delete" = { "security" = "is_granted('delete', object)" }
- *     },
- * 
- */
-
 /**
  * @ApiResource(
  *     attributes={

@@ -3,8 +3,11 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
+
 use App\Entity\BehavioursTraits\UuidIdentifiable;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -49,20 +52,20 @@ class User implements UserInterface {
      * @ORM\Column(type="string")
      */
     private $password;
-//
-//    /**
-//     * @ORM\OneToMany(targetEntity=Delegation::class, mappedBy="user")
-//     */
-//    private $delegations;
-//    
-//    /**
-//     * @ORM\OneToMany(targetEntity=Delegation::class, mappedBy="owner")
-//     */
-//    private $delegationsOwned;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Delegation::class, mappedBy="user")
+     */
+    private $delegations;
+    
+    /**
+     * @ORM\OneToMany(targetEntity=Delegation::class, mappedBy="owner")
+     */
+    private $delegationsOwned;
 
     public function __construct() {
-//        $this->delegations = new ArrayCollection();
-//        $this->delegationsOwned = new ArrayCollection();
+        $this->delegations = new ArrayCollection();
+        $this->delegationsOwned = new ArrayCollection();
     }
 
     public function getEmail(): ?string {
@@ -128,59 +131,79 @@ class User implements UserInterface {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
     }
-//
-//    /**
-//     * @return Collection|Delegation[]
-//     */
-//    public function getDelegations(): Collection {
-//        return $this->delegations;
-//    }
-//
-//    public function addDelegation(Delegation $delegation): self {
-//        if (!$this->delegations->contains($delegation)) {
-//            $this->delegations[] = $delegation;
-//            $delegation->setUser($this);
-//        }
-//
-//        return $this;
-//    }
-//
-//    public function removeDelegation(Delegation $delegation): self {
-//        if ($this->delegations->removeElement($delegation)) {
-//            // set the owning side to null (unless already changed)
-//            if ($delegation->getUser() === $this) {
-//                $delegation->setUser(null);
-//            }
-//        }
-//
-//        return $this;
-//    }
-//
-//    /**
-//     * @return Collection|Delegation[]
-//     */
-//    public function getDelegationsOwned(): Collection {
-//        return $this->delegationsOwned;
-//    }
-//
-//    public function addDelegationOwned(Delegation $delegation): self {
-//        if (!$this->delegationsOwned->contains($delegation)) {
-//            $this->delegationsOwned[] = $delegation;
-//            $delegationOwned->setOwner($this);
-//        }
-//
-//        return $this;
-//    }
-//
-//    public function removeDelegationOwned(Delegation $delegation): self {
-//        if ($this->delegationsOwned->removeElement($delegation)) {
-//            // set the owning side to null (unless already changed)
-//            if ($delegationOwned->getOwner() === $this) {
-//                $delegationOwned->setOwner(null);
-//            }
-//        }
-//
-//        return $this;
-//    }
+
+    /**
+     * @return Collection|Delegation[]
+     */
+    public function getDelegations(): Collection {
+        return $this->delegations;
+    }
+
+    /**
+     * 
+     * @param Delegation $delegation
+     * @return self
+     */
+    public function addDelegation(Delegation $delegation): self {
+        if (!$this->delegations->contains($delegation)) {
+            $this->delegations[] = $delegation;
+            $delegation->setUser($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * 
+     * @param Delegation $delegation
+     * @return self
+     */
+    public function removeDelegation(Delegation $delegation): self {
+        if ($this->delegations->removeElement($delegation)) {
+            // set the owning side to null (unless already changed)
+            if ($delegation->getUser() === $this) {
+                $delegation->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Delegation[]
+     */
+    public function getDelegationsOwned(): Collection {
+        return $this->delegationsOwned;
+    }
+
+    /**
+     * 
+     * @param Delegation $delegation
+     * @return self
+     */
+    public function addDelegationOwned(Delegation $delegation): self {
+        if (!$this->delegationsOwned->contains($delegation)) {
+            $this->delegationsOwned[] = $delegation;
+            $delegationOwned->setOwner($this);
+        }
+
+        return $this;
+    }
+
+    /**
+     * 
+     * @param Delegation $delegation
+     * @return self
+     */
+    public function removeDelegationOwned(Delegation $delegation): self {
+        if ($this->delegationsOwned->removeElement($delegation)) {
+            // set the owning side to null (unless already changed)
+            if ($delegationOwned->getOwner() === $this) {
+                $delegationOwned->setOwner(null);
+            }
+        }
+
+        return $this;
+    }
 
 }

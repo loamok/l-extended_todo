@@ -28,6 +28,14 @@ services:
         decorates: 'api_platform.swagger.normalizer.documentation'
         arguments: ['@App\Swagger\SwaggerDecorator.inner']
         autoconfigure: false
+    LET.security.delegations:
+        class: App\Security\Delegations
+        arguments: 
+            - '@security.helper'
+        tags:
+            - { name: doctrine.event_subscriber, connection: default }
+    App\Security\Voters\:
+        resource: '../../src/Security/Voters/'
 api_platform:
     swagger:
          api_keys:

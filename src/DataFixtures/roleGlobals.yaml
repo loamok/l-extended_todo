@@ -1,0 +1,22 @@
+proprietary:
+    role: proprietary
+    rights:
+        - create
+        - list
+admin:
+    role: admin
+    rights:
+        - create
+        - list
+contributor:
+    role: contributor
+    rights:
+        - list
+reader:
+    role: reader
+    rights:
+        - list
+availlability:
+    role: availlability
+    rights:
+        - list

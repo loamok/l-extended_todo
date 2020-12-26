@@ -1,0 +1,50 @@
+proprietary:
+    code: proprietary
+    label: Proprietary of a resource
+    rights:
+        - list
+        - read
+        - read_full
+        - update
+        - delete
+        - history_list
+        - history_read
+        - history_restore
+        - history_delete
+admin:
+    code: admin
+    label: Admin of resources
+    rights:
+        - list
+        - read
+        - read_full
+        - update
+        - delete
+        - history_list
+        - history_read
+        - history_restore
+        - history_delete
+contributor:
+    code: contributor
+    label: Contributor of user
+    rights:
+        - list
+        - read
+        - read_full
+        - update
+reader:
+    code: reader
+    label: Read only role 
+    rights:
+        - list
+        - read
+        - read_full
+availlability:
+    code: availlability
+    label: Read only role (no opaque)
+    rights:
+        - list
+        - read
+personalized:
+    code: personalized
+    label: Personalized role
