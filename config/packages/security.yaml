@@ -21,18 +21,18 @@ security:
             pattern:  ^/api/login
             stateless: true
 #            anonymous: true
-#            json_login:
-#                check_path:               /api/login_check
-#                success_handler:          lexik_jwt_authentication.handler.authentication_success
-#                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
-#        api:
-#            pattern: ^/api/
-#            stateless: true
+            json_login:
+                check_path:               /api/login_check
+                success_handler:          lexik_jwt_authentication.handler.authentication_success
+                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
+        api:
+            pattern: ^/api/
+            stateless: true
 #            anonymous: true
-#            provider: app_user_provider
-#            guard:
-#                authenticators:
-#                    - lexik_jwt_authentication.jwt_token_authenticator
+            provider: app_user_provider
+            guard:
+                authenticators:
+                    - lexik_jwt_authentication.jwt_token_authenticator
         main:
             remember_me:
                 name: LET_REMEMBERME
@@ -50,6 +50,10 @@ security:
                 path: app_logout
                 # where to redirect after logout
                 # target: app_any_route
+            json_login:
+                check_path:               /api/login_check
+                success_handler:          lexik_jwt_authentication.handler.authentication_success
+                failure_handler:          lexik_jwt_authentication.handler.authentication_failure
 
             # activate different ways to authenticate
             # https://symfony.com/doc/current/security.html#firewalls-authentication
@@ -63,6 +67,6 @@ security:
         - { path: ^/admin,           roles: ROLE_ADMIN }
         - { path: ^/profile,         roles: ROLE_USER }
 #        - { path: ^/api/login,       roles: IS_AUTHENTICATED_ANONYMOUSLY }
-#        - { path: ^/api/login_check$,roles: IS_AUTHENTICATED_ANONYMOUSLY }
-#        - { path: ^/api$,            roles: IS_AUTHENTICATED_ANONYMOUSLY }
-#        - { path: ^/api/*,           roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api/login_check$,roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api$,            roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/api/*,           roles: IS_AUTHENTICATED_FULLY }

@@ -6,3 +6,15 @@ doctrine:
     orm:
         dql:
             numeric_functions:
+api_platform:
+    swagger:
+         api_keys:
+             apiKey:
+                name: Authorization
+                type: header
+                
+services:
+    App\Swagger\SwaggerDecorator:
+        decorates: 'api_platform.swagger.normalizer.documentation'
+        arguments: ['@App\Swagger\SwaggerDecorator.inner']
+        autoconfigure: false
