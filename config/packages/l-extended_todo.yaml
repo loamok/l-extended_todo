@@ -3,9 +3,31 @@ doctrine:
         types:
             # LET special type to utc DateTime
             datetime: App\DBAL\Types\UTCDateTimeType
+            # creof/doctrine2-spatial https://github.com/creof/doctrine2-spatial/blob/master/doc/index.md
+            geometry: CrEOF\Spatial\DBAL\Types\GeometryType
+            geography: CrEOF\Spatial\DBAL\Types\GeographyType
+            geompoint: CrEOF\Spatial\DBAL\Types\Geometry\PointType
+            geogpoint: CrEOF\Spatial\DBAL\Types\Geography\PointType
+            geompolygon: CrEOF\Spatial\DBAL\Types\Geometry\PolygonType
+            geogpolygon: CrEOF\Spatial\DBAL\Types\Geography\PolygonType
+            geomlinestring: CrEOF\Spatial\DBAL\Types\Geometry\LineStringType
+            geoglinestring: CrEOF\Spatial\DBAL\Types\Geography\LineStringType
     orm:
         dql:
             numeric_functions:
+                st_contains: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STContains
+                contains: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Contains
+                st_area: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Area
+                st_geomfromtext: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\GeomFromText
+                geodist_pt: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\GeodistPt
+                st_intersects: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STIntersects
+                st_buffer: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STBuffer
+                point: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Point
+services:
+    App\Swagger\SwaggerDecorator:
+        decorates: 'api_platform.swagger.normalizer.documentation'
+        arguments: ['@App\Swagger\SwaggerDecorator.inner']
+        autoconfigure: false
 api_platform:
     swagger:
          api_keys:
@@ -19,8 +41,3 @@ api_platform:
             items_per_page: 10
             items_per_page_parameter_name: itemsPerPage # Default value  
             maximum_items_per_page: 20
-services:
-    App\Swagger\SwaggerDecorator:
-        decorates: 'api_platform.swagger.normalizer.documentation'
-        arguments: ['@App\Swagger\SwaggerDecorator.inner']
-        autoconfigure: false
