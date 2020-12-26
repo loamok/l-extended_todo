@@ -12,7 +12,13 @@ api_platform:
              apiKey:
                 name: Authorization
                 type: header
-                
+    collection:
+        pagination:
+#            client_enabled: true
+            client_items_per_page: true # Disabled by default
+            items_per_page: 10
+            items_per_page_parameter_name: itemsPerPage # Default value  
+            maximum_items_per_page: 20
 services:
     App\Swagger\SwaggerDecorator:
         decorates: 'api_platform.swagger.normalizer.documentation'
