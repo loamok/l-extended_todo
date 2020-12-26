@@ -1,14 +1,27 @@
-
 ###> symfony/framework-bundle ###
+/.env
 /.env.local
 /.env.local.php
 /.env.*.local
+/.env.test
+/env.local.*
 /config/secrets/prod/prod.decrypt.private.php
 /public/bundles/
 /var/
 /vendor/
 ###< symfony/framework-bundle ###
-
+/doc/*
+!/doc/FR/
+!/doc/EN/
+!/doc/schema/
+/doc/schema/*
+!/doc/schema/l-extended_todo_database_Schema.xml
+!/doc/schema/dbSchema.png
+/vrac/*
+/src/DataFixtures/users.yaml
+###> lexik/jwt-authentication-bundle ###
+/config/jwt/*.pem
+###< lexik/jwt-authentication-bundle ###
 ###> symfony/phpunit-bridge ###
 .phpunit
 .phpunit.result.cache
