@@ -32,7 +32,10 @@ use DateTimeZone;
 
 /**
  * @ApiResource(
- *     attributes={"security"="is_granted('ROLE_USER')"},
+ *     attributes={
+ *          "security"="is_granted('ROLE_USER')", 
+ *          "pagination_items_per_page"=20
+ *     },
  *     collectionOperations={
  *          "get" = { "security_post_denormalize" = "is_granted('list', object)" }, 
  *          "post"= { "security_post_denormalize" = "is_granted('create', object)" }

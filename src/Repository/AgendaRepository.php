@@ -23,16 +23,21 @@ class AgendaRepository extends ServiceEntityRepository {
     }
 
     public function getUserAgendasByRightCodeQuery(User $user, string $rightCode) {
+        $qb = $this->createQueryBuilder('a');
         return 
-            $this->createQueryBuilder('a')
+            $qb
                 ->leftJoin('a.delegations', 'ad')
                 ->leftJoin('ad.delegationType', 'adt')
                 ->leftJoin('adt.rights', 'adtr')
                 ->leftJoin('ad.user', 'adu')
-            ->andWhere('adu.id = :user')
+                ->leftJoin('ad.owner', 'ado')
             ->andWhere('adtr.code = :rightCode')
-                ->setParameter('user', strtolower($user->getId()))
-                ->setParameter('rightCode', $rightCode);
+            ->andWhere($qb->expr()->orX(
+                    $qb->expr()->eq('adu.id', ':user'),
+                    $qb->expr()->eq('ado.id', ':user')))
+                ->setParameter('user', $user->getId()->toBinary())
+                ->setParameter('rightCode', $rightCode)
+                    ;
     }
     
     public function getUserAgendasByRightCode(User $user, string $rightCode) {

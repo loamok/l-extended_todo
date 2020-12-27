@@ -43,16 +43,16 @@ final class AgendaCollectionDataProvider implements ContextAwareCollectionDataPr
      * @return iterable<Agenda>
      */
     public function getCollection(string $resourceClass, string $operationName = null, array $context = []): iterable {
-        $queryBuilder = $this->managerRegistry
+        /* @var $repo \App\Repository\AgendaRepository */
+        $repo = $this->managerRegistry
             ->getManagerForClass($resourceClass)
-            ->getRepository($resourceClass)
-            ->getUserAgendasByRightCodeQuery($this->security->getUser(),'list');
+            ->getRepository($resourceClass);
+        $queryBuilder = $repo->getUserAgendasByRightCodeQuery($this->security->getUser(),'list');
 
         $this->paginationExtension->applyToCollection($queryBuilder, new QueryNameGenerator(), $resourceClass, $operationName, $context);
 
         if ($this->paginationExtension instanceof QueryResultCollectionExtensionInterface
             && $this->paginationExtension->supportsResult($resourceClass, $operationName, $context)) {
-
             return $this->paginationExtension->getResult($queryBuilder, $resourceClass, $operationName, $context);
         }
 

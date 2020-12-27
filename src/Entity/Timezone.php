@@ -5,7 +5,13 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiResource;
 use App\Repository\TimezoneRepository;
 use Doctrine\ORM\Mapping as ORM;
-/*
+
+/**
+ * @ApiResource(
+ *     attributes={
+ *          "security"="is_granted('ROLE_USER')", 
+ *          "pagination_items_per_page"=10
+ *     },
  *     collectionOperations={
  *          "get" = { "security_post_denormalize" = "is_granted('list', object)" }, 
  *          "post"= { "security_post_denormalize" = "is_granted('create', object)" }
@@ -14,23 +20,6 @@ use Doctrine\ORM\Mapping as ORM;
  *          "get" = { "security" = "is_granted('read', object)" },
  *          "put" = { "security" = "is_granted('update', object)" },
  *          "delete" = { "security" = "is_granted('delete', object)" }
- *     },
- * 
- */
-/**
- * @ApiResource(
- *     attributes={
- *          "security"="is_granted('ROLE_USER')", 
- *          "pagination_items_per_page"=10
- *     },
- *     collectionOperations={
- *          "get" = { "security_post_denormalize" = "is_granted('ROLE_USER')" }, 
- *          "post"= { "security_post_denormalize" = "is_granted('admin')" }
- *     },
- *     itemOperations={
- *          "get" = { "security" = "is_granted('ROLE_USER')" },
- *          "put" = { "security" = "is_granted('admin')" },
- *          "delete" = { "security" = "is_granted('admin')" }
  *     },
  * )
  * @ORM\Entity(repositoryClass=TimezoneRepository::class)

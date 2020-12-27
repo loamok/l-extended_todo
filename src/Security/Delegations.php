@@ -36,26 +36,23 @@ class Delegations implements EventSubscriber {
         $this->delegate($args);
     }
 
-    protected function delegate(LifecycleEventArgs $args, bool $selfOwner = false, ?\App\Entity\User $user = null) {
+    public function delegate(LifecycleEventArgs $args, ?\App\Entity\User $user = null, ?\App\Entity\User $owner = null, string $type = self::delegationType_proprietary) {
         $entity = $args->getEntity();
         $em = $args->getEntityManager();
-//        dump($user);
         if ($entity instanceof Agenda) {
-            $owner = $this->security->getUser();
-            if(!$selfOwner && is_null($user)) {
+            if(is_null($user)) {
+                $owner = $this->security->getUser();
+            }
+            if(is_null($user)) {
                 $user = $this->security->getUser();
             }
-            $delegation = $em->getRepository(Delegation::class)->findOneBy(['agenda' => $entity, 'user' => $user]);
+            $delegation = $em->getRepository(Delegation::class)->findOneBy(['agenda' => $entity, 'user' => $user, 'owner' => $owner]);
             if(is_null($delegation)) {
                 $delegation = new Delegation();
             }
-            $delegationType = $em->getRepository(DelegationType::class)->findOneBy(['code' => self::delegationType_proprietary]);
-            $delegation
-                    ->setAgenda($entity)
-                    ->setOwner($owner)
-                    ->setUser($user)
-                    ->setDelegationType($delegationType)
-            ;
+            $delegationType = $em->getRepository(DelegationType::class)->findOneBy(['code' => $type]);
+            $delegation->setAgenda($entity)->setOwner($owner)
+                    ->setUser($user)->setDelegationType($delegationType);
             $em->persist($delegation);
             $em->flush();
         }

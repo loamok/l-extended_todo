@@ -31,6 +31,10 @@ use DateTimeZone;
 
 /**
  * @ApiResource(
+ *     attributes={
+ *          "security"="is_granted('ROLE_USER')", 
+ *          "pagination_items_per_page"=20
+ *     },
  *   normalizationContext={ "jsonld_embed_context"=true },
  *   input={"class"=PersonalizedDelegationRightsInput::class,"name"="PersonalizedDelegationRights", "iri"="PersonalizedDelegationRights"},
  *   output={"class"=PersonalizedDelegationRightsOutput::class,"name"="PersonalizedDelegationRights", "iri"="PersonalizedDelegationRights"},

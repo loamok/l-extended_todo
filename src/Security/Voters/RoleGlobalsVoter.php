@@ -29,7 +29,7 @@ class RoleGlobalsVoter extends BaseVoter {
     public function __construct(Security $security, EntityManagerInterface $em) {
         $this->security = $security;
         $this->em = $em;
-        $this->entities = [Agenda::class, \App\Entity\Delegation::class];
+        $this->entities = [Agenda::class, \App\Entity\Delegation::class, ];
     }
     
     protected function supports(string $attribute, $subject) {
@@ -65,7 +65,6 @@ class RoleGlobalsVoter extends BaseVoter {
 
         $isGranted = false;
         foreach ($user->getRoles() as $role) {
-            dump($role);
             /** @var RoleGlobals $rg */
             $rg = $this->em->getRepository(RoleGlobals::class)->findOneBy(['role' => $role]);
             if(is_null($rg)) {
