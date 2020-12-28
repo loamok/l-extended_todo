@@ -7,6 +7,7 @@ use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  *
@@ -21,6 +22,7 @@ trait Durationable {
      * 
      * @Gedmo\Versioned
      * @ORM\Column(type="datetime")
+     * @Groups({"read", "write"})
      */
     protected $startAt;
 
@@ -29,6 +31,7 @@ trait Durationable {
      * 
      * @Gedmo\Versioned
      * @ORM\Column(type="datetime")
+     * @Groups({"read", "write"})
      */
     protected $endAt;
 
@@ -37,6 +40,7 @@ trait Durationable {
      * 
      * @Gedmo\Versioned
      * @ORM\Column(type="dateinterval")
+     * @Groups({"read", "write"})
      */
     protected $duration;
     

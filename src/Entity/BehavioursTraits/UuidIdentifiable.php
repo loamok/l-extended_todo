@@ -6,6 +6,7 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\IdGenerator\UuidV4Generator;
 use Symfony\Component\Uid\AbstractUid;
 use Symfony\Component\Uid\UuidV4;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  *
@@ -20,6 +21,7 @@ trait UuidIdentifiable {
      * @ORM\Column(type="uuid", unique=true)
      * @ORM\GeneratedValue(strategy="CUSTOM")
      * @ORM\CustomIdGenerator(class=UuidV4Generator::class)
+     * @Groups({"read"})
      */
     private $id;
 

@@ -44,6 +44,6 @@ class Point {
     }
     
     public function __toString() : string {
-        return "{$this->lattitude} {$this->longitude}";
+        return "{$this->latitude} {$this->longitude}";
     }
 }

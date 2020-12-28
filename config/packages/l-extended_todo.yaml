@@ -7,7 +7,7 @@ doctrine:
             geometry: CrEOF\Spatial\DBAL\Types\GeometryType
             geography: CrEOF\Spatial\DBAL\Types\GeographyType
             geompoint: CrEOF\Spatial\DBAL\Types\Geometry\PointType
-            geogpoint: CrEOF\Spatial\DBAL\Types\Geography\PointType
+            geogpoint: App\DBAL\Types\PointType
             geompolygon: CrEOF\Spatial\DBAL\Types\Geometry\PolygonType
             geogpolygon: CrEOF\Spatial\DBAL\Types\Geography\PolygonType
             geomlinestring: CrEOF\Spatial\DBAL\Types\Geometry\LineStringType

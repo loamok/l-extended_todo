@@ -2,6 +2,10 @@
 
 namespace App\Entity\BehavioursTraits;
 
+use Symfony\Component\Serializer\Annotation\Groups;
+use Doctrine\ORM\Mapping as ORM;
+use Gedmo\Mapping\Annotation as Gedmo;
+
 /**
  *
  * @author symio
@@ -12,6 +16,7 @@ trait CodeAble {
      * @var string Code of the resource
      * 
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read", "write"})
      */
     private $code;
 
@@ -19,6 +24,7 @@ trait CodeAble {
      * @var string Display label of the resource
      * 
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read", "write"})
      */
     private $label;
 

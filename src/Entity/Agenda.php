@@ -15,8 +15,8 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 use Gedmo\Mapping\Annotation as Gedmo;
-use Gedmo\Blameable\Traits\BlameableEntity;
 
+use App\Entity\BehavioursTraits\BlameableEntity;
 use App\Entity\BehavioursTraits\UuidIdentifiable;
 use App\Entity\BehavioursTraits\SoftDeleteable;
 use App\Entity\BehavioursTraits\Timestampable;
@@ -30,6 +30,8 @@ use DateInterval;
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
+
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  * @todo configurer les extensions et compléter les champs et relations
@@ -48,9 +50,11 @@ use DateTimeZone;
  *          "put" = { "security" = "is_granted('update', object)" },
  *          "delete" = { "security" = "is_granted('delete', object)" }
  *     },
- *     normalizationContext={ "jsonld_embed_context"=true },
- *     input={"class"=AgendaInput::class,"name"="Agenda", "iri"="Agenda"},
- *     output={"class"=AgendaOutput::class,"name"="Agenda", "iri"="Agenda"},
+ *     normalizationContext={
+ *          "jsonld_embed_context"=true,
+ *          "groups"={"read"}
+ *     },
+ *     denormalizationContext={"groups"={"write"}},
  *     iri="Agenda"
  * )
  * @Gedmo\Loggable
@@ -71,6 +75,7 @@ class Agenda {
      * @var string Agenda name
      * 
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read", "write"})
      */
     private $name;
         
@@ -79,6 +84,7 @@ class Agenda {
      * 
      * @ORM\ManyToOne(targetEntity=Timezone::class)
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"read", "write"})
      */
     private $tz;
 
@@ -87,26 +93,35 @@ class Agenda {
      * 
      * @ORM\ManyToOne(targetEntity=AgType::class)
      * @ORM\JoinColumn(nullable=false)
+     * @Groups({"read", "write"})
      */
     private $type;
 
     /**
      * @ORM\OneToMany(targetEntity=Delegation::class, mappedBy="agenda", orphanRemoval=true)
+     * @Groups({"read"})
+     * @ApiSubresource
      */
     private $delegations;
-    
+
     /**
-     * 
-     * @return string
+     * @ORM\OneToMany(targetEntity=Event::class, mappedBy="agenda")
+     * @Groups({"read"})
+     * @ApiSubresource
      */
-    public function __toString() : string {
-        return $this->getId()->toString();
-    }
+    private $events;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Todo::class, mappedBy="agenda")
+     * @Groups({"read"})
+     * @ApiSubresource
+     */
+    private $todos;
     
     public function __construct() {
         $this->delegations = new ArrayCollection();
-//        $this->events = new ArrayCollection();
-//        $this->todos = new ArrayCollection();
+        $this->events = new ArrayCollection();
+        $this->todos = new ArrayCollection();
     }
     
     /**
@@ -203,4 +218,58 @@ class Agenda {
         return $this;
     }
 
+    /**
+     * @return Collection|Event[]
+     */
+    public function getEvents(): Collection {
+        return $this->events;
+    }
+
+    public function addEvent(Event $event): self {
+        if (!$this->events->contains($event)) {
+            $this->events[] = $event;
+            $event->setAgenda($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEvent(Event $event): self {
+        if ($this->events->removeElement($event)) {
+            // set the owning side to null (unless already changed)
+            if ($event->getAgenda() === $this) {
+                $event->setAgenda(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Todo[]
+     */
+    public function getTodos(): Collection {
+        return $this->todos;
+    }
+
+    public function addTodo(Todo $todo): self {
+        if (!$this->todos->contains($todo)) {
+            $this->todos[] = $todo;
+            $todo->setAgenda($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTodo(Todo $todo): self {
+        if ($this->todos->removeElement($todo)) {
+            // set the owning side to null (unless already changed)
+            if ($todo->getAgenda() === $this) {
+                $todo->setAgenda(null);
+            }
+        }
+
+        return $this;
+    }
+    
 }

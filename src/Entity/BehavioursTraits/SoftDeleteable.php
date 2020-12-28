@@ -8,12 +8,21 @@ use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  *
  * @author symio
  */
 trait SoftDeleteable {
+    
+    /**
+     * @ORM\Column(type="datetime", nullable=true)
+     *
+     * @var DateTime|null
+     * @Groups({"read"})
+     */
+    protected $deletedAt;
     
     use SoftDeleteableEntity {
         SoftDeleteableEntity::setDeletedAt as parentSetDeletedAt;

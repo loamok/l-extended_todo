@@ -8,6 +8,7 @@ use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  *
@@ -22,21 +23,40 @@ trait Timestampable {
         TimestampableEntity::getUpdatedAt as parentGetUpdatedAt;
     }
     
+    /**
+     * @var \DateTime
+     * @Gedmo\Timestampable(on="create")
+     * @ORM\Column(type="datetime")
+     * @Groups({"read"})
+     */
+    protected $createdAt;
+
+    /**
+     * @var \DateTime
+     * @Gedmo\Timestampable(on="update")
+     * @ORM\Column(type="datetime")
+     * @Groups({"read"})
+     */
+    protected $updatedAt;
+    
     /** 
      * @var string
      * 
      * @Gedmo\Versioned
      * @ORM\Column(type="string", nullable=true) 
+     * @Groups({"read"})
      */
     protected $timezone;
     
     /**
      * @var bool
+     * @Groups({"none"})
      */
     private $localizedCreatedAt = false;
     
     /**
      * @var bool
+     * @Groups({"none"})
      */
     private $localizedUpdatedAt = false;
 

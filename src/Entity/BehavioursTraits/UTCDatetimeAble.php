@@ -8,6 +8,7 @@ use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  *
@@ -20,12 +21,14 @@ trait UTCDatetimeAble {
      * 
      * @Gedmo\Versioned
      * @ORM\Column(type="string", nullable=true) 
+     * @Groups({"read", "write"})
      */
     protected $timezone;
     
     /**
      *
      * @var boolean[]
+     * @Groups({"none"})
      */
     protected $localized;
 
@@ -60,7 +63,7 @@ trait UTCDatetimeAble {
      * @param \DateTimeInterface|null $datetime
      * @return self
      */
-    public function setDatetime(string $name, ?\DateTimeInterface $datetime) : self {
+    protected function setDatetime(string $name, ?\DateTimeInterface $datetime) : self {
         $this->setLocalized($name);
         if(!is_null($datetime) && !$this->isLocalized($name)) {
             $this->setLocalized($name, true);
@@ -76,7 +79,7 @@ trait UTCDatetimeAble {
      * @param string $name
      * @return \DateTimeInterface|null
      */
-    public function getDatetime(string $name) : ?\DateTimeInterface {
+    protected function getDatetime(string $name) : ?\DateTimeInterface {
         if(!$this->isLocalized($name) && !is_null($this->{$name}) && $this->{$name} instanceof \DateTimeInterface) {
             $this->{$name}->setTimeZone(new \DateTimeZone($this->timezone));
             $this->setLocalized($name, true);

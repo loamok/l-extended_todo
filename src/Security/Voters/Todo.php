@@ -2,22 +2,20 @@
 
 namespace App\Security\Voters;
 
-use App\Entity\Agenda;
-use App\Entity\Delegation;
 use App\Entity\Rights;
+use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\User\User;
-
 
 /**
- * Agenda Security Voter
- * Grant access to agenda resources by delegations
+ * Event Security Voter
+ * Grant access to Todo resources by Agenda delegations
  *
  * @author symio
  */
-class AgendaVoter extends BaseVoter {
+class Todo extends AgendaVoter {
     
     protected $supports = [
                 self::READ, self::READ_FULL, self::UPDATE,
@@ -32,7 +30,7 @@ class AgendaVoter extends BaseVoter {
     public function __construct(Security $security, EntityManagerInterface $em) {
         $this->security = $security;
         $this->em = $em;
-        $this->entity = Agenda::class;
+        $this->entity = \App\Entity\Todo::class;
     }
     
     protected function supports(string $attribute, $subject) {
@@ -45,18 +43,17 @@ class AgendaVoter extends BaseVoter {
             return false;
         }
 
-        // you know $subject is an Agenda entity object, thanks to `supports()`
-        /** @var Agenda $agenda */
-        $agenda = $subject;
+        // you know $subject is an Event entity object, thanks to `supports()`
+        /** @var \App\Entity\Event $event */
+        $event = $subject;
+        $agenda = $this->em->getRepository(\App\Entity\Agenda::class)->find($event->getAgenda()->getId()->toBinary());
         
-        $delegations = $this->em->getRepository(Delegation::class)->findByAgenda($agenda);
+        $delegations = $this->em->getRepository(\App\Entity\Delegation::class)->findByAgenda($agenda);
         dump($delegations);
         $delegationFound = false;
         $isGranted = false;
-        /** @var Delegation $del */
-        foreach ($delegations as $del) {
-            /** @var Delegation $delegation */
-            $delegation = "";
+        /** @var \App\Entity\Delegation $delegation */
+        foreach ($delegations as $delegation) {
             if($delegation->getUser() == $user) {
                 $delegationFound = true;
                 /** @var Rights $right */

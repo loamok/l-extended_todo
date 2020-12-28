@@ -3,6 +3,7 @@ namespace App\Entity\BehavioursTraits;
 
 use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 /**
  *
@@ -15,6 +16,7 @@ trait Descriptable {
      * 
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255)
+     * @Groups({"read", "write"})
      */
     private $summary;
 
@@ -23,6 +25,7 @@ trait Descriptable {
      * 
      * @Gedmo\Versioned
      * @ORM\Column(type="text", nullable=true)
+     * @Groups({"read", "write"})
      */
     private $description;
 
@@ -31,6 +34,7 @@ trait Descriptable {
      * 
      * @Gedmo\Versioned
      * @ORM\Column(type="string", length=255, nullable=true)
+     * @Groups({"read", "write"})
      */
     private $location;
     

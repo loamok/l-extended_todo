@@ -19,22 +19,21 @@ class DelegationRepository extends ServiceEntityRepository
         parent::__construct($registry, Delegation::class);
     }
 
-    // /**
-    //  * @return Delegation[] Returns an array of Delegation objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
+    /**
+     * 
+     * @param App\Entity\Agenda $agenda
+     * @return Delegation[] Returns an array of Delegation objects
+     */
+    public function findByAgenda($agenda) {
         return $this->createQueryBuilder('d')
-            ->andWhere('d.exampleField = :val')
-            ->setParameter('val', $value)
+            ->leftJoin('d.agenda', 'da')
+            ->andWhere('da.id = :id')
+            ->setParameter('id', $agenda->getId()->toBinary())
             ->orderBy('d.id', 'ASC')
-            ->setMaxResults(10)
             ->getQuery()
             ->getResult()
         ;
     }
-    */
 
     /*
     public function findOneBySomeField($value): ?Delegation
