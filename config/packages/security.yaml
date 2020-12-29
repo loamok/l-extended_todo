@@ -62,10 +62,23 @@ security:
 
     # Easy way to control access for large sections of your site
     # Note: Only the *first* access control that matches will be used
+#    access_control:
+#        - { path: ^/admin,           roles: ROLE_ADMIN }
+#        - { path: ^/profile,         roles: ROLE_USER }
+##        - { path: ^/api/login,       roles: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: ^/api/login_check$,roles: IS_AUTHENTICATED_ANONYMOUSLY }
+##        - { path: ^/api$,            roles: IS_AUTHENTICATED_ANONYMOUSLY }
+#        - { path: ^/api/*,           roles: IS_AUTHENTICATED_FULLY }
     access_control:
         - { path: ^/admin,           roles: ROLE_ADMIN }
         - { path: ^/profile,         roles: ROLE_USER }
 #        - { path: ^/api/login,       roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api/login_check$,roles: IS_AUTHENTICATED_ANONYMOUSLY }
-#        - { path: ^/api$,            roles: IS_AUTHENTICATED_ANONYMOUSLY }
-        - { path: ^/api/*,           roles: IS_AUTHENTICATED_FULLY }
+        - { path: ^/api$,            roles: IS_AUTHENTICATED_REMEMBERED }
+        - { path: ^/api/*,           roles: IS_AUTHENTICATED_REMEMBERED }
+        - { path: ^/plop,            roles: IS_AUTHENTICATED_REMEMBERED }
+        - { path: ^/logout,          roles: IS_AUTHENTICATED_REMEMBERED }
+        - { path: ^/login,           roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/home,            roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/,                roles: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/reset-password*, roles: IS_AUTHENTICATED_ANONYMOUSLY }

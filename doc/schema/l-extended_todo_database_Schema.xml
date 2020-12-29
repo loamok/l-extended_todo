@@ -2,7 +2,7 @@
 <!-- SQL XML created by WWW SQL Designer, https://github.com/ondras/wwwsqldesigner/ -->
 <!-- Active URL: http://localhost:8002/?keyword=l_extended_todo_rewrite -->
 <sql>
-    <datatypes db="mysql">
+<datatypes db="mysql">
         <group label="Numeric" color="rgb(238,238,170)">
             <type label="Integer" length="0" sql="INTEGER" quote=""/>
             <type label="TINYINT" length="0" sql="TINYINT" quote=""/>
@@ -36,7 +36,195 @@
             <type label="Point" length="0" sql="point" quote=""/>
         </group>
     </datatypes>
-    <table x="665" y="265" name="delegation">
+    <table x="341" y="145" name="agenda">
+        <row name="id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <row name="tz_id" null="0" autoincrement="0">
+            <datatype>INT(11)</datatype>
+            <relation table="timezone" row="id" />
+        </row>
+        <row name="type_id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <relation table="ag_type" row="id" />
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <row name="name" null="0" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+        </row>
+        <row name="created_by" null="1" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="updated_by" null="1" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="timezone" null="1" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="deleted_at" null="1" autoincrement="0">
+            <datatype>DATETIME</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="created_at" null="0" autoincrement="0">
+            <datatype>DATETIME</datatype>
+        </row>
+        <row name="updated_at" null="0" autoincrement="0">
+            <datatype>DATETIME</datatype>
+        </row>
+        <key type="PRIMARY" name="PRIMARY">
+            <part>id</part>
+        </key>
+        <key type="INDEX" name="IDX_2CEDC877C54C8C93">
+            <part>type_id</part>
+        </key>
+        <key type="INDEX" name="IDX_2CEDC87757F2EDC8">
+            <part>tz_id</part>
+        </key>
+    </table>
+    <table x="59" y="678" name="event">
+        <row name="id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <row name="agenda_id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <relation table="agenda" row="id" />
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <row name="created_by" null="1" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="updated_by" null="1" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="deleted_at" null="1" autoincrement="0">
+            <datatype>DATETIME</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="timezone" null="1" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="created_at" null="0" autoincrement="0">
+            <datatype>DATETIME</datatype>
+        </row>
+        <row name="updated_at" null="0" autoincrement="0">
+            <datatype>DATETIME</datatype>
+        </row>
+        <row name="start_at" null="0" autoincrement="0">
+            <datatype>DATETIME</datatype>
+        </row>
+        <row name="end_at" null="0" autoincrement="0">
+            <datatype>DATETIME</datatype>
+        </row>
+        <row name="duration" null="0" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+            <comment>(DC2Type:dateinterval)</comment>
+        </row>
+        <row name="summary" null="0" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+        </row>
+        <row name="description" null="1" autoincrement="0">
+            <datatype>MEDIUMTEXT</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="location" null="1" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="geo" null="1" autoincrement="0">
+        <datatype>INTEGER</datatype>
+            <default>NULL</default>
+            <comment>(DC2Type:geogpoint)</comment>
+        </row>
+        <key type="INDEX" name="IDX_3BAE0AA7EA67784A">
+            <part>agenda_id</part>
+        </key>
+        <key type="PRIMARY" name="PRIMARY">
+            <part>id</part>
+        </key>
+    </table>
+    <table x="355" y="527" name="todo">
+        <row name="id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <row name="agenda_id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <relation table="agenda" row="id" />
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <row name="completed" null="0" autoincrement="0">
+            <datatype>TINYINT(1)</datatype>
+        </row>
+        <row name="percent" null="0" autoincrement="0">
+            <datatype>INT(11)</datatype>
+        </row>
+        <row name="priority" null="0" autoincrement="0">
+            <datatype>SMALLINT(6)</datatype>
+        </row>
+        <row name="summary" null="0" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+        </row>
+        <row name="description" null="1" autoincrement="0">
+            <datatype>MEDIUMTEXT</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="location" null="1" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="geo" null="1" autoincrement="0">
+            <datatype>INTEGER</datatype>
+            <default>NULL</default>
+            <comment>(DC2Type:geogpoint)</comment>
+        </row>
+        <row name="created_by" null="1" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="updated_by" null="1" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="deleted_at" null="1" autoincrement="0">
+            <datatype>DATETIME</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="timezone" null="1" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="created_at" null="0" autoincrement="0">
+            <datatype>DATETIME</datatype>
+        </row>
+        <row name="updated_at" null="0" autoincrement="0">
+            <datatype>DATETIME</datatype>
+        </row>
+        <row name="start_at" null="0" autoincrement="0">
+            <datatype>DATETIME</datatype>
+        </row>
+        <row name="end_at" null="0" autoincrement="0">
+            <datatype>DATETIME</datatype>
+        </row>
+        <row name="duration" null="0" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+            <comment>(DC2Type:dateinterval)</comment>
+        </row>
+        <key type="INDEX" name="IDX_5A0EB6A0EA67784A">
+            <part>agenda_id</part>
+        </key>
+        <key type="PRIMARY" name="PRIMARY">
+            <part>id</part>
+        </key>
+    </table>
+    <table x="808" y="51" name="delegation">
         <row name="id" null="0" autoincrement="0">
             <datatype>BINARY(16)</datatype>
             <comment>(DC2Type:uuid)</comment>
@@ -48,14 +236,12 @@
         </row>
         <row name="user_id" null="1" autoincrement="0">
             <datatype>BINARY(16)</datatype>
-            <default>'4e554c4c'</default>
-            <relation table="user" row="id" />
+            <default>'4e554c4c'</default><relation table="user" row="id" />
             <comment>(DC2Type:uuid)</comment>
         </row>
         <row name="owner_id" null="1" autoincrement="0">
             <datatype>BINARY(16)</datatype>
-            <default>'4e554c4c'</default>
-            <relation table="user" row="id" />
+            <default>'4e554c4c'</default><relation table="user" row="id" />
             <comment>(DC2Type:uuid)</comment>
         </row>
         <row name="delegation_type_id" null="0" autoincrement="0">
@@ -100,8 +286,12 @@
         <key type="INDEX" name="IDX_292F436D7E3C61F9">
             <part>owner_id</part>
         </key>
+        <comment>
+Table in center of user content authorisation.
+A "Proprietary" delegation is mandatory to Agenda object existance.
+        </comment>
     </table>
-    <table x="961" y="135" name="user">
+    <table x="1115" y="119" name="user">
         <row name="id" null="0" autoincrement="0">
             <datatype>BINARY(16)</datatype>
             <comment>(DC2Type:uuid)</comment>
@@ -123,7 +313,7 @@
             <part>id</part>
         </key>
     </table>
-    <table x="700" y="807" name="personalized_delegation_rights">
+    <table x="880" y="749" name="personalized_delegation_rights">
         <row name="id" null="0" autoincrement="0">
             <datatype>BINARY(16)</datatype>
             <comment>(DC2Type:uuid)</comment>
@@ -178,7 +368,7 @@
             <part>rights_id</part>
         </key>
     </table>
-    <table x="1007" y="657" name="rights">
+    <table x="1064" y="532" name="rights">
         <row name="id" null="0" autoincrement="0">
             <datatype>BINARY(16)</datatype>
             <comment>(DC2Type:uuid)</comment>
@@ -192,8 +382,20 @@
         <key type="PRIMARY" name="PRIMARY">
             <part>id</part>
         </key>
+        <comment>
+create.
+list.
+read.
+read_full.
+update.
+delete.
+history_list.
+history_read.
+history_restore.
+history_delete.
+        </comment>
     </table>
-    <table x="415" y="677" name="delegation_type">
+    <table x="785" y="538" name="delegation_type">
         <row name="id" null="0" autoincrement="0">
             <datatype>BINARY(16)</datatype>
             <comment>(DC2Type:uuid)</comment>
@@ -207,60 +409,19 @@
         <key type="PRIMARY" name="PRIMARY">
             <part>id</part>
         </key>
+        <comment>
+Proprietary : owner of the objet.
+Availlability : person with readonly access to availlability status (private fields (location and geo, summary, description are hidden if transparancy property is set to OPAQUE)).
+Reader : reader extended to private fields even if transp is OPAQUE.
+contributor : person with write access but no admin powers (delete, create, history_* will not be allowed).
+Admin : same rigths as the owner.
+Personalized
+        </comment>
     </table>
-    <table x="341" y="145" name="agenda">
-        <row name="id" null="0" autoincrement="0">
-            <datatype>BINARY(16)</datatype>
-            <comment>(DC2Type:uuid)</comment>
-        </row>
-        <row name="tz_id" null="0" autoincrement="0">
-            <datatype>INT(11)</datatype>
-            <relation table="timezone" row="id" />
-        </row>
-        <row name="type_id" null="0" autoincrement="0">
-            <datatype>BINARY(16)</datatype>
-            <relation table="ag_type" row="id" />
-            <comment>(DC2Type:uuid)</comment>
-        </row>
-        <row name="name" null="0" autoincrement="0">
-            <datatype>VARCHAR(255)</datatype>
-        </row>
-        <row name="created_by" null="1" autoincrement="0">
-            <datatype>VARCHAR(255)</datatype>
-            <default>NULL</default>
-        </row>
-        <row name="updated_by" null="1" autoincrement="0">
-            <datatype>VARCHAR(255)</datatype>
-            <default>NULL</default>
-        </row>
-        <row name="timezone" null="1" autoincrement="0">
-            <datatype>VARCHAR(255)</datatype>
-            <default>NULL</default>
-        </row>
-        <row name="deleted_at" null="1" autoincrement="0">
-            <datatype>DATETIME</datatype>
-            <default>NULL</default>
-        </row>
-        <row name="created_at" null="0" autoincrement="0">
-            <datatype>DATETIME</datatype>
-        </row>
-        <row name="updated_at" null="0" autoincrement="0">
-            <datatype>DATETIME</datatype>
-        </row>
-        <key type="PRIMARY" name="PRIMARY">
-            <part>id</part>
-        </key>
-        <key type="INDEX" name="IDX_2CEDC877C54C8C93">
-            <part>type_id</part>
-        </key>
-        <key type="INDEX" name="IDX_2CEDC87757F2EDC8">
-            <part>tz_id</part>
-        </key>
-    </table>
-    <table x="1171" y="823" name="role_globals_rights">
+    <table x="1263" y="536" name="role_globals_rights">
         <row name="role_globals_id" null="0" autoincrement="0">
             <datatype>BINARY(16)</datatype>
-            <relation table="role_globals" row="id" />
+        <relation table="role_globals" row="id" />
             <comment>(DC2Type:uuid)</comment>
         </row>
         <row name="rights_id" null="0" autoincrement="0">
@@ -279,7 +440,7 @@
             <part>rights_id</part>
         </key>
     </table>
-    <table x="690" y="633" name="delegation_type_rights">
+    <table x="833" y="399" name="delegation_type_rights">
         <row name="delegation_type_id" null="0" autoincrement="0">
             <datatype>BINARY(16)</datatype>
             <relation table="delegation_type" row="id" />
@@ -300,10 +461,21 @@
         <key type="INDEX" name="IDX_15597668B196EE6E">
             <part>rights_id</part>
         </key>
+        <comment>
+create.
+list.
+read.
+update.
+delete.
+history_list.
+history_read.
+history_restore.
+history_delete.
+        </comment>
     </table>
-    <table x="1205" y="616" name="role_globals">
+    <table x="1231" y="364" name="role_globals">
         <row name="id" null="0" autoincrement="0">
-        <datatype>BINARY(16)</datatype>
+            <datatype>BINARY(16)</datatype>
             <comment>(DC2Type:uuid)</comment>
         </row>
         <row name="role" null="0" autoincrement="0">
@@ -313,7 +485,7 @@
             <part>id</part>
         </key>
     </table>
-    <table x="440" y="474" name="timezone">
+    <table x="563" y="268" name="timezone">
         <row name="id" null="0" autoincrement="1">
             <datatype>INT(11)</datatype>
         </row>
@@ -330,7 +502,22 @@
             <part>id</part>
         </key>
     </table>
-    <table x="1191" y="53" name="reset_password_request">
+    <table x="575" y="23" name="ag_type">
+        <row name="id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <row name="code" null="0" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+        </row>
+        <row name="label" null="0" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+        </row>
+        <key type="PRIMARY" name="PRIMARY">
+            <part>id</part>
+        </key>
+    </table>
+    <table x="1302" y="49" name="reset_password_request">
         <row name="id" null="0" autoincrement="1">
             <datatype>INT(11)</datatype>
         </row>
@@ -356,21 +543,6 @@
         <key type="INDEX" name="IDX_7CE748AA76ED395">
             <part>user_id</part>
         </key>
-        <key type="PRIMARY" name="PRIMARY">
-            <part>id</part>
-        </key>
-    </table>
-    <table x="472" y="32" name="ag_type">
-        <row name="id" null="0" autoincrement="0">
-            <datatype>BINARY(16)</datatype>
-            <comment>(DC2Type:uuid)</comment>
-        </row>
-        <row name="code" null="0" autoincrement="0">
-            <datatype>VARCHAR(255)</datatype>
-        </row>
-        <row name="label" null="0" autoincrement="0">
-            <datatype>VARCHAR(255)</datatype>
-        </row>
         <key type="PRIMARY" name="PRIMARY">
             <part>id</part>
         </key>
