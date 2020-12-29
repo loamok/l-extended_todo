@@ -110,6 +110,11 @@
             <relation table="agenda" row="id" />
             <comment>(DC2Type:uuid)</comment>
         </row>
+        <row name="status_id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <relation table="status" row="id" />
+            <comment>(DC2Type:uuid)</comment>
+        </row>
         <row name="created_by" null="1" autoincrement="0">
             <datatype>VARCHAR(255)</datatype>
             <default>NULL</default>
@@ -175,6 +180,11 @@
             <relation table="agenda" row="id" />
             <comment>(DC2Type:uuid)</comment>
         </row>
+        <row name="status_id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <relation table="status" row="id" />
+            <comment>(DC2Type:uuid)</comment>
+        </row>
         <row name="completed" null="0" autoincrement="0">
             <datatype>TINYINT(1)</datatype>
         </row>
@@ -237,6 +247,156 @@
         </key>
         <key type="PRIMARY" name="PRIMARY">
             <part>id</part>
+        </key>
+    </table>
+    <table x="569" y="532" name="journal">
+        <row name="id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <row name="agenda_id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <relation table="agenda" row="id" />
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <row name="status_id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <relation table="status" row="id" />
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <row name="summary" null="0" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+        </row>
+        <row name="description" null="1" autoincrement="0">
+            <datatype>MEDIUMTEXT</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="created_by" null="1" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="updated_by" null="1" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="deleted_at" null="1" autoincrement="0">
+            <datatype>DATETIME</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="timezone" null="1" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="created_at" null="0" autoincrement="0">
+            <datatype>DATETIME</datatype>
+        </row>
+        <row name="updated_at" null="0" autoincrement="0">
+            <datatype>DATETIME</datatype>
+        </row>
+        <row name="start_at" null="0" autoincrement="0">
+            <datatype>DATETIME</datatype>
+        </row>
+        <key type="PRIMARY" name="PRIMARY">
+            <part>id</part>
+        </key>
+        <key type="INDEX" name="IDX_C1A7E74DEA67784A">
+            <part>agenda_id</part>
+        </key>
+    </table>
+    <table x="140" y="1181" name="status">
+        <row name="id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <row name="code" null="0" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+        </row>
+        <row name="label" null="0" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+        </row>
+        <key type="PRIMARY" name="PRIMARY">
+            <part>id</part>
+        </key>
+    </table>
+    <table x="588" y="1022" name="category">
+        <row name="id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <row name="code" null="0" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+        </row>
+        <row name="label" null="0" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+        </row>
+        <key type="PRIMARY" name="PRIMARY">
+            <part>id</part>
+        </key>
+    </table>
+    <table x="77" y="1062" name="event_category">
+        <row name="event_id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <relation table="event" row="id" />
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <row name="category_id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <relation table="category" row="id" />
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <key type="INDEX" name="IDX_40A0F01112469DE2">
+            <part>category_id</part>
+        </key>
+        <key type="PRIMARY" name="PRIMARY">
+            <part>event_id</part>
+            <part>category_id</part>
+        </key>
+        <key type="INDEX" name="IDX_40A0F01171F7E88B">
+            <part>event_id</part>
+        </key>
+    </table>
+    <table x="561" y="888" name="journal_category">
+        <row name="journal_id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <relation table="journal" row="id" />
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <row name="category_id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <relation table="category" row="id" />
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <key type="INDEX" name="IDX_D6FCB47812469DE2">
+            <part>category_id</part>
+        </key>
+        <key type="PRIMARY" name="PRIMARY">
+            <part>journal_id</part>
+            <part>category_id</part>
+        </key>
+        <key type="INDEX" name="IDX_D6FCB478478E8802">
+            <part>journal_id</part>
+        </key>
+    </table>
+    <table x="361" y="1135" name="todo_category">
+        <row name="todo_id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <relation table="todo" row="id" />
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <row name="category_id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <relation table="category" row="id" />
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <key type="INDEX" name="IDX_219B51A112469DE2">
+            <part>category_id</part>
+        </key>
+        <key type="PRIMARY" name="PRIMARY">
+            <part>todo_id</part>
+            <part>category_id</part>
+        </key>
+        <key type="INDEX" name="IDX_219B51A1EA1EBC33">
+            <part>todo_id</part>
         </key>
     </table>
     <table x="808" y="51" name="delegation">
@@ -305,55 +465,6 @@
 Table in center of user content authorisation.
 A "Proprietary" delegation is mandatory to Agenda object existance.
         </comment>
-    </table>
-    <table x="569" y="532" name="journal">
-        <row name="id" null="0" autoincrement="0">
-            <datatype>BINARY(16)</datatype>
-            <comment>(DC2Type:uuid)</comment>
-        </row>
-        <row name="agenda_id" null="0" autoincrement="0">
-            <datatype>BINARY(16)</datatype>
-            <relation table="agenda" row="id" />
-            <comment>(DC2Type:uuid)</comment>
-        </row>
-        <row name="summary" null="0" autoincrement="0">
-            <datatype>VARCHAR(255)</datatype>
-        </row>
-        <row name="description" null="1" autoincrement="0">
-            <datatype>MEDIUMTEXT</datatype>
-            <default>NULL</default>
-        </row>
-        <row name="created_by" null="1" autoincrement="0">
-            <datatype>VARCHAR(255)</datatype>
-            <default>NULL</default>
-        </row>
-        <row name="updated_by" null="1" autoincrement="0">
-            <datatype>VARCHAR(255)</datatype>
-            <default>NULL</default>
-        </row>
-        <row name="deleted_at" null="1" autoincrement="0">
-            <datatype>DATETIME</datatype>
-            <default>NULL</default>
-        </row>
-        <row name="timezone" null="1" autoincrement="0">
-            <datatype>VARCHAR(255)</datatype>
-            <default>NULL</default>
-        </row>
-        <row name="created_at" null="0" autoincrement="0">
-            <datatype>DATETIME</datatype>
-        </row>
-        <row name="updated_at" null="0" autoincrement="0">
-            <datatype>DATETIME</datatype>
-        </row>
-        <row name="start_at" null="0" autoincrement="0">
-            <datatype>DATETIME</datatype>
-        </row>
-        <key type="PRIMARY" name="PRIMARY">
-            <part>id</part>
-        </key>
-        <key type="INDEX" name="IDX_C1A7E74DEA67784A">
-            <part>agenda_id</part>
-        </key>
     </table>
     <table x="563" y="268" name="timezone">
         <row name="id" null="0" autoincrement="1">

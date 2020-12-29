@@ -6,7 +6,8 @@ use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
 //use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
-use App\Filters\UuidSearchFilter;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 use App\DBAL\Types\Point;
@@ -14,6 +15,7 @@ use App\DBAL\Types\Point;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
 
+use App\Filters\UuidSearchFilter;
 use App\Entity\BehavioursTraits\BlameableEntity;
 use App\Entity\BehavioursTraits\SoftDeleteable;
 use App\Entity\BehavioursTraits\Timestampable;
@@ -62,6 +64,8 @@ use Doctrine\ORM\Mapping as ORM;
  */
 class Todo {
     
+    const STATUSES = ["needs-action", "completed", "in-progress", "cancelled"];
+    
     use UuidIdentifiable,
         Descriptable,
         Locationable,
@@ -101,10 +105,22 @@ class Todo {
      */
     private $agenda;
 
+    /**
+     * @ORM\ManyToMany(targetEntity=Category::class)
+     */
+    private $categories;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Status::class)
+     * @ORM\JoinColumn(nullable=false)
+     */
+    private $status;
+
     public function __construct() {
         $this->completed = false;
         $this->percent = 0;
         $this->priority = 0;
+        $this->categories = new ArrayCollection();
     }
     
     /**
@@ -195,14 +211,43 @@ class Todo {
         return $this;
     }
 
-    public function getAgenda(): ?Agenda
-    {
+    public function getAgenda(): ?Agenda {
         return $this->agenda;
     }
 
-    public function setAgenda(?Agenda $agenda): self
-    {
+    public function setAgenda(?Agenda $agenda): self {
         $this->agenda = $agenda;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Category[]
+     */
+    public function getCategories(): Collection {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): self {
+        if (!$this->categories->contains($category)) {
+            $this->categories[] = $category;
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self {
+        $this->categories->removeElement($category);
+
+        return $this;
+    }
+
+    public function getStatus(): ?Status {
+        return $this->status;
+    }
+
+    public function setStatus(?Status $status): self {
+        $this->status = $status;
 
         return $this;
     }

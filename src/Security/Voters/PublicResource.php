@@ -3,8 +3,10 @@
 namespace App\Security\Voters;
 
 use App\Entity\AgType;
+use App\Entity\Category;
 use App\Entity\DelegationType;
 use App\Entity\Rights;
+use App\Entity\Status;
 use App\Entity\Timezone;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
@@ -37,6 +39,8 @@ class PublicResource extends BaseVoter {
             AgType::class, 
             Timezone::class, 
             User::class, 
+            Status::class, 
+            Category::class, 
         ];
     }
     

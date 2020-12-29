@@ -1,0 +1,24 @@
+tentative:
+    code: tentative
+    label: Started not Terminated
+confirmed:
+    code: confirmed
+    label: Finished
+cancelled:
+    code: cancelled
+    label: Cancelled
+needs_action:
+    code: needs-action
+    label: Needs an user action
+completed:
+    code: completed
+    label: Terminated
+in_progress:
+    code: in-progress
+    label: In progress
+draft:
+    code: draft
+    label: Draft
+final:
+    code: final
+    label: Final

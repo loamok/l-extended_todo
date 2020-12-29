@@ -2,7 +2,7 @@
 
 namespace App\Entity;
 
-use App\Repository\AgTypeRepository;
+use App\Repository\CategoryRepository;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 
@@ -31,9 +31,9 @@ use Symfony\Component\Uid\UuidV4;
  *          "delete" = { "security" = "is_granted('admin')" }
  *     },
  * )
- * @ORM\Entity(repositoryClass=AgTypeRepository::class)
+ * @ORM\Entity(repositoryClass=CategoryRepository::class)
  */
-class AgType {
+class Category {
     
     use UuidIdentifiable,
         CodeAble;
