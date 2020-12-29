@@ -85,7 +85,22 @@
             <part>tz_id</part>
         </key>
     </table>
-    <table x="59" y="678" name="event">
+    <table x="575" y="23" name="ag_type">
+        <row name="id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <row name="code" null="0" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+        </row>
+        <row name="label" null="0" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+        </row>
+        <key type="PRIMARY" name="PRIMARY">
+            <part>id</part>
+        </key>
+    </table>
+    <table x="60" y="602" name="event">
         <row name="id" null="0" autoincrement="0">
             <datatype>BINARY(16)</datatype>
             <comment>(DC2Type:uuid)</comment>
@@ -291,6 +306,72 @@ Table in center of user content authorisation.
 A "Proprietary" delegation is mandatory to Agenda object existance.
         </comment>
     </table>
+    <table x="569" y="532" name="journal">
+        <row name="id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <row name="agenda_id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <relation table="agenda" row="id" />
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <row name="summary" null="0" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+        </row>
+        <row name="description" null="1" autoincrement="0">
+            <datatype>MEDIUMTEXT</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="created_by" null="1" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="updated_by" null="1" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="deleted_at" null="1" autoincrement="0">
+            <datatype>DATETIME</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="timezone" null="1" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="created_at" null="0" autoincrement="0">
+            <datatype>DATETIME</datatype>
+        </row>
+        <row name="updated_at" null="0" autoincrement="0">
+            <datatype>DATETIME</datatype>
+        </row>
+        <row name="start_at" null="0" autoincrement="0">
+            <datatype>DATETIME</datatype>
+        </row>
+        <key type="PRIMARY" name="PRIMARY">
+            <part>id</part>
+        </key>
+        <key type="INDEX" name="IDX_C1A7E74DEA67784A">
+            <part>agenda_id</part>
+        </key>
+    </table>
+    <table x="563" y="268" name="timezone">
+        <row name="id" null="0" autoincrement="1">
+            <datatype>INT(11)</datatype>
+        </row>
+        <row name="name" null="0" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+        </row>
+        <row name="label" null="0" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+        </row>
+        <row name="code" null="0" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+        </row>
+        <key type="PRIMARY" name="PRIMARY">
+            <part>id</part>
+        </key>
+    </table>
     <table x="1115" y="119" name="user">
         <row name="id" null="0" autoincrement="0">
             <datatype>BINARY(16)</datatype>
@@ -313,7 +394,7 @@ A "Proprietary" delegation is mandatory to Agenda object existance.
             <part>id</part>
         </key>
     </table>
-    <table x="880" y="749" name="personalized_delegation_rights">
+    <table x="802" y="416" name="personalized_delegation_rights">
         <row name="id" null="0" autoincrement="0">
             <datatype>BINARY(16)</datatype>
             <comment>(DC2Type:uuid)</comment>
@@ -368,7 +449,7 @@ A "Proprietary" delegation is mandatory to Agenda object existance.
             <part>rights_id</part>
         </key>
     </table>
-    <table x="1064" y="532" name="rights">
+    <table x="1062" y="783" name="rights">
         <row name="id" null="0" autoincrement="0">
             <datatype>BINARY(16)</datatype>
             <comment>(DC2Type:uuid)</comment>
@@ -395,7 +476,7 @@ history_restore.
 history_delete.
         </comment>
     </table>
-    <table x="785" y="538" name="delegation_type">
+    <table x="787" y="741" name="delegation_type">
         <row name="id" null="0" autoincrement="0">
             <datatype>BINARY(16)</datatype>
             <comment>(DC2Type:uuid)</comment>
@@ -418,7 +499,7 @@ Admin : same rigths as the owner.
 Personalized
         </comment>
     </table>
-    <table x="1263" y="536" name="role_globals_rights">
+    <table x="1220" y="670" name="role_globals_rights">
         <row name="role_globals_id" null="0" autoincrement="0">
             <datatype>BINARY(16)</datatype>
         <relation table="role_globals" row="id" />
@@ -440,7 +521,7 @@ Personalized
             <part>rights_id</part>
         </key>
     </table>
-    <table x="833" y="399" name="delegation_type_rights">
+    <table x="801" y="905" name="delegation_type_rights">
         <row name="delegation_type_id" null="0" autoincrement="0">
             <datatype>BINARY(16)</datatype>
             <relation table="delegation_type" row="id" />
@@ -473,44 +554,12 @@ history_restore.
 history_delete.
         </comment>
     </table>
-    <table x="1231" y="364" name="role_globals">
+    <table x="1258" y="502" name="role_globals">
         <row name="id" null="0" autoincrement="0">
             <datatype>BINARY(16)</datatype>
             <comment>(DC2Type:uuid)</comment>
         </row>
         <row name="role" null="0" autoincrement="0">
-            <datatype>VARCHAR(255)</datatype>
-        </row>
-        <key type="PRIMARY" name="PRIMARY">
-            <part>id</part>
-        </key>
-    </table>
-    <table x="563" y="268" name="timezone">
-        <row name="id" null="0" autoincrement="1">
-            <datatype>INT(11)</datatype>
-        </row>
-        <row name="name" null="0" autoincrement="0">
-            <datatype>VARCHAR(255)</datatype>
-        </row>
-        <row name="label" null="0" autoincrement="0">
-            <datatype>VARCHAR(255)</datatype>
-        </row>
-        <row name="code" null="0" autoincrement="0">
-            <datatype>VARCHAR(255)</datatype>
-        </row>
-        <key type="PRIMARY" name="PRIMARY">
-            <part>id</part>
-        </key>
-    </table>
-    <table x="575" y="23" name="ag_type">
-        <row name="id" null="0" autoincrement="0">
-            <datatype>BINARY(16)</datatype>
-            <comment>(DC2Type:uuid)</comment>
-        </row>
-        <row name="code" null="0" autoincrement="0">
-            <datatype>VARCHAR(255)</datatype>
-        </row>
-        <row name="label" null="0" autoincrement="0">
             <datatype>VARCHAR(255)</datatype>
         </row>
         <key type="PRIMARY" name="PRIMARY">

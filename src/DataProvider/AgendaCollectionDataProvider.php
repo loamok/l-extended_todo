@@ -47,7 +47,7 @@ final class AgendaCollectionDataProvider implements ContextAwareCollectionDataPr
         $repo = $this->managerRegistry
             ->getManagerForClass($resourceClass)
             ->getRepository($resourceClass);
-        $queryBuilder = $repo->getUserAgendasByRightCodeQuery($this->security->getUser(),'list');
+        $queryBuilder = $repo->getUserAgendasByRightCodeQuery($this->security->getUser(), 'list');
 
         $this->paginationExtension->applyToCollection($queryBuilder, new QueryNameGenerator(), $resourceClass, $operationName, $context);
 

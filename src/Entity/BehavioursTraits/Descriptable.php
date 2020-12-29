@@ -28,15 +28,6 @@ trait Descriptable {
      * @Groups({"read", "write"})
      */
     private $description;
-
-    /**
-     * @var string
-     * 
-     * @Gedmo\Versioned
-     * @ORM\Column(type="string", length=255, nullable=true)
-     * @Groups({"read", "write"})
-     */
-    private $location;
     
     /**
      * 
@@ -72,25 +63,6 @@ trait Descriptable {
      */
     public function setDescription(?string $description): self {
         $this->description = $description;
-
-        return $this;
-    }
-
-    /**
-     * 
-     * @return string|null
-     */
-    public function getLocation(): ?string {
-        return $this->location;
-    }
-
-    /**
-     * 
-     * @param string|null $location
-     * @return \self
-     */
-    public function setLocation(?string $location): self {
-        $this->location = $location;
 
         return $this;
     }

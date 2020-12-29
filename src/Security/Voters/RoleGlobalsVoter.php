@@ -30,7 +30,7 @@ class RoleGlobalsVoter extends BaseVoter {
         $this->security = $security;
         $this->em = $em;
         $this->entities = [Agenda::class, \App\Entity\Delegation::class, \App\Entity\Event::class, 
-        \App\Entity\Todo::class, ];
+        \App\Entity\Todo::class, \App\Entity\Journal::class, ];
     }
     
     protected function supports(string $attribute, $subject) {

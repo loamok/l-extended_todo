@@ -15,16 +15,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  */
 trait Durationable {
     
-    use UTCDatetimeAble;
-    
-    /**
-     * @var \DateTimeInterface|null
-     * 
-     * @Gedmo\Versioned
-     * @ORM\Column(type="datetime")
-     * @Groups({"read", "write"})
-     */
-    protected $startAt;
+    use UTCDatetimeAble, Startable;
 
     /**
      * @var \DateTimeInterface|null
@@ -43,28 +34,6 @@ trait Durationable {
      * @Groups({"read", "write"})
      */
     protected $duration;
-    
-    
-    /**
-     * 
-     * @return DateTimeInterface|null
-     */
-    public function getStartAt(): ?DateTimeInterface {
-        return $this->getDatetime('startAt');
-    }
-
-    /**
-     * 
-     * @param DateTimeInterface|null $startAt
-     * @return \self
-     */
-    public function setStartAt(?DateTimeInterface $startAt): self {
-        if(!is_null($startAt)) {
-            $this->startAt = $startAt;
-        }
-        
-        return $this->respectRules();
-    }
 
     /**
      * 

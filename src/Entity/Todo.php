@@ -5,7 +5,8 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
-use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+//use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use App\Filters\UuidSearchFilter;
 
 use CrEOF\Spatial\PHP\Types\Geography\GeographyInterface;
 use App\DBAL\Types\Point;
@@ -18,8 +19,10 @@ use App\Entity\BehavioursTraits\SoftDeleteable;
 use App\Entity\BehavioursTraits\Timestampable;
 use App\Entity\BehavioursTraits\UTCDatetimeAble;
 use App\Entity\BehavioursTraits\Durationable;
+use App\Entity\BehavioursTraits\Startable;
 use App\Entity\BehavioursTraits\Geolocable;
 use App\Entity\BehavioursTraits\Descriptable;
+use App\Entity\BehavioursTraits\Locationable;
 use App\Entity\BehavioursTraits\UuidIdentifiable;
 
 use Symfony\Bridge\Doctrine\IdGenerator\UuidV4Generator;
@@ -52,7 +55,7 @@ use Doctrine\ORM\Mapping as ORM;
  *   },
  *   iri="Todo"
  * )
- * @ApiFilter(SearchFilter::class, properties={"agenda": "exact"})
+ * @ApiFilter(UuidSearchFilter::class, properties={"agenda": "exact"})
  * @Gedmo\Loggable
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=true, hardDelete=true)
  * @ORM\Entity(repositoryClass=TodoRepository::class)
@@ -61,6 +64,7 @@ class Todo {
     
     use UuidIdentifiable,
         Descriptable,
+        Locationable,
         Geolocable,
         BlameableEntity, 
         SoftDeleteable,

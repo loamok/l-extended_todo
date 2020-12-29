@@ -39,9 +39,9 @@ class AgendaVoter extends BaseVoter {
         return parent::supports($attribute, $subject);
     }
     
-    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token) {
+    protected function voteOnSubResourceAttribute(string $attribute, $subject, TokenInterface $token) {
         $user = $this->security->getUser();
-        if (!$user instanceof User) {
+        if (!$user instanceof \App\Entity\User) {
             return false;
         }
 
@@ -50,13 +50,10 @@ class AgendaVoter extends BaseVoter {
         $agenda = $subject;
         
         $delegations = $this->em->getRepository(Delegation::class)->findByAgenda($agenda);
-        dump($delegations);
         $delegationFound = false;
         $isGranted = false;
-        /** @var Delegation $del */
-        foreach ($delegations as $del) {
-            /** @var Delegation $delegation */
-            $delegation = "";
+        /** @var Delegation $delegation */
+        foreach ($delegations as $delegation) {
             if($delegation->getUser() == $user) {
                 $delegationFound = true;
                 /** @var Rights $right */
@@ -73,6 +70,10 @@ class AgendaVoter extends BaseVoter {
         return ($delegationFound && $isGranted);
         
         throw new LogicException('This code should not be reached!');
+    }
+    
+    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token) {
+        return $this->voteOnSubResourceAttribute($attribute, $subject, $token);
     }
     
 }

@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security;
 
 /**
- * Event Security Voter
+ * Todo Security Voter
  * Grant access to Todo resources by Agenda delegations
  *
  * @author symio
@@ -38,38 +38,12 @@ class Todo extends AgendaVoter {
     }
     
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token) {
-        $user = $this->security->getUser();
-        if (!$user instanceof User) {
-            return false;
-        }
-
-        // you know $subject is an Event entity object, thanks to `supports()`
-        /** @var \App\Entity\Event $event */
-        $event = $subject;
-        $agenda = $this->em->getRepository(\App\Entity\Agenda::class)->find($event->getAgenda()->getId()->toBinary());
+        // you know $subject is an Todo entity object, thanks to `supports()`
+        /** @var \App\Entity\Todo $todo */
+        $todo = $subject;
+        $agenda = $this->em->getRepository(\App\Entity\Agenda::class)->find($todo->getAgenda()->getId()->toBinary());
         
-        $delegations = $this->em->getRepository(\App\Entity\Delegation::class)->findByAgenda($agenda);
-        dump($delegations);
-        $delegationFound = false;
-        $isGranted = false;
-        /** @var \App\Entity\Delegation $delegation */
-        foreach ($delegations as $delegation) {
-            if($delegation->getUser() == $user) {
-                $delegationFound = true;
-                /** @var Rights $right */
-                foreach ($delegation->getRights() as $right) {
-                    if($right->getCode() == $attribute) {
-                        $isGranted = true;
-                        break;
-                    }
-                }
-                break;
-            }
-        }
-        
-        return ($delegationFound && $isGranted);
-        
-        throw new LogicException('This code should not be reached!');
+        return $this->voteOnSubResourceAttribute($attribute, $agenda, $token);
     }
     
 }

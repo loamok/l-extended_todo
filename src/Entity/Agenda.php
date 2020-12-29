@@ -117,11 +117,19 @@ class Agenda {
      * @ApiSubresource
      */
     private $todos;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Journal::class, mappedBy="agenda")
+     * @Groups({"read"})
+     * @ApiSubresource
+     */
+    private $journals;
     
     public function __construct() {
         $this->delegations = new ArrayCollection();
         $this->events = new ArrayCollection();
         $this->todos = new ArrayCollection();
+        $this->journals = new ArrayCollection();
     }
     
     /**
@@ -266,6 +274,36 @@ class Agenda {
             // set the owning side to null (unless already changed)
             if ($todo->getAgenda() === $this) {
                 $todo->setAgenda(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Journal[]
+     */
+    public function getJournals(): Collection
+    {
+        return $this->journals;
+    }
+
+    public function addJournal(Journal $journal): self
+    {
+        if (!$this->journals->contains($journal)) {
+            $this->journals[] = $journal;
+            $journal->setAgenda($this);
+        }
+
+        return $this;
+    }
+
+    public function removeJournal(Journal $journal): self
+    {
+        if ($this->journals->removeElement($journal)) {
+            // set the owning side to null (unless already changed)
+            if ($journal->getAgenda() === $this) {
+                $journal->setAgenda(null);
             }
         }
 
