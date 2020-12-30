@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Repository\AgTypeRepository;
 
 use ApiPlatform\Core\Annotation\ApiResource;
+use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 
 use App\Entity\BehavioursTraits\CodeAble;
 use App\Entity\BehavioursTraits\UuidIdentifiable;
@@ -42,6 +44,7 @@ class AgType {
 
     /**
      * @ORM\ManyToMany(targetEntity=Category::class)
+     * @ApiSubresource
      */
     private $categories;
 
