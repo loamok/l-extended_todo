@@ -8,6 +8,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 
 use App\Entity\BehavioursTraits\CodeAble;
 use App\Entity\BehavioursTraits\UuidIdentifiable;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 
 use Doctrine\ORM\Mapping as ORM;
 
@@ -37,5 +39,39 @@ class AgType {
     
     use UuidIdentifiable,
         CodeAble;
+
+    /**
+     * @ORM\ManyToMany(targetEntity=Category::class)
+     */
+    private $categories;
+
+    public function __construct()
+    {
+        $this->categories = new ArrayCollection();
+    }
+
+    /**
+     * @return Collection|Category[]
+     */
+    public function getCategories(): Collection
+    {
+        return $this->categories;
+    }
+
+    public function addCategory(Category $category): self
+    {
+        if (!$this->categories->contains($category)) {
+            $this->categories[] = $category;
+        }
+
+        return $this;
+    }
+
+    public function removeCategory(Category $category): self
+    {
+        $this->categories->removeElement($category);
+
+        return $this;
+    }
     
 }

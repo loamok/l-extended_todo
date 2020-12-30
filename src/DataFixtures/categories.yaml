@@ -1,0 +1,28 @@
+worktime:
+    code: worktime
+    label: Work time
+    agtype: work_track
+public-holiday:
+    code: public-holiday
+    label: Public Holiday
+    agtype: work_track
+non-working:
+    code: non-working
+    label: Non working
+    agtype: work_track
+toil:
+    code: toil
+    label: Toil
+    agtype: work_track
+holiday:
+    code: holiday
+    label: Holiday
+    agtype: work_track
+sick-leave:
+    code: sick-leave
+    label: Sick Leave
+    agtype: work_track
+non-working-employer:
+    code: non-working-employer
+    label: Non working payable by the Employer
+    agtype: work_track

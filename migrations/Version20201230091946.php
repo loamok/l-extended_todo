@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20201229133421 extends AbstractMigration
+final class Version20201230091946 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -21,6 +21,7 @@ final class Version20201229133421 extends AbstractMigration
     {
         // this up() migration is auto-generated, please modify it to your needs
         $this->addSql('CREATE TABLE ag_type (id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', code VARCHAR(255) NOT NULL, label VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE ag_type_category (ag_type_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', category_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', INDEX IDX_17F51A6E318B59D2 (ag_type_id), INDEX IDX_17F51A6E12469DE2 (category_id), PRIMARY KEY(ag_type_id, category_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE agenda (id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', tz_id INT NOT NULL, type_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', name VARCHAR(255) NOT NULL, created_by VARCHAR(255) DEFAULT NULL, updated_by VARCHAR(255) DEFAULT NULL, deleted_at DATETIME DEFAULT NULL, timezone VARCHAR(255) DEFAULT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, INDEX IDX_2CEDC87757F2EDC8 (tz_id), INDEX IDX_2CEDC877C54C8C93 (type_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE category (id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', code VARCHAR(255) NOT NULL, label VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE delegation (id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', agenda_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', user_id BINARY(16) DEFAULT NULL COMMENT \'(DC2Type:uuid)\', owner_id BINARY(16) DEFAULT NULL COMMENT \'(DC2Type:uuid)\', delegation_type_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', created_by VARCHAR(255) DEFAULT NULL, updated_by VARCHAR(255) DEFAULT NULL, deleted_at DATETIME DEFAULT NULL, timezone VARCHAR(255) DEFAULT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, INDEX IDX_292F436DEA67784A (agenda_id), INDEX IDX_292F436DA76ED395 (user_id), INDEX IDX_292F436D7E3C61F9 (owner_id), INDEX IDX_292F436DB5224DF6 (delegation_type_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
@@ -42,6 +43,8 @@ final class Version20201229133421 extends AbstractMigration
         $this->addSql('CREATE TABLE todo (id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', agenda_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', status_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', completed TINYINT(1) NOT NULL, percent INT NOT NULL, priority SMALLINT NOT NULL, summary VARCHAR(255) NOT NULL, description LONGTEXT DEFAULT NULL, location VARCHAR(255) DEFAULT NULL, geo POINT DEFAULT NULL COMMENT \'(DC2Type:geogpoint)\', created_by VARCHAR(255) DEFAULT NULL, updated_by VARCHAR(255) DEFAULT NULL, deleted_at DATETIME DEFAULT NULL, timezone VARCHAR(255) DEFAULT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, end_at DATETIME NOT NULL, duration VARCHAR(255) NOT NULL COMMENT \'(DC2Type:dateinterval)\', start_at DATETIME NOT NULL, INDEX IDX_5A0EB6A0EA67784A (agenda_id), INDEX IDX_5A0EB6A06BF700BD (status_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE todo_category (todo_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', category_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', INDEX IDX_219B51A1EA1EBC33 (todo_id), INDEX IDX_219B51A112469DE2 (category_id), PRIMARY KEY(todo_id, category_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE user (id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', email VARCHAR(180) NOT NULL, roles LONGTEXT NOT NULL COMMENT \'(DC2Type:json)\', password VARCHAR(255) NOT NULL, UNIQUE INDEX UNIQ_8D93D649E7927C74 (email), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE ag_type_category ADD CONSTRAINT FK_17F51A6E318B59D2 FOREIGN KEY (ag_type_id) REFERENCES ag_type (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE ag_type_category ADD CONSTRAINT FK_17F51A6E12469DE2 FOREIGN KEY (category_id) REFERENCES category (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE agenda ADD CONSTRAINT FK_2CEDC87757F2EDC8 FOREIGN KEY (tz_id) REFERENCES timezone (id)');
         $this->addSql('ALTER TABLE agenda ADD CONSTRAINT FK_2CEDC877C54C8C93 FOREIGN KEY (type_id) REFERENCES ag_type (id)');
         $this->addSql('ALTER TABLE delegation ADD CONSTRAINT FK_292F436DEA67784A FOREIGN KEY (agenda_id) REFERENCES agenda (id)');
@@ -73,11 +76,13 @@ final class Version20201229133421 extends AbstractMigration
     public function down(Schema $schema) : void
     {
         // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE ag_type_category DROP FOREIGN KEY FK_17F51A6E318B59D2');
         $this->addSql('ALTER TABLE agenda DROP FOREIGN KEY FK_2CEDC877C54C8C93');
         $this->addSql('ALTER TABLE delegation DROP FOREIGN KEY FK_292F436DEA67784A');
         $this->addSql('ALTER TABLE event DROP FOREIGN KEY FK_3BAE0AA7EA67784A');
         $this->addSql('ALTER TABLE journal DROP FOREIGN KEY FK_C1A7E74DEA67784A');
         $this->addSql('ALTER TABLE todo DROP FOREIGN KEY FK_5A0EB6A0EA67784A');
+        $this->addSql('ALTER TABLE ag_type_category DROP FOREIGN KEY FK_17F51A6E12469DE2');
         $this->addSql('ALTER TABLE event_category DROP FOREIGN KEY FK_40A0F01112469DE2');
         $this->addSql('ALTER TABLE journal_category DROP FOREIGN KEY FK_D6FCB47812469DE2');
         $this->addSql('ALTER TABLE todo_category DROP FOREIGN KEY FK_219B51A112469DE2');
@@ -100,6 +105,7 @@ final class Version20201229133421 extends AbstractMigration
         $this->addSql('ALTER TABLE delegation DROP FOREIGN KEY FK_292F436D7E3C61F9');
         $this->addSql('ALTER TABLE reset_password_request DROP FOREIGN KEY FK_7CE748AA76ED395');
         $this->addSql('DROP TABLE ag_type');
+        $this->addSql('DROP TABLE ag_type_category');
         $this->addSql('DROP TABLE agenda');
         $this->addSql('DROP TABLE category');
         $this->addSql('DROP TABLE delegation');

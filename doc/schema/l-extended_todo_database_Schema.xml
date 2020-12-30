@@ -100,6 +100,28 @@
             <part>id</part>
         </key>
     </table>
+    <table x="566" y="425" name="ag_type_category">
+        <row name="ag_type_id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <relation table="ag_type" row="id" />
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <row name="category_id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <relation table="category" row="id" />
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <key type="INDEX" name="IDX_17F51A6E12469DE2">
+            <part>category_id</part>
+        </key>
+        <key type="INDEX" name="IDX_17F51A6E318B59D2">
+            <part>ag_type_id</part>
+        </key>
+        <key type="PRIMARY" name="PRIMARY">
+            <part>ag_type_id</part>
+            <part>category_id</part>
+        </key>
+    </table>
     <table x="60" y="602" name="event">
         <row name="id" null="0" autoincrement="0">
             <datatype>BINARY(16)</datatype>
