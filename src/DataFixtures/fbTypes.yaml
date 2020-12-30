@@ -4,3 +4,9 @@ free:
 busy:
     code: busy
     label: Busy time
+busy-unavailable:
+    code: busy-unavailable
+    label: Busy time ; not availlable
+busy-tentative:
+    code: busy-tentative
+    label: Busy time ; tentative

@@ -339,6 +339,24 @@
         <key type="PRIMARY" name="PRIMARY">
             <part>id</part>
         </key>
+        <comment>
+
+"FBTYPE" = (
+    "FREE" / 
+    "BUSY" / 
+    "BUSY-UNAVAILABLE" / 
+    "BUSY-TENTATIVE" / 
+    x-name ; Some experimental iCalendar data type. / 
+    iana-token ; Some other IANA registered iCalendar data type.
+)
+
+The parameter specifies the free or busy time type. 
+The value FREE indicates that the time interval is free for scheduling. 
+The value BUSY indicates that the time interval is busy because one or more events have been scheduled for that interval. 
+The value BUSY-UNAVAILABLE indicates that the time interval is busy and that the interval can not be scheduled. 
+The value BUSY-TENTATIVE indicates that the time interval is busy because one or more events have been tentatively scheduled for that interval. 
+If not specified on a property that allows this parameter, the default is BUSY.
+        </comment>
     </table>
     <table x="372" y="1230" name="freebusy">
         <row name="id" null="0" autoincrement="0">
