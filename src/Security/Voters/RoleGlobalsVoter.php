@@ -59,8 +59,7 @@ class RoleGlobalsVoter extends BaseVoter {
         }
         if(is_null($subject)) {
             $res = true;
-        } else {
-        }
+        } 
         
         return $res;
     }
@@ -71,7 +70,7 @@ class RoleGlobalsVoter extends BaseVoter {
         }
 
         $isGranted = false;
-        foreach ($user->getRoles() as $role) {
+        foreach ($this->security->getUser()->getRoles() as $role) {
             /** @var RoleGlobals $rg */
             $rg = $this->em->getRepository(RoleGlobals::class)->findOneBy(['role' => $role]);
             if(is_null($rg)) {

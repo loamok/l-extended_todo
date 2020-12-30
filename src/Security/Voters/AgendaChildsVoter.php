@@ -2,20 +2,26 @@
 
 namespace App\Security\Voters;
 
-use App\Entity\Rights;
-use App\Entity\User;
+use App\Entity\Agenda;
+use App\Entity\Event;
+use App\Entity\Freebusy;
+use App\Entity\Journal;
+use App\Entity\Todo;
 use Doctrine\ORM\EntityManagerInterface;
-use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security;
 
 /**
- * Event Security Voter
- * Grant access to Event resources by Agenda delegations
+ * AgendaChilds Security Voter
+ * Grant access to Agenda Childs resources by Agenda delegations
+ * Event
+ * Todo
+ * Journal
+ * Freebusy
  *
  * @author symio
  */
-class Event extends AgendaVoter {
+class AgendaChildsVoter extends AgendaVoter {
     
     protected $supports = [
                 self::READ, self::READ_FULL, self::UPDATE,
@@ -23,25 +29,38 @@ class Event extends AgendaVoter {
                 self::HISTORY_DELETE,
             ];
     protected $entity;
+    protected $entities;
     
     protected $security;
     protected $em;
 
     public function __construct(Security $security, EntityManagerInterface $em) {
         $this->security = $security;
-        $this->em = $em;
-        $this->entity = \App\Entity\Event::class;
+        $this->em = $em;$this->entities = [
+            Event::class, Todo::class, Journal::class, Freebusy::class, 
+        ];
     }
     
     protected function supports(string $attribute, $subject) {
+        foreach ($this->entities as $entityClassName) {
+            if(is_a($subject, $entityClassName)) {
+                $this->entity = $entityClassName;
+                break;
+            }
+        }
+        if(is_null($this->entity)) {
+            return false;
+        }
+        
         return parent::supports($attribute, $subject);
     }
     
     protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token) {
-        // you know $subject is an Event entity object, thanks to `supports()`
-        /** @var \App\Entity\Event $event */
-        $event = $subject;
-        $agenda = $this->em->getRepository(\App\Entity\Agenda::class)->find($event->getAgenda()->getId()->toBinary());
+        if(!method_exists($subject, 'getAgenda')) {
+            return false;
+        }
+        
+        $agenda = $this->em->getRepository(Agenda::class)->find($subject->getAgenda()->getId()->toBinary());
         
         return $this->voteOnSubResourceAttribute($attribute, $agenda, $token);
     }
