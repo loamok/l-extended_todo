@@ -124,12 +124,20 @@ class Agenda {
      * @ApiSubresource
      */
     private $journals;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Freebusy::class, mappedBy="agenda")
+     * @Groups({"read"})
+     * @ApiSubresource
+     */
+    private $freebusies;
     
     public function __construct() {
         $this->delegations = new ArrayCollection();
         $this->events = new ArrayCollection();
         $this->todos = new ArrayCollection();
         $this->journals = new ArrayCollection();
+        $this->freebusies = new ArrayCollection();
     }
     
     /**
@@ -304,6 +312,36 @@ class Agenda {
             // set the owning side to null (unless already changed)
             if ($journal->getAgenda() === $this) {
                 $journal->setAgenda(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|Freebusy[]
+     */
+    public function getFreebusies(): Collection
+    {
+        return $this->freebusies;
+    }
+
+    public function addFreebusy(Freebusy $freebusy): self
+    {
+        if (!$this->freebusies->contains($freebusy)) {
+            $this->freebusies[] = $freebusy;
+            $freebusy->setAgenda($this);
+        }
+
+        return $this;
+    }
+
+    public function removeFreebusy(Freebusy $freebusy): self
+    {
+        if ($this->freebusies->removeElement($freebusy)) {
+            // set the owning side to null (unless already changed)
+            if ($freebusy->getAgenda() === $this) {
+                $freebusy->setAgenda(null);
             }
         }
 

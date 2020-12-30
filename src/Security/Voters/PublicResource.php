@@ -5,6 +5,7 @@ namespace App\Security\Voters;
 use App\Entity\AgType;
 use App\Entity\Category;
 use App\Entity\DelegationType;
+use App\Entity\FbType;
 use App\Entity\Rights;
 use App\Entity\Status;
 use App\Entity\Timezone;
@@ -34,13 +35,9 @@ class PublicResource extends BaseVoter {
         $this->security = $security;
         $this->em = $em;
         $this->entities = [
-            DelegationType::class, 
-            Rights::class, 
-            AgType::class, 
-            Timezone::class, 
-            User::class, 
-            Status::class, 
-            Category::class, 
+            DelegationType::class, Rights::class, AgType::class, 
+            Timezone::class, User::class, Status::class, 
+            Category::class, FbType::class, 
         ];
     }
     

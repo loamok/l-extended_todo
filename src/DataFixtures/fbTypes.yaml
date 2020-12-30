@@ -1,0 +1,6 @@
+free:
+    code: free
+    label: Free time
+busy:
+    code: busy
+    label: Busy time

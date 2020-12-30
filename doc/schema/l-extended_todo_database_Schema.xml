@@ -325,6 +325,78 @@
             <part>agenda_id</part>
         </key>
     </table>
+    <table x="102" y="1332" name="fb_type">
+        <row name="id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <row name="code" null="0" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+        </row>
+        <row name="label" null="0" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+        </row>
+        <key type="PRIMARY" name="PRIMARY">
+            <part>id</part>
+        </key>
+    </table>
+    <table x="372" y="1230" name="freebusy">
+        <row name="id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <row name="agenda_id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <relation table="agenda" row="id" />
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <row name="type_id" null="0" autoincrement="0">
+            <datatype>BINARY(16)</datatype>
+            <relation table="fb_type" row="id" />
+            <comment>(DC2Type:uuid)</comment>
+        </row>
+        <row name="created_by" null="1" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="updated_by" null="1" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="deleted_at" null="1" autoincrement="0">
+            <datatype>DATETIME</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="timezone" null="1" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+            <default>NULL</default>
+        </row>
+        <row name="created_at" null="0" autoincrement="0">
+            <datatype>DATETIME</datatype>
+        </row>
+        <row name="updated_at" null="0" autoincrement="0">
+            <datatype>DATETIME</datatype>
+        </row>
+        <row name="start_at" null="0" autoincrement="0">
+            <datatype>DATETIME</datatype>
+        </row>
+        <row name="end_at" null="0" autoincrement="0">
+            <datatype>DATETIME</datatype>
+        </row>
+        <row name="duration" null="0" autoincrement="0">
+            <datatype>VARCHAR(255)</datatype>
+            <comment>(DC2Type:dateinterval)</comment>
+        </row>
+        <key type="INDEX" name="IDX_EF64A71DEA67784A">
+            <part>agenda_id</part>
+        </key>
+        <key type="INDEX" name="IDX_EF64A71DC54C8C93">
+            <part>type_id</part>
+        </key>
+        <key type="PRIMARY" name="PRIMARY">
+            <part>id</part>
+        </key>
+    </table>
     <table x="140" y="1181" name="status">
         <row name="id" null="0" autoincrement="0">
             <datatype>BINARY(16)</datatype>

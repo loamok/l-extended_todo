@@ -3,10 +3,16 @@
 namespace App\Security\Voters;
 
 use App\Entity\Agenda;
+use App\Entity\Delegation;
+use App\Entity\Event;
+use App\Entity\Freebusy;
+use App\Entity\Journal;
 use App\Entity\Rights;
 use App\Entity\RoleGlobals;
+use App\Entity\Todo;
 use App\Entity\User;
 use Doctrine\ORM\EntityManagerInterface;
+use LogicException;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security;
 
@@ -29,8 +35,10 @@ class RoleGlobalsVoter extends BaseVoter {
     public function __construct(Security $security, EntityManagerInterface $em) {
         $this->security = $security;
         $this->em = $em;
-        $this->entities = [Agenda::class, \App\Entity\Delegation::class, \App\Entity\Event::class, 
-        \App\Entity\Todo::class, \App\Entity\Journal::class, ];
+        $this->entities = [
+            Agenda::class, Delegation::class, Event::class, 
+            Todo::class, Journal::class, Freebusy::class, 
+        ];
     }
     
     protected function supports(string $attribute, $subject) {
@@ -57,10 +65,8 @@ class RoleGlobalsVoter extends BaseVoter {
         return $res;
     }
     
-    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token) {
-        $user = $this->security->getUser();
-        
-        if (!$user instanceof User) {
+    protected function voteOnAttribute(string $attribute, $subject, TokenInterface $token) {        
+        if (!$this->security->getUser() instanceof User) {
             return false;
         }
 
@@ -84,8 +90,6 @@ class RoleGlobalsVoter extends BaseVoter {
         }
         
         return $isGranted;
-        
-        throw new LogicException('This code should not be reached!');
     }
     
 }

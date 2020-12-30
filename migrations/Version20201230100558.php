@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20201230091946 extends AbstractMigration
+final class Version20201230100558 extends AbstractMigration
 {
     public function getDescription() : string
     {
@@ -31,6 +31,8 @@ final class Version20201230091946 extends AbstractMigration
         $this->addSql('CREATE TABLE event_category (event_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', category_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', INDEX IDX_40A0F01171F7E88B (event_id), INDEX IDX_40A0F01112469DE2 (category_id), PRIMARY KEY(event_id, category_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE ext_log_entries (id INT AUTO_INCREMENT NOT NULL, action VARCHAR(8) NOT NULL, logged_at DATETIME NOT NULL, object_id VARCHAR(64) DEFAULT NULL, object_class VARCHAR(191) NOT NULL, version INT NOT NULL, data LONGTEXT DEFAULT NULL COMMENT \'(DC2Type:array)\', username VARCHAR(191) DEFAULT NULL, INDEX log_class_lookup_idx (object_class), INDEX log_date_lookup_idx (logged_at), INDEX log_user_lookup_idx (username), INDEX log_version_lookup_idx (object_id, object_class, version), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB ROW_FORMAT = DYNAMIC');
         $this->addSql('CREATE TABLE ext_translations (id INT AUTO_INCREMENT NOT NULL, locale VARCHAR(8) NOT NULL, object_class VARCHAR(191) NOT NULL, field VARCHAR(32) NOT NULL, foreign_key VARCHAR(64) NOT NULL, content LONGTEXT DEFAULT NULL, INDEX translations_lookup_idx (locale, object_class, foreign_key), UNIQUE INDEX lookup_unique_idx (locale, object_class, field, foreign_key), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB ROW_FORMAT = DYNAMIC');
+        $this->addSql('CREATE TABLE fb_type (id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', code VARCHAR(255) NOT NULL, label VARCHAR(255) NOT NULL, PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE freebusy (id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', agenda_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', type_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', created_by VARCHAR(255) DEFAULT NULL, updated_by VARCHAR(255) DEFAULT NULL, deleted_at DATETIME DEFAULT NULL, timezone VARCHAR(255) DEFAULT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, end_at DATETIME NOT NULL, duration VARCHAR(255) NOT NULL COMMENT \'(DC2Type:dateinterval)\', start_at DATETIME NOT NULL, INDEX IDX_EF64A71DEA67784A (agenda_id), INDEX IDX_EF64A71DC54C8C93 (type_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE journal (id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', agenda_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', status_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', summary VARCHAR(255) NOT NULL, description LONGTEXT DEFAULT NULL, created_by VARCHAR(255) DEFAULT NULL, updated_by VARCHAR(255) DEFAULT NULL, deleted_at DATETIME DEFAULT NULL, timezone VARCHAR(255) DEFAULT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, start_at DATETIME NOT NULL, INDEX IDX_C1A7E74DEA67784A (agenda_id), INDEX IDX_C1A7E74D6BF700BD (status_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE journal_category (journal_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', category_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', INDEX IDX_D6FCB478478E8802 (journal_id), INDEX IDX_D6FCB47812469DE2 (category_id), PRIMARY KEY(journal_id, category_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
         $this->addSql('CREATE TABLE personalized_delegation_rights (id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', delegation_type_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', delegation_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', rights_id BINARY(16) NOT NULL COMMENT \'(DC2Type:uuid)\', created_by VARCHAR(255) DEFAULT NULL, updated_by VARCHAR(255) DEFAULT NULL, deleted_at DATETIME DEFAULT NULL, timezone VARCHAR(255) DEFAULT NULL, created_at DATETIME NOT NULL, updated_at DATETIME NOT NULL, INDEX IDX_5484E804B5224DF6 (delegation_type_id), INDEX IDX_5484E80456CBBCF5 (delegation_id), INDEX IDX_5484E804B196EE6E (rights_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
@@ -57,6 +59,8 @@ final class Version20201230091946 extends AbstractMigration
         $this->addSql('ALTER TABLE event ADD CONSTRAINT FK_3BAE0AA76BF700BD FOREIGN KEY (status_id) REFERENCES status (id)');
         $this->addSql('ALTER TABLE event_category ADD CONSTRAINT FK_40A0F01171F7E88B FOREIGN KEY (event_id) REFERENCES event (id) ON DELETE CASCADE');
         $this->addSql('ALTER TABLE event_category ADD CONSTRAINT FK_40A0F01112469DE2 FOREIGN KEY (category_id) REFERENCES category (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE freebusy ADD CONSTRAINT FK_EF64A71DEA67784A FOREIGN KEY (agenda_id) REFERENCES agenda (id)');
+        $this->addSql('ALTER TABLE freebusy ADD CONSTRAINT FK_EF64A71DC54C8C93 FOREIGN KEY (type_id) REFERENCES fb_type (id)');
         $this->addSql('ALTER TABLE journal ADD CONSTRAINT FK_C1A7E74DEA67784A FOREIGN KEY (agenda_id) REFERENCES agenda (id)');
         $this->addSql('ALTER TABLE journal ADD CONSTRAINT FK_C1A7E74D6BF700BD FOREIGN KEY (status_id) REFERENCES status (id)');
         $this->addSql('ALTER TABLE journal_category ADD CONSTRAINT FK_D6FCB478478E8802 FOREIGN KEY (journal_id) REFERENCES journal (id) ON DELETE CASCADE');
@@ -80,6 +84,7 @@ final class Version20201230091946 extends AbstractMigration
         $this->addSql('ALTER TABLE agenda DROP FOREIGN KEY FK_2CEDC877C54C8C93');
         $this->addSql('ALTER TABLE delegation DROP FOREIGN KEY FK_292F436DEA67784A');
         $this->addSql('ALTER TABLE event DROP FOREIGN KEY FK_3BAE0AA7EA67784A');
+        $this->addSql('ALTER TABLE freebusy DROP FOREIGN KEY FK_EF64A71DEA67784A');
         $this->addSql('ALTER TABLE journal DROP FOREIGN KEY FK_C1A7E74DEA67784A');
         $this->addSql('ALTER TABLE todo DROP FOREIGN KEY FK_5A0EB6A0EA67784A');
         $this->addSql('ALTER TABLE ag_type_category DROP FOREIGN KEY FK_17F51A6E12469DE2');
@@ -91,6 +96,7 @@ final class Version20201230091946 extends AbstractMigration
         $this->addSql('ALTER TABLE delegation_type_rights DROP FOREIGN KEY FK_15597668B5224DF6');
         $this->addSql('ALTER TABLE personalized_delegation_rights DROP FOREIGN KEY FK_5484E804B5224DF6');
         $this->addSql('ALTER TABLE event_category DROP FOREIGN KEY FK_40A0F01171F7E88B');
+        $this->addSql('ALTER TABLE freebusy DROP FOREIGN KEY FK_EF64A71DC54C8C93');
         $this->addSql('ALTER TABLE journal_category DROP FOREIGN KEY FK_D6FCB478478E8802');
         $this->addSql('ALTER TABLE delegation_type_rights DROP FOREIGN KEY FK_15597668B196EE6E');
         $this->addSql('ALTER TABLE personalized_delegation_rights DROP FOREIGN KEY FK_5484E804B196EE6E');
@@ -115,6 +121,8 @@ final class Version20201230091946 extends AbstractMigration
         $this->addSql('DROP TABLE event_category');
         $this->addSql('DROP TABLE ext_log_entries');
         $this->addSql('DROP TABLE ext_translations');
+        $this->addSql('DROP TABLE fb_type');
+        $this->addSql('DROP TABLE freebusy');
         $this->addSql('DROP TABLE journal');
         $this->addSql('DROP TABLE journal_category');
         $this->addSql('DROP TABLE personalized_delegation_rights');
