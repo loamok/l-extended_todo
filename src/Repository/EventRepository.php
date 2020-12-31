@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Event;
+use App\Entity\User;
 use App\Repository\BehavioursTraits\UuidIdentifiable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -21,6 +22,31 @@ class EventRepository extends ServiceEntityRepository {
         parent::__construct($registry, Event::class);
     }
 
+    public function getUserEventByRightCodeQuery(User $user, string $rightCode) {
+        $qb = $this->createQueryBuilder('e');
+        return 
+            $qb
+                ->leftJoin('e.agenda', 'a')
+                ->leftJoin('a.delegations', 'ad')
+                ->leftJoin('ad.delegationType', 'adt')
+                ->leftJoin('adt.rights', 'adtr')
+                ->leftJoin('ad.user', 'adu')
+                ->leftJoin('ad.owner', 'ado')
+            ->andWhere('adtr.code = :rightCode')
+            ->andWhere($qb->expr()->orX(
+                    $qb->expr()->eq('adu.id', ':user'),
+                    $qb->expr()->eq('ado.id', ':user')))
+                ->setParameter('user', $user->getId()->toBinary())
+                ->setParameter('rightCode', $rightCode)
+                    ;
+    }
+    
+    public function getUserEventByRightCode(User $user, string $rightCode) {
+        return $this->getUserEventByRightCodeQuery($user, $rightCode)
+            ->getQuery()
+            ->getResult();    
+    }
+    
     // /**
     //  * @return Event[] Returns an array of Event objects
     //  */

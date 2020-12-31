@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Freebusy;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -19,6 +20,31 @@ class FreebusyRepository extends ServiceEntityRepository
         parent::__construct($registry, Freebusy::class);
     }
 
+    public function getUserFreebusyByRightCodeQuery(User $user, string $rightCode) {
+        $qb = $this->createQueryBuilder('f');
+        return 
+            $qb
+                ->leftJoin('f.agenda', 'a')
+                ->leftJoin('a.delegations', 'ad')
+                ->leftJoin('ad.delegationType', 'adt')
+                ->leftJoin('adt.rights', 'adtr')
+                ->leftJoin('ad.user', 'adu')
+                ->leftJoin('ad.owner', 'ado')
+            ->andWhere('adtr.code = :rightCode')
+            ->andWhere($qb->expr()->orX(
+                    $qb->expr()->eq('adu.id', ':user'),
+                    $qb->expr()->eq('ado.id', ':user')))
+                ->setParameter('user', $user->getId()->toBinary())
+                ->setParameter('rightCode', $rightCode)
+                    ;
+    }
+    
+    public function getUserFreebusyByRightCode(User $user, string $rightCode) {
+        return $this->getUserFreebusyByRightCodeQuery($user, $rightCode)
+            ->getQuery()
+            ->getResult();    
+    }
+    
     // /**
     //  * @return Freebusy[] Returns an array of Freebusy objects
     //  */

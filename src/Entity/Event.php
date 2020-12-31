@@ -5,7 +5,9 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 //use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -25,6 +27,7 @@ use App\Entity\BehavioursTraits\Startable;
 use App\Entity\BehavioursTraits\Locationable;
 use App\Entity\BehavioursTraits\Geolocable;
 use App\Entity\BehavioursTraits\Descriptable;
+use App\Entity\BehavioursTraits\Relatable;
 use App\Entity\BehavioursTraits\UuidIdentifiable;
 
 use Symfony\Bridge\Doctrine\IdGenerator\UuidV4Generator;
@@ -71,6 +74,12 @@ class Event {
     
     const STATUSES = ["tentative", "confirmed", "cancelled"];
 
+    /**
+     * @ORM\OneToMany(targetEntity=Related::class, mappedBy="event")
+     * @ApiSubresource
+     */
+    private $relateds;
+    
     use UuidIdentifiable,
         BlameableEntity, 
         SoftDeleteable,
@@ -79,6 +88,7 @@ class Event {
         Locationable,
         Descriptable,
         Geolocable,
+        Relatable,
         UTCDatetimeAble {
             UTCDatetimeAble::getTimezone insteadof SoftDeleteable, Timestampable, Durationable;
         }
@@ -86,7 +96,6 @@ class Event {
     /**
      * @ORM\ManyToOne(targetEntity=Agenda::class, inversedBy="events")
      * @ORM\JoinColumn(nullable=false)
-     * @Groups({"read"})
      */
     private $agenda;
 
@@ -103,6 +112,7 @@ class Event {
 
     public function __construct() {
         $this->categories = new ArrayCollection();
+        $this->initRelatable();
     }
 
     public function getAgenda(): ?Agenda {

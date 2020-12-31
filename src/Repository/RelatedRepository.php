@@ -2,31 +2,29 @@
 
 namespace App\Repository;
 
-use App\Entity\Todo;
+use App\Entity\Related;
 use App\Entity\User;
-use App\Repository\BehavioursTraits\UuidIdentifiable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Todo|null find($id, $lockMode = null, $lockVersion = null)
- * @method Todo|null findOneBy(array $criteria, array $orderBy = null)
- * @method Todo[]    findAll()
- * @method Todo[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
+ * @method Related|null find($id, $lockMode = null, $lockVersion = null)
+ * @method Related|null findOneBy(array $criteria, array $orderBy = null)
+ * @method Related[]    findAll()
+ * @method Related[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class TodoRepository extends ServiceEntityRepository {
-    
-    use UuidIdentifiable;
-    
-    public function __construct(ManagerRegistry $registry) {
-        parent::__construct($registry, Todo::class);
+class RelatedRepository extends ServiceEntityRepository
+{
+    public function __construct(ManagerRegistry $registry)
+    {
+        parent::__construct($registry, Related::class);
     }
 
-    public function getUserTodoByRightCodeQuery(User $user, string $rightCode) {
-        $qb = $this->createQueryBuilder('t');
+    public function getUserRelatedByRightCodeQuery(User $user, string $rightCode) {
+        $qb = $this->createQueryBuilder('r');
         return 
             $qb
-                ->leftJoin('t.agenda', 'a')
+                ->leftJoin('r.agenda', 'a')
                 ->leftJoin('a.delegations', 'ad')
                 ->leftJoin('ad.delegationType', 'adt')
                 ->leftJoin('adt.rights', 'adtr')
@@ -41,22 +39,22 @@ class TodoRepository extends ServiceEntityRepository {
                     ;
     }
     
-    public function getUserTodoByRightCode(User $user, string $rightCode) {
-        return $this->getUserTodoByRightCodeQuery($user, $rightCode)
+    public function getUserRelatedByRightCode(User $user, string $rightCode) {
+        return $this->getUserRelatedByRightCodeQuery($user, $rightCode)
             ->getQuery()
             ->getResult();    
     }
     
     // /**
-    //  * @return Todo[] Returns an array of Todo objects
+    //  * @return Related[] Returns an array of Related objects
     //  */
     /*
     public function findByExampleField($value)
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.exampleField = :val')
             ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
+            ->orderBy('r.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
             ->getResult()
@@ -65,10 +63,10 @@ class TodoRepository extends ServiceEntityRepository {
     */
 
     /*
-    public function findOneBySomeField($value): ?Todo
+    public function findOneBySomeField($value): ?Related
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
+        return $this->createQueryBuilder('r')
+            ->andWhere('r.exampleField = :val')
             ->setParameter('val', $value)
             ->getQuery()
             ->getOneOrNullResult()

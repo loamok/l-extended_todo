@@ -6,6 +6,7 @@ use App\Entity\Agenda;
 use App\Entity\Event;
 use App\Entity\Freebusy;
 use App\Entity\Journal;
+use App\Entity\Related;
 use App\Entity\Todo;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
@@ -37,7 +38,7 @@ class AgendaChildsVoter extends AgendaVoter {
     public function __construct(Security $security, EntityManagerInterface $em) {
         $this->security = $security;
         $this->em = $em;$this->entities = [
-            Event::class, Todo::class, Journal::class, Freebusy::class, 
+            Event::class, Todo::class, Journal::class, Freebusy::class, Related::class, 
         ];
     }
     

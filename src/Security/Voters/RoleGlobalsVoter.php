@@ -7,12 +7,14 @@ use App\Entity\Delegation;
 use App\Entity\Event;
 use App\Entity\Freebusy;
 use App\Entity\Journal;
+use App\Entity\Related;
 use App\Entity\Rights;
 use App\Entity\RoleGlobals;
 use App\Entity\Todo;
 use App\Entity\User;
+
 use Doctrine\ORM\EntityManagerInterface;
-use LogicException;
+
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security;
 
@@ -37,7 +39,7 @@ class RoleGlobalsVoter extends BaseVoter {
         $this->em = $em;
         $this->entities = [
             Agenda::class, Delegation::class, Event::class, 
-            Todo::class, Journal::class, Freebusy::class, 
+            Todo::class, Journal::class, Freebusy::class, Related::class
         ];
     }
     
