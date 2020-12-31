@@ -6,6 +6,7 @@ use App\Entity\Todo;
 use App\Entity\User;
 use App\Repository\BehavioursTraits\UuidIdentifiable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -22,11 +23,10 @@ class TodoRepository extends ServiceEntityRepository {
         parent::__construct($registry, Todo::class);
     }
 
-    public function getUserTodoByRightCodeQuery(User $user, string $rightCode) {
-        $qb = $this->createQueryBuilder('t');
+    public function getUserSubWithRightCodeQuery(string $alias, QueryBuilder $qb, User $user, string $rightCode) {
         return 
             $qb
-                ->leftJoin('t.agenda', 'a')
+                ->leftJoin($alias . '.agenda', 'a')
                 ->leftJoin('a.delegations', 'ad')
                 ->leftJoin('ad.delegationType', 'adt')
                 ->leftJoin('adt.rights', 'adtr')
@@ -39,6 +39,12 @@ class TodoRepository extends ServiceEntityRepository {
                 ->setParameter('user', $user->getId()->toBinary())
                 ->setParameter('rightCode', $rightCode)
                     ;
+    }
+    
+    public function getUserTodoByRightCodeQuery(User $user, string $rightCode) {
+        $qb = $this->createQueryBuilder('t');
+        return 
+            $this->getUserSubWithRightCodeQuery('t', $qb, $this->security->getUser(), 'list');
     }
     
     public function getUserTodoByRightCode(User $user, string $rightCode) {

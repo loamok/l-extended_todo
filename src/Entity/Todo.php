@@ -58,7 +58,12 @@ use Doctrine\ORM\Mapping as ORM;
  *   normalizationContext={ 
  *      "jsonld_embed_context"=true 
  *   },
- *   iri="Todo"
+ *   iri="Todo",
+ *     subresourceOperations={
+ *       "todos_relateds_get_subresource"= {
+ *              "security"="is_granted('list', object)"
+ *       }
+ *     }
  * )
  * @ApiFilter(UuidSearchFilter::class, properties={"agenda": "exact"})
  * @Gedmo\Loggable

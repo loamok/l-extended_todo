@@ -42,7 +42,7 @@ class Point extends AbstractPoint implements GeographyInterface {
         if(count(func_get_args()) == 0) {
             return;
         }
-        dump(func_get_args());
+        
         $argv = $this->validateArguments(func_get_args());
         
         call_user_func_array(array($this, 'construct'), $argv);

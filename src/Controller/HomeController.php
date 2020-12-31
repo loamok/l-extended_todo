@@ -15,13 +15,7 @@ class HomeController extends AbstractController {
      * @Route("/", name="app_home")
      */
     public function index(): Response {
-        /* @var $user \App\Entity\User */
-        $user = $this->getUser();
-        if(!is_null($user)) {
-            dump($user);
-            dump($user->getId());
-            dump($user->__toString());
-        }
+        
         return $this->render('home/index.html.twig', [
             'controller_name' => 'HomeController',
         ]);

@@ -117,7 +117,11 @@ class Related {
         return $this;
     }
     
-    public function getParent(string $entityType) {
+    public function getParent(?string $entityType = null) {
+        if(is_null($entityType)) {
+            return null;
+        }
+        
         $func = 'get'.ucfirst($entityType);
         return $this->{$func}();
     }

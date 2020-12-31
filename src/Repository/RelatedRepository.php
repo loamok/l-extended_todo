@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Related;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -13,18 +14,16 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Related[]    findAll()
  * @method Related[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class RelatedRepository extends ServiceEntityRepository
-{
-    public function __construct(ManagerRegistry $registry)
-    {
+class RelatedRepository extends ServiceEntityRepository {
+    
+    public function __construct(ManagerRegistry $registry) {
         parent::__construct($registry, Related::class);
     }
 
-    public function getUserRelatedByRightCodeQuery(User $user, string $rightCode) {
-        $qb = $this->createQueryBuilder('r');
+    public function getUserSubWithRightCodeQuery(string $alias, QueryBuilder $qb, User $user, string $rightCode) {
         return 
             $qb
-                ->leftJoin('r.agenda', 'a')
+                ->leftJoin($alias . '.agenda', 'a')
                 ->leftJoin('a.delegations', 'ad')
                 ->leftJoin('ad.delegationType', 'adt')
                 ->leftJoin('adt.rights', 'adtr')
@@ -37,6 +36,12 @@ class RelatedRepository extends ServiceEntityRepository
                 ->setParameter('user', $user->getId()->toBinary())
                 ->setParameter('rightCode', $rightCode)
                     ;
+    }
+    
+    public function getUserRelatedByRightCodeQuery(User $user, string $rightCode) {
+        $qb = $this->createQueryBuilder('r');
+        return
+            $this->getUserSubWithRightCodeQuery('r', $qb, $this->security->getUser(), 'list');
     }
     
     public function getUserRelatedByRightCode(User $user, string $rightCode) {

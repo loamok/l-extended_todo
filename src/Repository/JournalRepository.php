@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\Journal;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -19,11 +20,10 @@ class JournalRepository extends ServiceEntityRepository {
         parent::__construct($registry, Journal::class);
     }
 
-    public function getUserJournalByRightCodeQuery(User $user, string $rightCode) {
-        $qb = $this->createQueryBuilder('j');
+    public function getUserSubWithRightCodeQuery(string $alias, QueryBuilder $qb, User $user, string $rightCode) {
         return 
             $qb
-                ->leftJoin('j.agenda', 'a')
+                ->leftJoin($alias . '.agenda', 'a')
                 ->leftJoin('a.delegations', 'ad')
                 ->leftJoin('ad.delegationType', 'adt')
                 ->leftJoin('adt.rights', 'adtr')
@@ -36,6 +36,12 @@ class JournalRepository extends ServiceEntityRepository {
                 ->setParameter('user', $user->getId()->toBinary())
                 ->setParameter('rightCode', $rightCode)
                     ;
+    }
+    public function getUserJournalByRightCodeQuery(User $user, string $rightCode) {
+        $alias = 'j';
+        $qb = $this->createQueryBuilder($alias);
+        return 
+            $this->getUserSubWithRightCodeQuery($alias, $qb, $this->security->getUser(), 'list');
     }
     
     public function getUserJournalByRightCode(User $user, string $rightCode) {

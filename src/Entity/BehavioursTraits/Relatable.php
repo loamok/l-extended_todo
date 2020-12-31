@@ -3,7 +3,13 @@
 namespace App\Entity\BehavioursTraits;
 
 use ApiPlatform\Core\Annotation\ApiSubresource;
-
+use App\Entity\Event;
+use App\Entity\Freebusy;
+use App\Entity\Journal;
+use App\Entity\Related;
+use App\Entity\Todo;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 /**

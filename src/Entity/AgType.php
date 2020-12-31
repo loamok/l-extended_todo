@@ -34,6 +34,12 @@ use Symfony\Component\Uid\UuidV4;
  *          "put" = { "security" = "is_granted('admin')" },
  *          "delete" = { "security" = "is_granted('admin')" }
  *     },
+ *     iri="AgType",
+ *     subresourceOperations={
+ *       "agtypes_categories_get_subresource"= {
+ *              "security"="is_granted('list', object)"
+ *       }
+ *     }
  * )
  * @ORM\Entity(repositoryClass=AgTypeRepository::class)
  */
@@ -48,21 +54,18 @@ class AgType {
      */
     private $categories;
 
-    public function __construct()
-    {
+    public function __construct() {
         $this->categories = new ArrayCollection();
     }
 
     /**
      * @return Collection|Category[]
      */
-    public function getCategories(): Collection
-    {
+    public function getCategories(): Collection {
         return $this->categories;
     }
 
-    public function addCategory(Category $category): self
-    {
+    public function addCategory(Category $category): self {
         if (!$this->categories->contains($category)) {
             $this->categories[] = $category;
         }
@@ -70,8 +73,7 @@ class AgType {
         return $this;
     }
 
-    public function removeCategory(Category $category): self
-    {
+    public function removeCategory(Category $category): self {
         $this->categories->removeElement($category);
 
         return $this;
