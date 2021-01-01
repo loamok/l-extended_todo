@@ -4,9 +4,7 @@ namespace App\Entity;
 
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiProperty;
-
-use App\DTO\DelegationInput;
-use App\DTO\Delegation as DelegationOutput;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 use App\Repository\DelegationRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -45,9 +43,9 @@ use DateTimeZone;
  *          "put" = { "security" = "is_granted('update', object)" },
  *          "delete" = { "security" = "is_granted('delete', object)" }
  *     },
- *   normalizationContext={ "jsonld_embed_context"=true },
- *   input={"class"=DelegationInput::class,"name"="Delegation", "iri"="Delegation"},
- *   output={"class"=DelegationOutput::class,"name"="Delegation", "iri"="Delegation"},
+ *   normalizationContext={
+ *          "jsonld_embed_context"=true,
+ *   },
  *   iri="Delegation"
  * )
  * @Gedmo\Loggable

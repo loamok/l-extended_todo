@@ -5,7 +5,9 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 //use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -25,6 +27,7 @@ use App\Entity\BehavioursTraits\Startable;
 use App\Entity\BehavioursTraits\Geolocable;
 use App\Entity\BehavioursTraits\Descriptable;
 use App\Entity\BehavioursTraits\Locationable;
+use App\Entity\BehavioursTraits\Relatable;
 use App\Entity\BehavioursTraits\UuidIdentifiable;
 
 use Symfony\Bridge\Doctrine\IdGenerator\UuidV4Generator;
@@ -55,7 +58,12 @@ use Doctrine\ORM\Mapping as ORM;
  *   normalizationContext={ 
  *      "jsonld_embed_context"=true 
  *   },
- *   iri="Todo"
+ *   iri="Todo",
+ *     subresourceOperations={
+ *       "todos_relateds_get_subresource"= {
+ *              "security"="is_granted('list', object)"
+ *       }
+ *     }
  * )
  * @ApiFilter(UuidSearchFilter::class, properties={"agenda": "exact"})
  * @Gedmo\Loggable
@@ -66,6 +74,12 @@ class Todo {
     
     const STATUSES = ["needs-action", "completed", "in-progress", "cancelled"];
     
+    /**
+     * @ORM\OneToMany(targetEntity=Related::class, mappedBy="todo")
+     * @ApiSubresource
+     */
+    private $relateds;
+    
     use UuidIdentifiable,
         Descriptable,
         Locationable,
@@ -74,6 +88,7 @@ class Todo {
         SoftDeleteable,
         Timestampable, 
         Durationable,
+        Relatable,
         UTCDatetimeAble {
             UTCDatetimeAble::getTimezone insteadof SoftDeleteable, Timestampable, Durationable;
         }
@@ -121,6 +136,7 @@ class Todo {
         $this->percent = 0;
         $this->priority = 0;
         $this->categories = new ArrayCollection();
+        $this->initRelatable();
     }
     
     /**
@@ -251,5 +267,5 @@ class Todo {
 
         return $this;
     }
-    
+
 }

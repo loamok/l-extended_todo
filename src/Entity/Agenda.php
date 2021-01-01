@@ -55,7 +55,24 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *          "groups"={"read"}
  *     },
  *     denormalizationContext={"groups"={"write"}},
- *     iri="Agenda"
+ *     iri="Agenda",
+ *     subresourceOperations={
+ *       "agendas_delegations_get_subresource"= {
+ *              "security"="is_granted('list', object)"
+ *       },
+ *       "agendas_events_get_subresource"= {
+ *              "security"="is_granted('list', object)"
+ *       },
+ *       "agendas_freebusies_get_subresource"= {
+ *              "security"="is_granted('list', object)"
+ *       },
+ *       "agendas_journals_get_subresource"= {
+ *              "security"="is_granted('list', object)"
+ *       },
+ *       "agendas_todos_get_subresource"= {
+ *              "security"="is_granted('list', object)"
+ *       }
+ *     }
  * )
  * @Gedmo\Loggable
  * @Gedmo\SoftDeleteable(fieldName="deletedAt", timeAware=true, hardDelete=true)

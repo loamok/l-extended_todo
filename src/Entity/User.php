@@ -8,6 +8,9 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\UserInterface;
 
+use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+use ApiPlatform\Core\Annotation\ApiFilter;
+
 use App\Entity\BehavioursTraits\UuidIdentifiable;
 
 use ApiPlatform\Core\Annotation\ApiResource;
@@ -32,6 +35,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *     normalizationContext={"groups"={"user", "user:read"}},
  *     denormalizationContext={"groups"={"user", "user:write"}}
  * )
+ * @ApiFilter(SearchFilter::class, properties={"email": "exact"})
  */
 class User implements UserInterface {
     

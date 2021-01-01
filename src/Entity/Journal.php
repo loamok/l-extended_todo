@@ -6,7 +6,9 @@ namespace App\Entity;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 //use ApiPlatform\Core\Bridge\Doctrine\Orm\Filter\SearchFilter;
+
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 
@@ -20,8 +22,8 @@ use App\Entity\BehavioursTraits\Timestampable;
 use App\Entity\BehavioursTraits\UTCDatetimeAble;
 use App\Entity\BehavioursTraits\Startable;
 use App\Entity\BehavioursTraits\Descriptable;
+use App\Entity\BehavioursTraits\Relatable;
 use App\Entity\BehavioursTraits\UuidIdentifiable;
-
 
 use Symfony\Bridge\Doctrine\IdGenerator\UuidV4Generator;
 use Symfony\Component\Uid\AbstractUid;
@@ -50,7 +52,12 @@ use Doctrine\ORM\Mapping as ORM;
  *   normalizationContext={ 
  *      "jsonld_embed_context"=true 
  *   },
- *   iri="Journal"
+ *   iri="Journal",
+ *     subresourceOperations={
+ *       "journals_relateds_get_subresource"= {
+ *              "security"="is_granted('list', object)"
+ *       }
+ *     }
  * )
  * @ApiFilter(UuidSearchFilter::class, properties={"agenda": "exact"})
  * @Gedmo\Loggable
@@ -61,12 +68,19 @@ class Journal {
     
     const STATUSES = ["draft", "final", "cancelled"];
     
+    /**
+     * @ORM\OneToMany(targetEntity=Related::class, mappedBy="journal")
+     * @ApiSubresource
+     */
+    private $relateds;
+    
     use UuidIdentifiable,
         Descriptable,
         BlameableEntity, 
         SoftDeleteable,
         Timestampable, 
         Startable,
+        Relatable,
         UTCDatetimeAble {
             UTCDatetimeAble::getTimezone insteadof SoftDeleteable, Timestampable, Startable;
         }
@@ -90,6 +104,7 @@ class Journal {
 
     public function __construct() {
         $this->categories = new ArrayCollection();
+        $this->initRelatable();
     }
 
     public function getAgenda(): ?Agenda {
@@ -127,8 +142,7 @@ class Journal {
         return $this->status;
     }
 
-    public function setStatus(?Status $status): self
-    {
+    public function setStatus(?Status $status): self {
         $this->status = $status;
 
         return $this;

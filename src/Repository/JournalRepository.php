@@ -3,7 +3,9 @@
 namespace App\Repository;
 
 use App\Entity\Journal;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\QueryBuilder;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -12,13 +14,42 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Journal[]    findAll()
  * @method Journal[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class JournalRepository extends ServiceEntityRepository
-{
-    public function __construct(ManagerRegistry $registry)
-    {
+class JournalRepository extends ServiceEntityRepository {
+    
+    public function __construct(ManagerRegistry $registry) {
         parent::__construct($registry, Journal::class);
     }
 
+    public function getUserSubWithRightCodeQuery(string $alias, QueryBuilder $qb, User $user, string $rightCode) {
+        return 
+            $qb
+                ->leftJoin($alias . '.agenda', 'a')
+                ->leftJoin('a.delegations', 'ad')
+                ->leftJoin('ad.delegationType', 'adt')
+                ->leftJoin('adt.rights', 'adtr')
+                ->leftJoin('ad.user', 'adu')
+                ->leftJoin('ad.owner', 'ado')
+            ->andWhere('adtr.code = :rightCode')
+            ->andWhere($qb->expr()->orX(
+                    $qb->expr()->eq('adu.id', ':user'),
+                    $qb->expr()->eq('ado.id', ':user')))
+                ->setParameter('user', $user->getId()->toBinary())
+                ->setParameter('rightCode', $rightCode)
+                    ;
+    }
+    public function getUserJournalByRightCodeQuery(User $user, string $rightCode) {
+        $alias = 'j';
+        $qb = $this->createQueryBuilder($alias);
+        return 
+            $this->getUserSubWithRightCodeQuery($alias, $qb, $this->security->getUser(), 'list');
+    }
+    
+    public function getUserJournalByRightCode(User $user, string $rightCode) {
+        return $this->getUserJournalByRightCodeQuery($user, $rightCode)
+            ->getQuery()
+            ->getResult();    
+    }
+    
     // /**
     //  * @return Journal[] Returns an array of Journal objects
     //  */

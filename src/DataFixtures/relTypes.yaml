@@ -1,0 +1,12 @@
+parent:
+    code: parent
+    label: Parent
+child:
+    code: child
+    label: Child
+sibling:
+    code: sibling
+    label: Sibling
+undescribed:
+    code: undescribed
+    label: Undescribed relation
