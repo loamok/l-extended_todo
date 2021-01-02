@@ -49,3 +49,5 @@ api_platform:
             items_per_page: 10
             items_per_page_parameter_name: itemsPerPage # Default value  
             maximum_items_per_page: 20
+twig:
+    form_themes: ['bootstrap_4_layout.html.twig']

@@ -47,6 +47,9 @@ security:
                     - App\Security\LoginFormAuthenticator
             logout:
                 path: app_logout
+                invalidate_session: true
+                delete_cookies:
+                    LET_REMEMBERME: { path: null, domain: null}
                 # where to redirect after logout
                 # target: app_any_route
             json_login:
@@ -78,6 +81,7 @@ security:
         - { path: ^/api/*,           roles: IS_AUTHENTICATED_REMEMBERED }
         - { path: ^/plop,            roles: IS_AUTHENTICATED_REMEMBERED }
         - { path: ^/logout,          roles: IS_AUTHENTICATED_REMEMBERED }
+        - { path: ^/get_my_token$,   roles: IS_AUTHENTICATED_REMEMBERED }
         - { path: ^/login,           roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/home,            roles: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/,                roles: IS_AUTHENTICATED_ANONYMOUSLY }

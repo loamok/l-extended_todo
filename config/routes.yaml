@@ -4,3 +4,9 @@
 # api/config/routes.yaml
 api_login_check:
     path: /api/login_check
+    options:
+        expose: true
+app_logout:
+    path: /logout
+    options:
+        expose: true
