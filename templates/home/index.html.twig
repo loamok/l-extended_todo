@@ -9,12 +9,7 @@
 </style>
 
 <div class="example-wrapper">
-    {% if is_granted('ROLE_USER') %}
-        <a href="{{ path('app_logout') }}">Log out</a>
-    {% else %}
-        <a href="{{ path('app_login') }}">Log in</a>
-        <a href="{{ path('app_forgot_password_request') }}">forgoted my pass</a>
-    {% endif %}
+    
     <h1>Hello {{ controller_name }}! ✅</h1>
 
     This friendly message is coming from:

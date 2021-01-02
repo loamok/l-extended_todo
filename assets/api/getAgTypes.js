@@ -1,9 +1,11 @@
-import $ from 'jquery';
+const debug = true;
 
-const routes = require('../js/fos_js_routes.json');
-import Routing from '../../public/bundles/fosjsrouting/js/router.min.js';
+//import $ from 'jquery';
 
-Routing.setRoutingData(routes);
+//const routes = require('../js/fos_js_routes.json');
+//import Routing from '../../public/bundles/fosjsrouting/js/router.min.js';
+//
+//Routing.setRoutingData(routes);
 
 import { call } from '../manipulateToken';
 
@@ -24,7 +26,7 @@ $(document).ready(function () {
                 console.log(result);
             },
             dataType: 'json'
-        }, null);
+        });
         
     });
 });

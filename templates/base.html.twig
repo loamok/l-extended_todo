@@ -11,13 +11,67 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
-        
+        {% set route_name = app.request.attributes.get('_route') %}
+        <header>
+            {% include 'top_bar.html.twig' %}
+        </header>
+        <div class="container-fluid h100">
+            <div class="row">
+                {% include 'sidebar_menu.html.twig' %}
+                <div class="col-10">
+                    <div id="alerts">
+                        <div class="row alerts-danger-zone let-hidden" id="alerts-danger-model">
+                            <div class="col let-hidden" id="alert-danger-zone">
+                                <div class="alert alert-danger alert-dismissible fade let-hidden">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <span class="message">
+                                        {% block alert_danger %}{% endblock %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row alerts-warning-zone let-hidden" id="alerts-warning-model">
+                            <div class="col let-hidden" id="alert-warning-zone">
+                                <div class="alert alert-warning alert-dismissible fade let-hidden">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <span class="message">
+                                        {% block alert_warning %}{% endblock %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row alerts-success-zone let-hidden" id="alerts-success-model">
+                            <div class="col let-hidden" id="alert-success-zone">
+                                <div class="alert alert-success alert-dismissible fade let-hidden">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <span class="message">
+                                        {% block alert_success %}{% endblock %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row alerts-info-zone let-hidden" id="alerts-info-model">
+                            <div class="col let-hidden" id="alert-info-zone">
+                                <div class="alert alert-info alert-dismissible fade let-hidden">
+                                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                                    <span class="message">
+                                        {% block alert_info %}{% endblock %}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% block body %}{% endblock %}
+                </div>
+            </div>
+        </div>
         {% block javascripts %}
             {{ encore_entry_script_tags('app') }}
             <!-- Renders app.js & a webpack runtime.js file
                 <script src="/build/runtime.js"></script>
                 <script src="/build/app.js"></script> -->
+        {% endblock %}
+        {% block pagescripts %}
         {% endblock %}
     </body>
 </html>

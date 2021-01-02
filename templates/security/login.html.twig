@@ -2,46 +2,45 @@
 
 {% block title %}Log in!{% endblock %}
 
-{% block body %}
-<form method="post">
+{% block pagescripts %}
     {% if error %}
-        <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
+        <script type="text/javascript">
+            $(document).ready(function(){
+                dissmissAlert();
+                showAlert('danger', "{{ error.messageKey|trans(error.messageData, 'security') }}", 'login-error');
+            });
+        </script>
     {% endif %}
+{% endblock %}
 
-        <div class="mb-3">
-    {% if app.user %}
-            You are logged in as {{ app.user.username }}, <a href="{{ path('app_logout') }}">Logout</a>
-    {% else %}
-        <a href="{{ path('app_forgot_password_request') }}">forgoted my pass</a>
-    {% endif %}
-        </div>
-
-    <h1 class="h3 mb-3 font-weight-normal">Please sign in</h1>
-    <label for="inputEmail">Email</label>
-    <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" required autofocus>
-    <label for="inputPassword">Password</label>
-    <input type="password" name="password" id="inputPassword" class="form-control" required>
-
-    <input type="checkbox" id="remember_me" name="_remember_me" checked/>
-    <label for="remember_me">Remember me (almost for one week)</label>
-    
-    <input type="hidden" name="_csrf_token"
-           value="{{ csrf_token('authenticate') }}"
-    >
-
-    {#
-        Uncomment this section and add a remember_me option below your firewall to activate remember me functionality.
-        See https://symfony.com/doc/current/security/remember_me.html
-
-        <div class="checkbox mb-3">
-            <label>
-                <input type="checkbox" name="_remember_me"> Remember me
-            </label>
-        </div>
-    #}
-
-    <button class="btn btn-lg btn-primary" type="submit">
-        Sign in
-    </button>
-</form>
+{% block body %}
+    <div class="login-form">
+        <form method="post">
+            <h2 class="text-center mb-3">Please Log in</h2>       
+            {% if not app.user %}
+            <div class="form-group mb-3">
+                <input id="inputEmail" type="email" value="{{ last_username }}" name="email" class="form-control login-form-element" 
+                    placeholder="Email" required autofocus autocomplete="off"
+                >
+            </div>
+            <div class="form-group mb-3">
+                <input type="password" name="password" id="inputPassword" class="form-control login-form-element" 
+                placeholder="Password" required="required" autocomplete="off" >
+            </div>
+            <div class="form-group mb-3">
+                <button type="submit" class="btn btn-primary btn-block">Log in</button>
+            </div>
+            {% endif %}
+            <div class="clearfix mb-3">
+                {% if app.user %}
+                    Logged as {{ app.user.username }}, <a href="{{ path('app_logout') }}" class="float-right">Logout</a>
+                {% else %}
+                    <label class="float-left form-check-label"><input type="checkbox" id="remember_me" name="_remember_me" checked/>&nbsp;Remember me</label>
+                    <a href="{{ path('app_forgot_password_request') }}" class="float-right">Forgoted my pass</a>
+                {% endif %}
+            </div>
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
+        </form>
+        <p class="text-center mb-3"><a href="#">Register</a></p>
+    </div>
 {% endblock %}

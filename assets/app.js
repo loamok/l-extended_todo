@@ -6,6 +6,9 @@
  */
 
 // any CSS you import will output into a single css file (app.css in this case)
+const $ = require('jquery');
+global.$ = global.jQuery = $;
+
 import './styles/app.scss';
 import 'bootstrap';
 //import 'jose';
@@ -19,6 +22,12 @@ const routes = require('./js/fos_js_routes.json');
 import Routing from '../public/bundles/fosjsrouting/js/router.min.js';
 
 Routing.setRoutingData(routes);
+global.routes = routes;
+global.Routing = Routing;
+
+import { showAlert, dissmissAlert } from './js/alerts';
+global.showAlert = showAlert;
+global.dissmissAlert = dissmissAlert;
 
 import './manipulateToken';
 import './api/getAgTypes';

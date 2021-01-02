@@ -1,0 +1,27 @@
+{# top navbar Twig template #}
+{% set route_name = app.request.attributes.get('_route') %}
+{% dump(route_name) %}
+<nav class="navbar navbar-expand-md navbar-light bg-light-blue mb-3">
+    <div class="container-fluid">
+        <a href="#" class="navbar-brand mr-3">LET</a>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav">
+                <a href="{{ path('app_home') }}" 
+                   class="nav-item nav-link {% if route_name == 'app_home' or route_name == 'app_homepage' %}active{% endif %}">Home</a>
+                {% block topbar_free %}{% endblock %}
+            </div>
+            <div class="navbar-nav ml-auto">
+                {% if is_granted('ROLE_USER') %}
+                    <a href="{{ path('app_logout') }}" class="nav-item nav-link {% if route_name == 'app_logout' %}active{% endif %}">Log out</a>
+                {% else %}
+                    <a href="#" class="nav-item nav-link">Register</a>
+                    <a href="{{ path('app_login') }}" class="nav-item nav-link {% if route_name == 'app_login' %}active{% endif %}">Log in</a>
+                    <a href="{{ path('app_forgot_password_request') }}" class="nav-item nav-link {% if route_name == 'app_forgot_password_request' %}active{% endif %}">Forgoted my pass</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>    
+</nav>
