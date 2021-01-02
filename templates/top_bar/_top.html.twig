@@ -1,0 +1,14 @@
+{# top navbar, top Twig template #}
+<nav class="navbar navbar-expand-md navbar-light bg-light-blue mb-3">
+    <div class="container-fluid">
+        <a href="#" class="navbar-brand mr-3">LET</a>
+        <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#navbarCollapse">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarCollapse">
+            <div class="navbar-nav">
+                <ul class="nav">
+                    <li class="nav-item">
+                        <a href="{{ path('app_home') }}" 
+                           class="nav-link {% if route_name in home_routes %}active{% endif %}">Home</a>
+                    </li>

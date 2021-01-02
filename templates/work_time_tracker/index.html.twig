@@ -1,0 +1,21 @@
+{% extends 'work_time_tracker/base.html.twig' %}
+
+{% block topbar_work %}
+    <li class="nav-item"><a href="{{ path('worktime_tracker') }}" 
+        class="nav-link {% if route_name in worktime_routes %}active{% endif %}">&nbsp;>&nbsp;Index</a></li>
+{% endblock %}
+
+{% block body %}
+    <h1>WorkTime tracking</h1>
+    {% if agendas %}
+        <h4>Select agenda to work on : </h4>
+        
+        <ul class="nav flex-column">
+        {% for agenda in agendas %}
+            <li class="nav-item"><a href="{{ path('worktime_tracker_display', {'id': agenda.id}) }}"  class="nav-link">{{ agenda.name }}</a></li>
+        {% endfor %}
+        </ul>
+    {% else %}
+        <p>No agendas to display.</p>
+    {% endif %}
+{% endblock %}

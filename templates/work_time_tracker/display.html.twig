@@ -1,0 +1,11 @@
+{# empty Twig template #}
+{% extends 'work_time_tracker/base.html.twig' %}
+
+{% block topbar_work %}
+    <li class="nav-item"><a href="{{ path('worktime_tracker_display', {'id': agenda.id}) }}" 
+        class="nav-link {% if route_name in worktime_routes %}active{% endif %}">&nbsp;>&nbsp;Agenda {{ agenda.name }}</a></li>
+{% endblock %}
+
+{% block body %}
+    
+{% endblock %}

@@ -1,0 +1,22 @@
+{# empty Twig template #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello WorkTimeTrackerController!{% endblock %}
+
+{% block sidebar_free %}
+    {% set worktime_routes_with_names = [
+        {'route' : 'worktime_tracker', 'label' : "Index", 'args' : []},
+        {'route' : 'worktime_tracker_create', 'label' : "New worktime Agenda", 'args' : []},
+] %}
+    <ul class="nav flex-column">
+    {% for route in worktime_routes_with_names %}
+        <li class="nav-item"><a href="{{ path(route.route, route.args) }}" 
+            class="nav-link {% if route_name in worktime_routes %}active{% endif %}">{{ route.label }}</a></li>
+    {% endfor %}
+
+    {% for agenda in agendas %}
+        <li class="nav-item"><a href="{{ path('worktime_tracker_display', {'id': agenda.id}) }}" 
+            class="nav-link {% if route_name in worktime_routes %}active{% endif %}">Agenda {{ agenda.name }}</a></li>
+    {% endfor %}    
+    </ul>
+{% endblock %}

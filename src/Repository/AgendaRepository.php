@@ -46,6 +46,17 @@ class AgendaRepository extends ServiceEntityRepository {
             ->getResult();    
     }
     
+    public function getUserAgendasByUserRightCodeAndType(User $user, string $rightCode, string $type) {
+        
+        return $this->getUserAgendasByRightCodeQuery($user, $rightCode)
+            ->leftJoin('a.type', 'at')
+            ->andWhere('at.code = :typeCode')
+            ->setParameter('typeCode', $type)
+            ->getQuery()
+            ->getResult();    
+    }
+    
+    
     // /**
     //  * @return Agenda[] Returns an array of Agenda objects
     //  */

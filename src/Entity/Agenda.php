@@ -6,6 +6,8 @@ use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 
+use Symfony\Component\Validator\Constraints as Assert;
+
 use App\DTO\AgendaInput;
 use App\DTO\Agenda as AgendaOutput;
 
@@ -93,6 +95,7 @@ class Agenda {
      * 
      * @ORM\Column(type="string", length=255)
      * @Groups({"read", "write"})
+     * @Assert\NotBlank
      */
     private $name;
         

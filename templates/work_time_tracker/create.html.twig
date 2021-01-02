@@ -1,0 +1,14 @@
+{# empty Twig template #}
+{% extends 'work_time_tracker/base.html.twig' %}
+
+{% block topbar_work %}
+    <li class="nav-item"><a href="{{ path('worktime_tracker_create') }}" 
+        class="nav-link {% if route_name in worktime_routes %}active{% endif %}">&nbsp;>&nbsp;Create Agenda</a></li>
+{% endblock %}
+
+{% block body %}
+    <h1>WorkTime tracking</h1>
+    <h4>New Agenda</h4>
+    
+    {{ form(agenda_form) }}
+{% endblock %}

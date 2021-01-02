@@ -11,13 +11,22 @@
         {% endblock %}
     </head>
     <body>
-        {% set route_name = app.request.attributes.get('_route') %}
+        
+{% set route_name = app.request.attributes.get('_route') %}
+{% set home_routes = ['app_homepage', 'app_home'] %}
+{% set worktime_routes = ['worktime_tracker', 'worktime_tracker_create', 'worktime_tracker_display', ] %}
+
         <header>
-            {% include 'top_bar.html.twig' %}
+            {% include 'top_bar/_top.html.twig' %}
+            {% include 'top_bar/_work.html.twig' %}
+            {% block topbar_work %}{% endblock %}
+            {% include 'top_bar/_bottom.html.twig' %}
         </header>
         <div class="container-fluid h100">
             <div class="row">
-                {% include 'sidebar_menu.html.twig' %}
+                {% include 'sidebar_menu/_top.html.twig' %}
+                {% block sidebar_free %}{% endblock %}
+                {% include 'sidebar_menu/_bottom.html.twig' %}
                 <div class="col-10">
                     <div id="alerts">
                         <div class="row alerts-danger-zone let-hidden" id="alerts-danger-model">

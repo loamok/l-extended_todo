@@ -2,7 +2,7 @@
  * display alerts
  */
 
-const debug = true;
+const debug = false;
 
 export function dissmissAlert(id, level) {
     if(id !== null && id !== undefined) {

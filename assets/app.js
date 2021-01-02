@@ -29,5 +29,6 @@ import { showAlert, dissmissAlert } from './js/alerts';
 global.showAlert = showAlert;
 global.dissmissAlert = dissmissAlert;
 
+import './js/notYet';
 import './manipulateToken';
 import './api/getAgTypes';

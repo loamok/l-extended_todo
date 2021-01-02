@@ -1,0 +1,25 @@
+{# top navbar, bottom Twig template #}
+                </ul>
+            </div>
+            <div class="navbar-nav ml-auto">
+                <ul class="nav">
+                {% if is_granted('ROLE_USER') %}
+                    <li class="nav-item">
+                        <a href="{{ path('app_logout') }}" class="nav-link {% if route_name == 'app_logout' %}active{% endif %}">Log out</a>
+                    </li>
+                {% else %}
+                    <li class="nav-item">
+                        <a href="#" class="nav-link">Register</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ path('app_login') }}" class="nav-link {% if route_name == 'app_login' %}active{% endif %}">Log in</a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ path('app_forgot_password_request') }}" class="nav-link {% if route_name == 'app_forgot_password_request' %}active{% endif %}">Forgoted my pass</a>
+                    </li>
+                {% endif %}
+                </ul>
+            </div>
+        </div>
+    </div>    
+</nav>
