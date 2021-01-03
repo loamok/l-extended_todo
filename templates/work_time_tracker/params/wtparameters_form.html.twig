@@ -1,0 +1,132 @@
+{# empty Twig template #}
+{{ form_start(form) }}
+<div id="wt_parameters" class="card">
+    <div class="form-group mb-3">
+        {{ form_label(form.name) }}
+        {{ form_widget(form.name) }}
+    </div>
+    <fieldset id="durationsFs" name="durationsFs" class="card">
+        <div class="card-header" id="headingLb">
+            <h5 class="mb-0">Lunch Breaks <button class="btn btn-secondary"
+                    type="button" data-toggle="collapse" data-target="#lunchBreaks" aria-expanded="false" aria-controls="lunchBreaks">
+                <i class="bi bi-caret-down-fill"></i>
+            </button></h5>
+        </div>
+        <div id="lunchBreaks" class="collapse" aria-labelledby="headingLb" data-parent="#wt_parameters">
+            <div class="form-group mb-3">
+                <label>Base lunch break duration : </label>
+                <div id="wt_parameters_baseLunchBreakDuration_ph"></div>
+                <div class="clearfix"></div>
+                {{ form_widget(form.baseLunchBreakDuration) }}
+            </div>
+            <div class="form-group mb-3">
+                <label>Extended lunch break duration : </label>
+                <div id="wt_parameters_extendedLunchBreakDuration_ph"></div>
+                <div class="clearfix"></div>
+                {{ form_widget(form.extendedLunchBreakDuration) }}
+            </div>
+            <div class="form-group mb-3">
+                <label>Shorted lunch break duration : </label>
+                <div id="wt_parameters_shortedLunchBreakDuration_ph"></div>
+                <div class="clearfix"></div>
+                {{ form_widget(form.shortedLunchBreakDuration) }}
+            </div>
+        </div>
+        <div class="card-header" id="headingWh">
+            <h5 class="mb-0">Workday Hours <button class="btn btn-secondary"
+                    type="button" data-toggle="collapse" data-target="#workdayHours" aria-expanded="false" aria-controls="workdayHours">
+                <i class="bi bi-caret-down-fill"></i>
+            </button></h5>
+        </div>
+        <div id="workdayHours" class="collapse" aria-labelledby="headingWh" data-parent="#wt_parameters">
+            <div class="form-group mb-3">
+                <label>Base workday hours duration : </label>
+                <div id="wt_parameters_baseWorkDayHoursDuration_ph"></div>
+                <div class="clearfix"></div>
+                {{ form_widget(form.baseWorkDayHoursDuration) }}
+            </div>
+            <div class="form-group mb-3">
+                <label>Extended workday hours duration : </label>
+                <div id="wt_parameters_extendedWorkDayHoursDuration_ph"></div>
+                <div class="clearfix"></div>
+                {{ form_widget(form.extendedWorkDayHoursDuration) }}
+            </div>
+            <div class="form-group mb-3">
+                <label>Shorted workday hours duration : </label>
+                <div id="wt_parameters_shortedWorkDayHoursDuration_ph"></div>
+                <div class="clearfix"></div>
+                {{ form_widget(form.shortedWorkDayHoursDuration) }}
+            </div>
+        </div>
+        <div class="card-header" id="headingTb">
+            <h5 class="mb-0">Workday Breaks <button class="btn btn-secondary"
+                    type="button" data-toggle="collapse" data-target="#totalBreaks" aria-expanded="false" aria-controls="totalBreaks">
+                <i class="bi bi-caret-down-fill"></i>
+            </button></h5>
+        </div>
+        <div id="totalBreaks" class="collapse" aria-labelledby="headingTh" data-parent="#wt_parameters">
+            <div class="form-group mb-3">
+                <label>Base workday breaks duration : </label>
+                <div id="wt_parameters_baseTotalDayBreaksDuration_ph"></div>
+                <div class="clearfix"></div>
+                {{ form_widget(form.baseTotalDayBreaksDuration) }}
+            </div>
+            <div class="form-group mb-3">
+                <label>Extended workday breaks duration : </label>
+                <div id="wt_parameters_extendedTotalDayBreaksDuration_ph"></div>
+                <div class="clearfix"></div>
+                {{ form_widget(form.extendedTotalDayBreaksDuration) }}
+            </div>
+            <div class="form-group mb-3">
+                <label>Shorted workday breaks duration : </label>
+                <div id="wt_parameters_shortedTotalDayBreaksDuration_ph"></div>
+                <div class="clearfix"></div>
+                {{ form_widget(form.shortedTotalDayBreaksDuration) }}
+            </div>
+        </div>
+    </fieldset>
+    <fieldset><legend>Config</legend>
+        <div class="form-group form-inline">
+            {{ form_widget(form.defaultConfig) }}&nbsp;
+            {{ form_widget(form.active) }}&nbsp;
+            {{ form_widget(form.global) }}&nbsp;
+        </div>
+    </fieldset>
+    <fieldset id="otherFs" name="otherFs" class="card">
+        <div class="card-header" id="headingTh">
+            <h5 class="mb-0">Toils &amp; Holydays <button class="btn btn-secondary"
+                    type="button" data-toggle="collapse" data-target="#toilHolydays" aria-expanded="false" aria-controls="toilHolydays">
+                <i class="bi bi-caret-down-fill"></i>
+            </button></h5>
+        </div>
+        <div id="toilHolydays" class="collapse" aria-labelledby="headingTh" data-parent="#wt_parameters">
+            <div class="form-group mb-3">
+                {{ form_label(form.annualToilDaysNumber) }}
+                {{ form_widget(form.annualToilDaysNumber) }}
+            </div>
+            <div class="form-group mb-3">
+                {{ form_label(form.annualHolidayDaysNumber) }}
+                {{ form_widget(form.annualHolidayDaysNumber) }}
+            </div>
+        </div>
+        <div class="card-header" id="headingSe">
+            <h5 class="mb-0">Start &amp; end of day <button class="btn btn-secondary"
+                    type="button" data-toggle="collapse" data-target="#startEnds" aria-expanded="false" aria-controls="startEnds">
+                <i class="bi bi-caret-down-fill"></i>
+            </button></h5>
+        </div>
+            <div id="startEnds" class="collapse" aria-labelledby="headingSe" data-parent="#wt_parameters">
+                <div class="form-group mb-3">
+                    {{ form_label(form.noWorkBefore) }}
+                    {{ form_widget(form.noWorkBefore) }}
+                </div>
+                <div class="form-group mb-3">
+                    {{ form_label(form.noWorkAfter) }}
+                    {{ form_widget(form.noWorkAfter) }}
+                </div>
+                
+            </div>
+    </fieldset>
+{{ form_rest(form) }}
+</div>
+{{ form_end(form) }}

@@ -12,9 +12,8 @@ use App\Entity\Rights;
 use App\Entity\RoleGlobals;
 use App\Entity\Todo;
 use App\Entity\User;
-
+use App\Entity\WtParameters;
 use Doctrine\ORM\EntityManagerInterface;
-
 use Symfony\Component\Security\Core\Authentication\Token\TokenInterface;
 use Symfony\Component\Security\Core\Security;
 
@@ -39,7 +38,8 @@ class RoleGlobalsVoter extends BaseVoter {
         $this->em = $em;
         $this->entities = [
             Agenda::class, Delegation::class, Event::class, 
-            Todo::class, Journal::class, Freebusy::class, Related::class
+            Todo::class, Journal::class, Freebusy::class, Related::class, 
+            WtParameters::class
         ];
     }
     

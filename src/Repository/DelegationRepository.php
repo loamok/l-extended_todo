@@ -58,7 +58,7 @@ class DelegationRepository extends ServiceEntityRepository {
     public function getUserDelegationByRightCodeQuery(User $user, string $rightCode) {
         $qb = $this->createQueryBuilder('d');
         return 
-            $this->getUserSubWithRightCodeQuery('d', $qb, $this->security->getUser(), 'list');
+            $this->getUserSubWithRightCodeQuery('d', $qb, $user, 'list');
     }
     
     public function getUserDelegationByRightCode(User $user, string $rightCode) {

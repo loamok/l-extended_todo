@@ -2,16 +2,13 @@
 
 namespace App\Entity;
 
+use App\Repository\AgendaRepository;
+
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiProperty;
 use ApiPlatform\Core\Annotation\ApiSubresource;
 
 use Symfony\Component\Validator\Constraints as Assert;
-
-use App\DTO\AgendaInput;
-use App\DTO\Agenda as AgendaOutput;
-
-use App\Repository\AgendaRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -72,6 +69,9 @@ use Symfony\Component\Serializer\Annotation\Groups;
  *              "security"="is_granted('list', object)"
  *       },
  *       "agendas_todos_get_subresource"= {
+ *              "security"="is_granted('list', object)"
+ *       },
+ *       "agendas_wtparameters_get_subresource"= {
  *              "security"="is_granted('list', object)"
  *       }
  *     }
@@ -151,6 +151,13 @@ class Agenda {
      * @ApiSubresource
      */
     private $freebusies;
+
+    /**
+     * @ORM\OneToMany(targetEntity=WtParameters::class, mappedBy="agenda")
+     * @Groups({"read", "write"})
+     * @ApiSubresource
+     */
+    private $wtParameters;
     
     public function __construct() {
         $this->delegations = new ArrayCollection();
@@ -158,6 +165,7 @@ class Agenda {
         $this->todos = new ArrayCollection();
         $this->journals = new ArrayCollection();
         $this->freebusies = new ArrayCollection();
+        $this->wtParameters = new ArrayCollection();
     }
     
     /**
@@ -362,6 +370,36 @@ class Agenda {
             // set the owning side to null (unless already changed)
             if ($freebusy->getAgenda() === $this) {
                 $freebusy->setAgenda(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection|WtParameters[]
+     */
+    public function getWtParameters(): Collection
+    {
+        return $this->wtParameters;
+    }
+
+    public function addWtParameter(WtParameters $wtParameter): self
+    {
+        if (!$this->wtParameters->contains($wtParameter)) {
+            $this->wtParameters[] = $wtParameter;
+            $wtParameter->setAgenda($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWtParameter(WtParameters $wtParameter): self
+    {
+        if ($this->wtParameters->removeElement($wtParameter)) {
+            // set the owning side to null (unless already changed)
+            if ($wtParameter->getAgenda() === $this) {
+                $wtParameter->setAgenda(null);
             }
         }
 

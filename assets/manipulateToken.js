@@ -105,7 +105,14 @@ function getMyToken () {
     ;
 };
 
-function setMyBearer() {
+var additionnalHeaders;
+global.additionnalHeaders = additionnalHeaders;
+
+export function setMyBearer() {
+    if(debug) {
+        console.log("globHeaders :");
+        console.log(global.additionnalHeaders);
+    }
     $.ajaxSetup({
         beforeSend: function(xhr) {
             if(debug)
@@ -114,6 +121,11 @@ function setMyBearer() {
                 if(debug)
                     console.log('onBeforeSend, set Bearer '+ localStorage.getItem(tokenKey));
                 xhr.setRequestHeader('Authorization', 'Bearer '+ localStorage.getItem(tokenKey));
+                if(global.additionnalHeaders) {
+                    for(header in additionnalHeaders) {
+                        xhr.setRequestHeader(header.name, header.value);
+                    }
+                }
             } 
         }
     });

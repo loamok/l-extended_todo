@@ -10,7 +10,10 @@ const $ = require('jquery');
 global.$ = global.jQuery = $;
 
 import './styles/app.scss';
-import 'bootstrap';
+//import 'bootstrap';
+require('bootstrap');
+require('./js/jquery.timesetter/jquery.timesetter');
+
 //import 'jose';
 import bsCustomFileInput from 'bs-custom-file-input';
 // start the Stimulus application
@@ -32,3 +35,6 @@ global.dissmissAlert = dissmissAlert;
 import './js/notYet';
 import './manipulateToken';
 import './api/getAgTypes';
+import './api/wt_parameters/wt_parameters';
+import './formActions/params/times_selectors';
+import './formActions/params/paramsActions';

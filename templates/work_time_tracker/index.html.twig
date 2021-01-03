@@ -4,9 +4,12 @@
     <li class="nav-item"><a href="{{ path('worktime_tracker') }}" 
         class="nav-link {% if route_name in worktime_routes %}active{% endif %}">&nbsp;>&nbsp;Index</a></li>
 {% endblock %}
+{% block body_title_bar %}
+    <h1>WorkTime tracking</h1>
+{% endblock %}
 
 {% block body %}
-    <h1>WorkTime tracking</h1>
+    {{ parent() }}
     {% if agendas %}
         <h4>Select agenda to work on : </h4>
         

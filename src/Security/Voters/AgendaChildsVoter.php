@@ -37,7 +37,8 @@ class AgendaChildsVoter extends AgendaVoter {
 
     public function __construct(Security $security, EntityManagerInterface $em) {
         $this->security = $security;
-        $this->em = $em;$this->entities = [
+        $this->em = $em;
+        $this->entities = [
             Event::class, Todo::class, Journal::class, Freebusy::class, Related::class, 
         ];
     }

@@ -1,8 +1,42 @@
 @import '~bootstrap/scss/bootstrap';
+@import '~glyphicons-only-bootstrap/css/bootstrap';
+@import '~bootstrap-icons/font/bootstrap-icons';
+@import 'jquery.timesetter.min';
 
 .login-form-element {
 }
 
 .let-hidden {
     display: none;
+}
+
+/* Important part */
+.modal-dialog{
+    overflow-y: initial !important
+}
+.modal-body{
+    height: 75vh;
+    overflow-y: auto;
+}
+
+.divTimeSetterContainer .button-time-control div.updownButton i {
+    top: -7px;
+    position: relative;
+}
+.divTimeSetterContainer span.hourSymbol, .divTimeSetterContainer span.minuteSymbol, .divTimeSetterContainer span.timeDelimiter {
+    position: relative;
+    top: -2px;
+}
+#params-form.modal fieldset.card div.card-header h5.mb-0 button.btn.btn-secondary
+{
+    width: 20px;
+    height: 20px;
+    margin: 0;
+    padding: 0;
+}
+#params-form.modal fieldset.card div.card-header h5.mb-0 button.btn.btn-secondary i.bi
+{
+    position: relative;
+    top: -3px;
+    left: 0px;
 }

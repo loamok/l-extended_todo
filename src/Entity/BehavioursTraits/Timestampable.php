@@ -78,7 +78,7 @@ trait Timestampable {
      * 
      * @return \DateTime
      */
-    public function getCreatedAt() : \DateTime {
+    public function getCreatedAt() : ?\DateTime {
         if (!$this->localizedCreatedAt && !is_null($this->createdAt)) {
             if(is_null($this->timezone)) {
                 $this->timezone = $this->createdAt->getTimeZone()->getName();
@@ -107,7 +107,7 @@ trait Timestampable {
      * 
      * @return \DateTime
      */
-    public function getUpdatedAt() : \DateTime {
+    public function getUpdatedAt() : ?\DateTime {
         if (!$this->localizedCreatedAt && !is_null($this->updatedAt)) {
             $this->updatedAt->setTimeZone(new \DateTimeZone($this->timezone));
         }
