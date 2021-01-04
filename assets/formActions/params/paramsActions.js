@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-import { getOneWtParameter, postOneWtParameter } from '../../api/wt_parameters/wt_parameters';
+import { getOneWtParameter, postOneWtParameter, putOneWtParameter } from '../../api/wt_parameters/wt_parameters';
 
 const debug = false;
 
@@ -11,8 +11,8 @@ var globalParam = null;
 
 import { 
     paramsFieldsIds, paramsFieldsIdsSuffix, paramsFieldsIdsPrefix, paramsHoursFieldsIds, 
-    paramsSimpleFieldsIds, paramsUuidFieldsIds, paramsCbFieldsIds
-} from './fieldsIds';
+    paramsSimpleFieldsIds, paramsUuidFieldsIds, paramsCbFieldsIds, paramsIntFieldsIds, jsonRepresentation
+} from './paramFields';
 
 function translateValuesFromSelector(input) {
     var h = $('#'+paramsFieldsIdsPrefix+input+paramsFieldsIdsSuffix).timesetter().getHoursValue();
@@ -58,21 +58,23 @@ function translateValuesFromAjax(input) {
     translateValuesFromSelector(input);
 }
 
-
 function getUuidValues(name) {
     var uuidVal = $('#'+paramsFieldsIdsPrefix+ name).val();
     
     if(uuidVal.length < 1) {
-        var uuid = JSON.parse($('script#'+name));
+        var uuid = JSON.parse($('script#'+name).text());
         if(uuid.length > 0) {
             uuidVal = uuid.id;
         }
     }
     
-//    $('#'+paramsFieldsIdsPrefix+ name).val(uuidVal);
+    if(uuidVal.length < 1) {
+        uuidVal = null;
+    }
     
     return uuidVal;
 }
+
 function translateUpUuid(uuid) {
     var uuidVal = $('#'+paramsFieldsIdsPrefix+ uuid.name).val();
     
@@ -84,28 +86,59 @@ function translateUpUuid(uuid) {
     
     $('#'+paramsFieldsIdsPrefix+ uuid.name).val(uuidVal);
 }
+
 function setUuidValues(name, value) {
     $('#'+paramsFieldsIdsPrefix+ name).val(value);
 }
+
 function setHourValues(name, value) {
     var hoursValue = value.split('T')[1].split(':');
-    hoursValue = {'h': parseInt(hoursValue[0]), 'm': parseInt(hoursValue[1])};
+    hoursValue = { h: parseInt(hoursValue[0]), m: parseInt(hoursValue[1])};
     
     $('#'+paramsFieldsIdsPrefix+ name + "_hour").val(hoursValue.h);
     $('#'+paramsFieldsIdsPrefix+ name + "_minute").val(hoursValue.m);
 }
 
-function getSimpleValues(name) {
-    return $('#'+paramsFieldsIdsPrefix+ name).val();
+function getHoursStringForJson(name) {
+    var hoursValue = {
+        h: parseInt($('#'+paramsFieldsIdsPrefix+ name + "_hour").val()), 
+        m: parseInt($('#'+paramsFieldsIdsPrefix+ name + "_minute").val())
+    };
+    
+    hoursValue.h = (hoursValue.h < 10) ? '0' + hoursValue.h : hoursValue.h;
+    hoursValue.m = (hoursValue.m < 10) ? '0' + hoursValue.m : hoursValue.m;
+    
+    return "1970-01-01T" + hoursValue.h + ":" + hoursValue.m + ":00.000+01:00";
 }
+
+function getSimpleValues(name, setnull, integer) {
+    var val = $('#'+paramsFieldsIdsPrefix+ name).val()
+    if((setnull && val.length < 1) || integer) {
+        if(integer && (!setnull)) {
+            val = parseInt(val);
+        } else if (setnull && val.length < 1) {
+            val = null;
+        } else if(!setnull && val.length < 1) {
+            val = 0;
+        }
+    }
+    
+    return val;
+}
+
 function setSimpleValues(name, value) {
     $('#'+paramsFieldsIdsPrefix+ name).val(value);
 }
+
 function setCbValue(name, value) {
     if (value) 
         $('#'+paramsFieldsIdsPrefix+ name).prop("checked", true); 
     else 
         $('#'+paramsFieldsIdsPrefix+ name).prop("checked", false);
+}
+
+function getCbValue(name) {
+    return $('#'+paramsFieldsIdsPrefix+ name).is(':checked');
 }
 
 function setParamValues(param) {
@@ -131,67 +164,47 @@ function setParamValues(param) {
         setHourValues(hour, param[hour]);
     }
     
+    
+    for (const f of paramsIntFieldsIds) {
+        setSimpleValues(f, param[f]);
+    }
+    
 }
 
 function prepareValuesForAjax() {
+    var res = jsonRepresentation;
+    
     for(const input of paramsFieldsIds) {
+        translateValuesFromSelector(input);
         translateValuesForAjax(input);
-    }
-    
-    var agenda = $('#'+paramsFieldsIdsPrefix+"agenda").val();
-    var user = $('#'+paramsFieldsIdsPrefix+"user").val();
-    var userVal = JSON.parse($("#user").text()).id;
-    if(debug)
-        console.log("userVal : ", userVal);
-    userVal = (userVal.indexOf("/api/users/") !== -1)?userVal:"/api/users/"+userVal;
-    if(debug)
-        console.log("userVal : ", userVal);
-    
-    var defaultConfig = $('#'+paramsFieldsIdsPrefix+"defaultConfig").val();
-    var active = $('#'+paramsFieldsIdsPrefix+"active").val();
-    var global = $('#'+paramsFieldsIdsPrefix+"global").val();
-    
-    var noWorkBeforeH = $('#'+paramsFieldsIdsPrefix+"noWorkBefore_hour").val();
-    noWorkBeforeH = (parseInt(noWorkBeforeH) < 10)?'0'+noWorkBeforeH:noWorkBeforeH;
-    var noWorkBeforeM = $('#'+paramsFieldsIdsPrefix+"noWorkBefore_minute").val();
-    noWorkBeforeM = (parseInt(noWorkBeforeM) < 10)?'0'+noWorkBeforeM:noWorkBeforeM;
-    var noWorkBefore = "1970-01-01T"+noWorkBeforeH+":"+noWorkBeforeM+":00.000+01:00";
-    
-    var noWorkAfterH = $('#'+paramsFieldsIdsPrefix+"noWorkAfter_hour").val();
-    noWorkAfterH = (parseInt(noWorkAfterH) < 10)?'0'+noWorkAfterH:noWorkAfterH;
-    var noWorkAfterM = $('#'+paramsFieldsIdsPrefix+"noWorkAfter_minute").val();
-    noWorkAfterM = (parseInt(noWorkAfterM) < 10)?'0'+noWorkAfterM:noWorkAfterM;
-    var noWorkAfter = "1970-01-01T"+noWorkAfterH+":"+noWorkAfterM+":00.000+01:00";
-    
-    var res = {
-        'name' : $('#'+paramsFieldsIdsPrefix+"name").val(),
-        'user' : (user.length > 0)?user:userVal,
-        'agenda' : (agenda.length > 0)?agenda:null,
-        'defaultConfig' : (parseInt(defaultConfig) === 1)?true:false,
-        'active' : (parseInt(active) === 1)?true:false,
-        'global' : (parseInt(global) === 1)?true:false,
-        'baseLunchBreakDuration' : $('#'+paramsFieldsIdsPrefix+"baseLunchBreakDuration").val(),
-        'extendedLunchBreakDuration' : $('#'+paramsFieldsIdsPrefix+"extendedLunchBreakDuration").val(),
-        'shortedLunchBreakDuration' : $('#'+paramsFieldsIdsPrefix+"shortedLunchBreakDuration").val(),
-        'baseWorkDayHoursDuration' : $('#'+paramsFieldsIdsPrefix+"baseWorkDayHoursDuration").val(),
-        'extendedWorkDayHoursDuration' : $('#'+paramsFieldsIdsPrefix+"extendedWorkDayHoursDuration").val(),
-        'shortedWorkDayHoursDuration' : $('#'+paramsFieldsIdsPrefix+"shortedWorkDayHoursDuration").val(),
-        'baseTotalDayBreaksDuration' : $('#'+paramsFieldsIdsPrefix+"baseTotalDayBreaksDuration").val(),
-        'extendedTotalDayBreaksDuration' : $('#'+paramsFieldsIdsPrefix+"extendedTotalDayBreaksDuration").val(),
-        'shortedTotalDayBreaksDuration' : $('#'+paramsFieldsIdsPrefix+"shortedTotalDayBreaksDuration").val(),
-        'annualToilDaysNumber' : parseInt($('#'+paramsFieldsIdsPrefix+"annualToilDaysNumber").val()),
-        'annualHolidayDaysNumber' : parseInt($('#'+paramsFieldsIdsPrefix+"annualHolidayDaysNumber").val()),
-        'noWorkBefore' : noWorkBefore,
-        'noWorkAfter' : noWorkAfter,
-    };
-    
-    
-    if(debug)
-        console.log('res :' , res);
-    
-    for(const input of paramsFieldsIds) {
+        res[input] = getSimpleValues(input);
         translateValuesFromAjax(input);
     }
+    
+    for(const input of paramsSimpleFieldsIds) {
+        res[input] = getSimpleValues(input);
+    }
+    
+    for(const input of paramsHoursFieldsIds) {
+        res[input] = getHoursStringForJson(input);
+    }
+    
+    for (const f of paramsUuidFieldsIds) {
+        setSimpleValues(f.name, getUuidValues(f.name));
+        translateUpUuid(f);
+        res[f.name] = getSimpleValues(f.name, true);
+    }
+    
+    for (const f of paramsCbFieldsIds) {
+        res[f] = getCbValue(f);
+    }
+    
+    for (const f of paramsIntFieldsIds) {
+        res[f] = getSimpleValues(f, false, true);
+    }
+
+    if(debug)
+        console.log('res :' , res);
     
     return res;
 }
@@ -209,16 +222,23 @@ function loadGlobalParam() {
 $(document).ready(function(){
     if($('#params-form').length > 0) {
         $('#params-form-save').click(function(e){
-            for(const input of paramsFieldsIds) {
-                translateValuesFromSelector(input);
-            }
             var values = prepareValuesForAjax();
-            postOneWtParameter(values, setParamValues);
-//            if(debug)
+            var id = JSON.parse($('script#globalParam').text()).id;
+            if(id === null) {
+                if(debug)
+                    console.log('id is null :', id);
+                postOneWtParameter(values, setParamValues);
+            } else {
+                if(debug)
+                    console.log('id is not null :', id);
+                putOneWtParameter(id, values, setParamValues);
+            }
+            if(debug)
                 console.log('values :', values);
     
         });
 
         loadGlobalParam();
+        
     }
 });

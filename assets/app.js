@@ -36,6 +36,6 @@ import './js/notYet';
 import './manipulateToken';
 import './api/getAgTypes';
 import './api/wt_parameters/wt_parameters';
-import './formActions/params/fieldsIds';
+import './formActions/params/paramFields';
 import './formActions/params/times_selectors';
 import './formActions/params/paramsActions';

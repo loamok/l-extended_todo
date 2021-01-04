@@ -4,7 +4,7 @@
  * and open the template in the editor.
  */
 
-import { paramsFieldsIdsPrefix, paramsFieldsIdsSuffix , paramsFieldsIds } from './fieldsIds';
+import { paramsFieldsIdsPrefix, paramsFieldsIdsSuffix , paramsFieldsIds } from './paramFields';
     
 const commonParams = {
     hour: {

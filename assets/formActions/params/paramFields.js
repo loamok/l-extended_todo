@@ -16,7 +16,9 @@ const paramsHoursFieldsIds = [
     'noWorkAfter'
 ];
 const paramsSimpleFieldsIds = [
-    'name', 
+    'name'
+];
+const paramsIntFieldsIds = [
     'annualToilDaysNumber',
     'annualHolidayDaysNumber'
 ];
@@ -30,7 +32,30 @@ const paramsUuidFieldsIds = [
     { name: 'agenda', identifier: "/api/agendas/" }
 ];
 
+const jsonRepresentation = { };
+
+for (const f of paramsFieldsIds) {
+    jsonRepresentation[f] = null;
+}
+
+for (const f of paramsHoursFieldsIds) {
+    jsonRepresentation[f] = null;
+}
+
+for (const f of paramsSimpleFieldsIds) {
+    jsonRepresentation[f] = null;
+}
+
+for (const f of paramsUuidFieldsIds) {
+    jsonRepresentation[f.name] = null;
+}
+
+for (const f of paramsCbFieldsIds) {
+    jsonRepresentation[f] = null;
+}
+
 export { 
-    paramsFieldsIds, paramsFieldsIdsSuffix, paramsFieldsIdsPrefix, paramsHoursFieldsIds, 
-    paramsSimpleFieldsIds, paramsUuidFieldsIds, paramsCbFieldsIds
+    paramsFieldsIdsSuffix, paramsFieldsIdsPrefix, 
+    paramsFieldsIds, paramsHoursFieldsIds, paramsSimpleFieldsIds, 
+    paramsUuidFieldsIds, paramsCbFieldsIds, paramsIntFieldsIds, jsonRepresentation
 };
