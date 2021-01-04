@@ -25,7 +25,7 @@ services:
         docker_proxy: '${PROXY}'
         dockers_proxy: '${PROXYS}'
         no_proxy: '${NO_PROXY}'
-        apply_acl_to_root: ${ROOT_ACL:-0}
+        apply_acl_to_root: '${ROOT_ACL:-0}'
         jwt_pass: '${JWT_PASSPHRASE}'
     volumes:
       - './:/var/www/l-extended_todo/'
@@ -46,6 +46,23 @@ services:
     restart: unless-stopped
     depends_on:
       - php
+  encore:
+    build:
+      context: ./docker/encore/
+      dockerfile: Dockerfile
+      args:
+        docker_proxy: '${PROXY}'
+        dockers_proxy: '${PROXYS}'
+        no_proxy: '${NO_PROXY}'
+    volumes:
+      - './:/var/www/l-extended_todo/'
+    ports:
+      - '${NODE_EXT_PORT}:8080'
+    restart: unless-stopped
+    depends_on:
+      - php
+#    image: node:12-alpine
+#    command: ["npm", "run dev-server", "--host=0.0.0.0"]
   phpmyadmin:
     image: 'phpmyadmin/phpmyadmin:latest'
     ports:

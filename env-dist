@@ -56,6 +56,9 @@ MYSQL_PASSWORD=changeme_let_passwd
 # external access port for NGINX
 # your instance of LET will be accessible by http: // localhost: 8000 where 8000 is the configured external port
 NGINX_EXT_PORT=8000
+###Encore ###
+# external access port for NODE and Encore
+NODE_EXT_PORT=8004
 ###PhpMyAdmin ###
 # external access port for PhpMyAdmin
 # your instance of PhpMyAdmin for LET will be accessible by http://localhost:8001 where 8001 is the configured external port

@@ -6,9 +6,12 @@
         class="nav-link {% if route_name in worktime_routes %}active{% endif %}">&nbsp;>&nbsp;Create Agenda</a></li>
 {% endblock %}
 
+{% block body_title_bar %}
+    <h4>WorkTime tracking > New Agenda</h4>
+{% endblock %}
+
 {% block body %}
-    <h1>WorkTime tracking</h1>
-    <h4>New Agenda</h4>
+    {{ parent() }}
     
     {{ form(agenda_form) }}
 {% endblock %}

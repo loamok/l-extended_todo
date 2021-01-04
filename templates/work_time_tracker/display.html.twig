@@ -6,6 +6,10 @@
         class="nav-link {% if route_name in worktime_routes %}active{% endif %}">&nbsp;>&nbsp;Agenda {{ agenda.name }}</a></li>
 {% endblock %}
 
+{% block body_title_bar %}
+    <h4>WorkTime tracking > Agenda {{ agenda.name|capitalize }}</h4>
+{% endblock %}
+
 {% block body %}
-    
+    {{ parent() }}
 {% endblock %}
