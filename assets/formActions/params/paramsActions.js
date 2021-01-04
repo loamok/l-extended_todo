@@ -9,7 +9,10 @@ const debug = false;
 
 var globalParam = null;
 
-import { paramsFieldsIdsPrefix, paramsFieldsIdsSuffix , paramsFieldsIds } from './times_selectors';
+import { 
+    paramsFieldsIds, paramsFieldsIdsSuffix, paramsFieldsIdsPrefix, paramsHoursFieldsIds, 
+    paramsSimpleFieldsIds, paramsUuidFieldsIds, paramsCbFieldsIds
+} from './fieldsIds';
 
 function translateValuesFromSelector(input) {
     var h = $('#'+paramsFieldsIdsPrefix+input+paramsFieldsIdsSuffix).timesetter().getHoursValue();
@@ -55,49 +58,79 @@ function translateValuesFromAjax(input) {
     translateValuesFromSelector(input);
 }
 
-function setParamValues(param) {
-    $('#'+paramsFieldsIdsPrefix+"name").val(param.name);
-    $('#'+paramsFieldsIdsPrefix+"user").val(param.user);
-    $('#'+paramsFieldsIdsPrefix+"agenda").val(param.agenda);
-    if (param.defaultConfig) 
-        $('#'+paramsFieldsIdsPrefix+"defaultConfig").prop("checked", true); 
-    else 
-        $('#'+paramsFieldsIdsPrefix+"defaultConfig").prop("checked", false);
-    if (param.active) 
-        $('#'+paramsFieldsIdsPrefix+"active").prop("checked", true); 
-    else 
-        $('#'+paramsFieldsIdsPrefix+"active").prop("checked", false);
-    if (param.global) 
-        $('#'+paramsFieldsIdsPrefix+"global").prop("checked", true); 
-    else 
-        $('#'+paramsFieldsIdsPrefix+"global").prop("checked", false);
+
+function getUuidValues(name) {
+    var uuidVal = $('#'+paramsFieldsIdsPrefix+ name).val();
     
-    $('#'+paramsFieldsIdsPrefix+"baseLunchBreakDuration").val(param.baseLunchBreakDuration);
-    $('#'+paramsFieldsIdsPrefix+"extendedLunchBreakDuration").val(param.extendedLunchBreakDuration);
-    $('#'+paramsFieldsIdsPrefix+"shortedLunchBreakDuration").val(param.shortedLunchBreakDuration);
-    $('#'+paramsFieldsIdsPrefix+"baseWorkDayHoursDuration").val(param.baseWorkDayHoursDuration);
-    $('#'+paramsFieldsIdsPrefix+"extendedWorkDayHoursDuration").val(param.extendedWorkDayHoursDuration);
-    $('#'+paramsFieldsIdsPrefix+"shortedWorkDayHoursDuration").val(param.shortedWorkDayHoursDuration);
-    $('#'+paramsFieldsIdsPrefix+"baseTotalDayBreaksDuration").val(param.baseTotalDayBreaksDuration);
-    $('#'+paramsFieldsIdsPrefix+"extendedTotalDayBreaksDuration").val(param.extendedTotalDayBreaksDuration);
-    $('#'+paramsFieldsIdsPrefix+"shortedTotalDayBreaksDuration").val(param.shortedTotalDayBreaksDuration);
-    $('#'+paramsFieldsIdsPrefix+"annualToilDaysNumber").val(param.annualToilDaysNumber);
-    $('#'+paramsFieldsIdsPrefix+"annualHolidayDaysNumber").val(param.annualHolidayDaysNumber);
-    
-    var noWorkBefore = param.noWorkBefore.split('T')[1].split(':');
-    noWorkBefore = {'h': parseInt(noWorkBefore[0]), 'm': parseInt(noWorkBefore[1])};
-    
-    var noWorkAfter = param.noWorkAfter.split('T')[1].split(':');
-    noWorkAfter = {'h': parseInt(noWorkAfter[0]), 'm': parseInt(noWorkAfter[1])};
-    
-    $('#'+paramsFieldsIdsPrefix+"noWorkBefore_hour").val(noWorkBefore.h);
-    $('#'+paramsFieldsIdsPrefix+"noWorkBefore_minute").val(noWorkBefore.m);
-    $('#'+paramsFieldsIdsPrefix+"noWorkAfter_hour").val(noWorkAfter.h);
-    $('#'+paramsFieldsIdsPrefix+"noWorkAfter_minute").val(noWorkAfter.m);
-    
-    for(const input of paramsFieldsIds) {
-        translateValuesFromAjax(input);
+    if(uuidVal.length < 1) {
+        var uuid = JSON.parse($('script#'+name));
+        if(uuid.length > 0) {
+            uuidVal = uuid.id;
+        }
     }
+    
+//    $('#'+paramsFieldsIdsPrefix+ name).val(uuidVal);
+    
+    return uuidVal;
+}
+function translateUpUuid(uuid) {
+    var uuidVal = $('#'+paramsFieldsIdsPrefix+ uuid.name).val();
+    
+    if(uuidVal.length < 1) {
+        return;
+    }
+    
+    uuidVal = (uuidVal.indexOf(uuid.identifier) !== -1)?uuidVal:uuid.identifier+uuidVal;
+    
+    $('#'+paramsFieldsIdsPrefix+ uuid.name).val(uuidVal);
+}
+function setUuidValues(name, value) {
+    $('#'+paramsFieldsIdsPrefix+ name).val(value);
+}
+function setHourValues(name, value) {
+    var hoursValue = value.split('T')[1].split(':');
+    hoursValue = {'h': parseInt(hoursValue[0]), 'm': parseInt(hoursValue[1])};
+    
+    $('#'+paramsFieldsIdsPrefix+ name + "_hour").val(hoursValue.h);
+    $('#'+paramsFieldsIdsPrefix+ name + "_minute").val(hoursValue.m);
+}
+
+function getSimpleValues(name) {
+    return $('#'+paramsFieldsIdsPrefix+ name).val();
+}
+function setSimpleValues(name, value) {
+    $('#'+paramsFieldsIdsPrefix+ name).val(value);
+}
+function setCbValue(name, value) {
+    if (value) 
+        $('#'+paramsFieldsIdsPrefix+ name).prop("checked", true); 
+    else 
+        $('#'+paramsFieldsIdsPrefix+ name).prop("checked", false);
+}
+
+function setParamValues(param) {
+    for(const field of paramsSimpleFieldsIds) {
+        setSimpleValues(field, param[field]);
+    }
+    
+    for(const uuid of paramsUuidFieldsIds) {
+        setUuidValues(uuid.name, param[uuid.name]);
+        translateUpUuid(uuid);
+    }
+    
+    for(const cb of paramsCbFieldsIds) {
+        setCbValue(cb, param[cb]);
+    }
+    
+    for(const durField of paramsFieldsIds) {
+        setSimpleValues(durField, param[durField]);
+        translateValuesFromAjax(durField);
+    }
+    
+    for(const hour of paramsHoursFieldsIds) {
+        setHourValues(hour, param[hour]);
+    }
+    
 }
 
 function prepareValuesForAjax() {

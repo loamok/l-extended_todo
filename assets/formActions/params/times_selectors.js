@@ -4,21 +4,7 @@
  * and open the template in the editor.
  */
 
-const paramsFieldsIdsPrefix = 'wt_parameters_';
-const paramsFieldsIdsSuffix = '_ph';
-const paramsFieldsIds = [
-    'baseLunchBreakDuration', 
-    'extendedLunchBreakDuration', 
-    'shortedLunchBreakDuration',
-    'baseWorkDayHoursDuration', 
-    'extendedWorkDayHoursDuration', 
-    'shortedWorkDayHoursDuration',
-    'baseTotalDayBreaksDuration', 
-    'extendedTotalDayBreaksDuration', 
-    'shortedTotalDayBreaksDuration'
-];
-
-export {paramsFieldsIds, paramsFieldsIdsSuffix, paramsFieldsIdsPrefix};
+import { paramsFieldsIdsPrefix, paramsFieldsIdsSuffix , paramsFieldsIds } from './fieldsIds';
     
 const commonParams = {
     hour: {
