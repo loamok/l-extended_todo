@@ -25,11 +25,13 @@
 
 {% block body %}
     <div class="row">
-        <div class="col-11">
+        <div class="col-7"> {# Barre de titre #}
     {% block body_title_bar %}
     {% endblock %}
         </div>
-        <div class="col-1">
+        <div class="col-4"> {# Icônes de travail #}
+        </div>
+        <div class="col-1">  {# Paramètres #}
             <button class="btn btn-secondary bg-light-gray" data-toggle="modal" data-target="#params-form"><i class="bi bi-gear"></i></button>
         </div>
     </div>
