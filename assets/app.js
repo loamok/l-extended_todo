@@ -10,6 +10,7 @@ const $ = require('jquery');
 global.$ = global.jQuery = $;
 
 import './styles/app.scss';
+
 //import 'bootstrap';
 require('bootstrap');
 require('./js/jquery.timesetter/jquery.timesetter');
@@ -39,3 +40,6 @@ import './api/wt_parameters/wt_parameters';
 import './formActions/params/paramFields';
 import './formActions/params/times_selectors';
 import './formActions/params/paramsActions';
+
+// Animations
+import './interfaces_animations/wtt/interfaces_animations';
