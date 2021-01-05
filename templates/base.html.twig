@@ -13,6 +13,8 @@
     <body>
         
 {% set route_name = app.request.attributes.get('_route') %}
+{% set path_attributes = app.request.attributes %}
+{#{% dump(app.request.attributes) %}#}
 {% set home_routes = ['app_homepage', 'app_home'] %}
 {% set worktime_routes = ['worktime_tracker', 'worktime_tracker_create', 'worktime_tracker_display', ] %}
 

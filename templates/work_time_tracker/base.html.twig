@@ -16,9 +16,15 @@
 
     {% for agenda in agendas %}
         {% if is_granted('read', agenda) %}
-        <li class="nav-item"><a href="{{ path('worktime_tracker_display', {'id': agenda.id}) }}" 
-            class="nav-link {% if route_name in worktime_routes %}active{% endif %}">Agenda {{ agenda.name }}</a></li>
-        {% endif %}    
+        <li class="nav-item">
+            <a href="{{ path('worktime_tracker_display', {'id': agenda.id}) }}" 
+            class="nav-link {% if route_name in worktime_routes %}active{% endif %}">
+            {% if route_name == 'worktime_tracker_display' and path_attributes.get('id') == agenda.id %}
+                <i class="bi bi-check bold" style="color:green !important;"></i>
+            {% endif %}
+                Agenda {{ agenda.name }}
+            </a></li>
+        {% endif %}
     {% endfor %}    
     </ul>
 {% endblock %}
@@ -30,6 +36,8 @@
     {% endblock %}
         </div>
         <div class="col-4"> {# Icônes de travail #}
+    {% block body_tools_bar %}
+    {% endblock %}
         </div>
         <div class="col-1">  {# Paramètres #}
             <button class="btn btn-secondary bg-light-gray" data-toggle="modal" data-target="#params-form"><i class="bi bi-gear"></i></button>
