@@ -35,10 +35,10 @@ const btnsClassesToggle = {
         }
     },
     'btn-rewind-action': {
-        beetwenModes: [btnOutlineDark, btnOutlineWarning, letBgClass, disabled],
+        beetwenModes: [btnOutlineDark, btnOutlineWarning],
         0: {
             all: {
-                always: [btnOutlineDark, disabled],
+                always: [btnOutlineDark],
                 elem: [letBgClass],
                 span: [letHiddenClass]
             }
@@ -77,10 +77,10 @@ const btnsClassesToggle = {
         }
     },
     'btn-end-action': {
-        beetwenModes: [btnOutlineDark, btnOutlineWarning, letBgClass, disabled],
+        beetwenModes: [btnOutlineDark, btnOutlineWarning],
         0: {
             all: {
-                always: [btnOutlineDark, disabled],
+                always: [btnOutlineDark],
                 elem: [letBgClass],
                 span: [letHiddenClass]
             }
@@ -137,10 +137,10 @@ function setOverAnim(elem) {
     
     if(!$(elem).hasClass(disabled)) {
         for(const className of config.mode.all.elem) {
-            $(elem).toggleClass(className);
+            $(elem).removeClass(className);
         }
         for(const className of config.mode.all.span) {
-            $(selector).toggleClass(className);
+            $(selector).removeClass(className);
         }
 //        
 //        $(selector).removeClass(hiddenClass)
@@ -164,10 +164,10 @@ function setOutAnim(elem) {
     }
     
     for(const className of config.mode.all.elem) {
-            $(elem).toggleClass(className);
+            $(elem).addClass(className);
     }
     for(const className of config.mode.all.span) {
-        $(selector).toggleClass(className);
+        $(selector).addClass(className);
     }
 //    $(selector).addClass(hiddenClass);
 //    $(elem).addClass(bgClass);
