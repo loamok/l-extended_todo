@@ -24,17 +24,45 @@ const btnOutlineDanger = btnOutline + Danger;
 const btnDanger = btn + Danger;
 const disabled = 'disabled';
 const btnClass = wttDisplayCbxp + '.actionsBtn';
+const toolsIconsContainer = 'tools-icons';
 
-const btnsClassesToggle = {
+const btnsActions = {
+    baseActions: {
+        disabledBtns: ['btn-rewind-action', 'btn-stop-action'],
+        all: {
+            trigger: 'click',
+            fn: function(e) {
+                e.preventDefault();
+            }
+        },
+        runModeChanged: function () {
+            switch (runMode) {
+                case 0:
+                    for(const disabled of baseActions.disabledBtns) {
+                        $('#'+disabled).addClass(disabled);
+                    }
+                    break;
+                    
+                default:
+                    
+                    break;
+            }
+            $('#'+toolsIconsContainer + ' .btn').each(function (i,e) {
+                setOutAnim(this);
+            });
+        }
+    },
     'btn-calculator-action': {
+        actions: {},
         all: {
             all: {
                 elem: [letBgClass],
                 span: [letHiddenClass]
             }
-        }
+        },
     },
     'btn-rewind-action': {
+        actions: {},
         beetwenModes: [btnOutlineDark, btnOutlineWarning],
         0: {
             all: {
@@ -49,9 +77,35 @@ const btnsClassesToggle = {
                 elem: [letBgClass],
                 span: [letHiddenClass]
             }
+        },
+        2: {
+            all: {
+                always: [btnOutlineWarning],
+                elem: [letBgClass],
+                span: [letHiddenClass]
+            }
         }
     },
     'btn-playpause-action': {
+        actions: {
+            all: {
+                trigger: 'click',
+                fn: function(e) {
+                    switch (runMode) {
+                        case 0:
+                            runMode = 1;
+                            break;
+                        case 1:
+                            runMode = 2;
+                            break;
+                        case 2:
+                            runMode = 1;
+                            break;
+                    }
+                    btnsActions.runModeChanged();
+                }
+            }
+        },
         beetwenModes: [btnOutlineSuccess, btnSuccess, letBgClass],
         0: {
             all: {
@@ -66,9 +120,29 @@ const btnsClassesToggle = {
                 elem: [],
                 span: [letHiddenClass]
             }
+        },
+        2: {
+            all: {
+                always: [btnSuccess],
+                elem: [],
+                span: [letHiddenClass]
+            }
         }
     },
     'btn-stop-action': {
+        actions: {
+            all: {
+                trigger: 'click',
+                fn: function(e) {
+                    switch (runMode) {
+                        default:
+                            runMode = 0;
+                            break;
+                    }
+                    btnsActions.runModeChanged();
+                }
+            }
+        },
         all: {
             all: {
                 elem: [letBgClass],
@@ -91,12 +165,18 @@ const btnsClassesToggle = {
                 elem: [letBgClass],
                 span: [letHiddenClass]
             }
-        }
+        },
+        2: {
+            all: {
+                always: [btnOutlineWarning],
+                elem: [letBgClass],
+                span: [letHiddenClass]
+            }
+        },
     }
 };
 
 var runMode = 0;
-
 var position = 0;
 
 function getSel(elem) {
@@ -109,9 +189,9 @@ function getSel(elem) {
 
 function getConfig(elem) {
     var id = $(elem).attr('id');
-    var modeOrAll = (btnsClassesToggle[id].hasOwnProperty('all'))?btnsClassesToggle[id].all:btnsClassesToggle[id][runMode];
+    var modeOrAll = (btnsActions[id].hasOwnProperty('all'))?btnsActions[id].all:btnsActions[id][runMode];
     var res = {
-        beetwenModes: (btnsClassesToggle[id].hasOwnProperty('beetwenModes'))?btnsClassesToggle[id].beetwenModes:null,
+        beetwenModes: (btnsActions[id].hasOwnProperty('beetwenModes'))?btnsActions[id].beetwenModes:null,
         mode: modeOrAll
     };
     
