@@ -41,6 +41,9 @@ function translateValuesForAjax(input) {
 function translateValuesFromAjax(input) {
     var intervalS = $('#'+paramsFieldsIdsPrefix+input).val();
     var dateTimeSpec = intervalS.split('T');
+    if(dateTimeSpec[1] === undefined) {
+        return;
+    }
     var hoursMinSpecs = dateTimeSpec[1].split('H');
     var minSecSpecs = hoursMinSpecs[1].split('M');
     var h = parseInt(hoursMinSpecs[0]);
@@ -92,6 +95,9 @@ function setUuidValues(name, value) {
 }
 
 function setHourValues(name, value) {
+    if(value === undefined) {
+        return;
+    }
     var hoursValue = value.split('T')[1].split(':');
     hoursValue = { h: parseInt(hoursValue[0]), m: parseInt(hoursValue[1])};
     

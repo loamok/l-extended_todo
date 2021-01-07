@@ -30,9 +30,10 @@ const btnsActions = {
     baseActions: {
         disabledBtns: ['btn-rewind-action', 'btn-stop-action'],
         all: {
-            trigger: 'click',
-            fn: function(e) {
-                e.preventDefault();
+            before: {
+                click: function(e) {
+                    e.preventDefault();
+                }
             }
         },
         runModeChanged: function () {
@@ -44,6 +45,9 @@ const btnsActions = {
                     break;
                     
                 default:
+                    for(const disabled of baseActions.disabledBtns) {
+                        $('#'+disabled).removeClass(disabled);
+                    }
                     
                     break;
             }
@@ -89,8 +93,8 @@ const btnsActions = {
     'btn-playpause-action': {
         actions: {
             all: {
-                trigger: 'click',
-                fn: function(e) {
+                click: function(e) {
+                    console.log('ok');
                     switch (runMode) {
                         case 0:
                             runMode = 1;
@@ -151,6 +155,7 @@ const btnsActions = {
         }
     },
     'btn-end-action': {
+        actions: {},
         beetwenModes: [btnOutlineDark, btnOutlineWarning],
         0: {
             all: {
@@ -253,6 +258,33 @@ function setOutAnim(elem) {
 //    $(elem).addClass(bgClass);
 }
 
+function runTrigeredAction(event, triggerName, elem) {
+    const id = $(elem).attr('id');
+    const fnDef = btnsActions[id].actions;
+    var entryPoint = null;
+    
+    if(fnDef.hasOwnProperty(runMode)) {
+        entryPoint = fnDef[runMode];
+    } else if(fnDef.hasOwnProperty('all')) {
+        entryPoint = fnDef.all;
+    }
+    
+    if(entryPoint !== null && entryPoint.trigger === triggerName) {
+        if(entryPoint.hasOwnProperty(triggerName)) {
+            if(baseActions.all.hasOwnProperty(before)) {
+                if( baseActions.all.before.hasOwnProperty(triggerName)) {
+                    baseActions.all.before[triggerName](event);
+                }
+            }
+            entryPoint[triggerName](event);
+            if(baseActions.all.hasOwnProperty(after)) {
+                if(baseActions.all.after.hasOwnProperty(triggerName)) {
+                    baseActions.all.before[triggerName](event);
+                }
+            }
+        }
+    }
+}
 
 $(document).ready(function () {
     if($(btnClass).length) {
@@ -261,6 +293,9 @@ $(document).ready(function () {
         });
         $(btnClass).mouseleave(function (e) {
             setOutAnim(this);
+        });
+        $(btnClass).click(function (e) {
+            runTrigeredAction(e, 'click', this);
         });
     }
 });
