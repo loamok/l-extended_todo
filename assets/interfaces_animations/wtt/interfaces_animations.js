@@ -28,7 +28,11 @@ const toolsIconsContainer = 'tools-icons';
 
 const btnsActions = {
     baseActions: {
-        disabledBtns: ['btn-rewind-action', 'btn-stop-action'],
+        disabledBtns: {
+            l0: ['btn-rewind-action', 'btn-stop-action', 'btn-end-action'],
+            l1: ['btn-calculator-action'],
+            l2: ['btn-calculator-action']
+        },
         all: {
             before: {
                 click: function(e) {
@@ -39,21 +43,49 @@ const btnsActions = {
         runModeChanged: function () {
             switch (runMode) {
                 case 0:
-                    for(const disabled of baseActions.disabledBtns) {
-                        $('#'+disabled).addClass(disabled);
+                    for(const disE of btnsActions.baseActions.disabledBtns.l1) {
+                        $('#'+disE).removeClass(disabled);
+                    }
+                    for(const disE of btnsActions.baseActions.disabledBtns.l2) {
+                        $('#'+disE).removeClass(disabled);
+                    }
+                    for(const disE of btnsActions.baseActions.disabledBtns.l0) {
+                        $('#'+disE).addClass(disabled);
+                    }
+                    break;
+                case 1:
+                    for(const disE of btnsActions.baseActions.disabledBtns.l0) {
+                        $('#'+disE).removeClass(disabled);
+                    }
+                    for(const disE of btnsActions.baseActions.disabledBtns.l2) {
+                        $('#'+disE).removeClass(disabled);
+                    }
+                    for(const disE of btnsActions.baseActions.disabledBtns.l1) {
+                        $('#'+disE).addClass(disabled);
+                    }
+                    break;
+                case 2:
+                    for(const disE of btnsActions.baseActions.disabledBtns.l0) {
+                        $('#'+disE).removeClass(disabled);
+                    }
+                    for(const disE of btnsActions.baseActions.disabledBtns.l1) {
+                        $('#'+disE).removeClass(disabled);
+                    }
+                    for(const disE of btnsActions.baseActions.disabledBtns.l2) {
+                        $('#'+disE).addClass(disabled);
                     }
                     break;
                     
                 default:
-                    for(const disabled of baseActions.disabledBtns) {
-                        $('#'+disabled).removeClass(disabled);
+                    for(const disE of btnsActions.baseActions.disabledBtns) {
+                        $('#'+disE).removeClass(disabled);
                     }
-                    
                     break;
             }
             $('#'+toolsIconsContainer + ' .btn').each(function (i,e) {
                 setOutAnim(this);
             });
+//            console.log('runMode', runMode);
         }
     },
     'btn-calculator-action': {
@@ -94,7 +126,6 @@ const btnsActions = {
         actions: {
             all: {
                 click: function(e) {
-                    console.log('ok');
                     switch (runMode) {
                         case 0:
                             runMode = 1;
@@ -106,13 +137,15 @@ const btnsActions = {
                             runMode = 1;
                             break;
                     }
-                    btnsActions.runModeChanged();
+                    btnsActions.baseActions.runModeChanged();
+                    setOverAnim($('#btn-playpause-action'));
                 }
             }
         },
         beetwenModes: [btnOutlineSuccess, btnSuccess, letBgClass],
         0: {
             all: {
+                alwaysSpan: {id: 'btn-playpause-action-1', class: [letHiddenClass]},
                 always: [btnOutlineSuccess],
                 elem: [letBgClass],
                 span: [letHiddenClass]
@@ -120,6 +153,7 @@ const btnsActions = {
         },
         1: {
             all: {
+                alwaysSpan: {id: 'btn-playpause-action-0', class: [letHiddenClass]},
                 always: [btnSuccess],
                 elem: [],
                 span: [letHiddenClass]
@@ -127,6 +161,7 @@ const btnsActions = {
         },
         2: {
             all: {
+                alwaysSpan: {id: 'btn-playpause-action-1', class: [letHiddenClass]},
                 always: [btnSuccess],
                 elem: [],
                 span: [letHiddenClass]
@@ -136,14 +171,13 @@ const btnsActions = {
     'btn-stop-action': {
         actions: {
             all: {
-                trigger: 'click',
-                fn: function(e) {
+                click: function(e) {
                     switch (runMode) {
                         default:
                             runMode = 0;
                             break;
                     }
-                    btnsActions.runModeChanged();
+                    btnsActions.baseActions.runModeChanged();
                 }
             }
         },
@@ -186,7 +220,7 @@ var position = 0;
 
 function getSel(elem) {
     const baseSelector = '#' + $(elem).attr('id') + ' span';
-    const suffix = ($(baseSelector).length > 1) ? '#' + $(elem).attr('id') + '-' + runMode : '';
+    const suffix = ($(baseSelector).length > 1) ? '.' + $(elem).attr('id') + '-' + runMode : '';
     const selector = baseSelector + suffix;
     
     return selector;
@@ -207,8 +241,6 @@ function setOverAnim(elem) {
     const selector = getSel(elem);
     const config = getConfig(elem);
     
-    console.debug(config);
-    
     if(config.beetwenModes !== null) {
         for(const className of config.beetwenModes) {
             $(elem).removeClass(className);
@@ -217,6 +249,11 @@ function setOverAnim(elem) {
     if(config.mode.all.hasOwnProperty('always')) {
         for(const className of config.mode.all.always) {
             $(elem).addClass(className);
+        }
+    }
+    if(config.mode.all.hasOwnProperty('alwaysSpan')) {
+        for(const className of config.mode.all.alwaysSpan.class) {
+            $(elem).children('span#' + config.mode.all.alwaysSpan.id).addClass(className);
         }
     }
     
@@ -247,7 +284,11 @@ function setOutAnim(elem) {
             $(elem).addClass(className);
         }
     }
-    
+    if(config.mode.all.hasOwnProperty('alwaysSpan')) {
+        for(const className of config.mode.all.alwaysSpan.class) {
+            $(elem).children('span#' + config.mode.all.alwaysSpan.id).addClass(className);
+        }
+    }
     for(const className of config.mode.all.elem) {
             $(elem).addClass(className);
     }
@@ -269,17 +310,17 @@ function runTrigeredAction(event, triggerName, elem) {
         entryPoint = fnDef.all;
     }
     
-    if(entryPoint !== null && entryPoint.trigger === triggerName) {
-        if(entryPoint.hasOwnProperty(triggerName)) {
-            if(baseActions.all.hasOwnProperty(before)) {
-                if( baseActions.all.before.hasOwnProperty(triggerName)) {
-                    baseActions.all.before[triggerName](event);
+    if(entryPoint !== null) {
+        if(typeof entryPoint[triggerName] === 'function') {
+            if(btnsActions.baseActions.all.hasOwnProperty('before')) {
+                if(typeof btnsActions.baseActions.all.before[triggerName]  === 'function') {
+                    btnsActions.baseActions.all.before[triggerName](event);
                 }
             }
             entryPoint[triggerName](event);
-            if(baseActions.all.hasOwnProperty(after)) {
-                if(baseActions.all.after.hasOwnProperty(triggerName)) {
-                    baseActions.all.before[triggerName](event);
+            if(btnsActions.baseActions.all.hasOwnProperty('after')) {
+                if(typeof btnsActions.baseActions.all.after[triggerName]  === 'function') {
+                    btnsActions.baseActions.all.after[triggerName](event);
                 }
             }
         }
