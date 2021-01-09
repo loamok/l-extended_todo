@@ -1,0 +1,35 @@
+{# 
+    Draw a modale for a form
+    use with :
+        {
+            modaleTitle, formTemplateName, formVar,
+            btns: { 
+                save: { id, label, classes* },
+                close: { id, label, classes* },
+        }
+    like : 
+        {% set options = {
+            'modaleTitle': "Test", 'formTemplateName': "myform", 'formVar': myformView,
+            'btns': { 
+                'save': { 'id':'btn-save', 'label': "Save Changes", 'classes': "plop tagada" },
+                'close': { 'id':'btn-close', 'label': "Close", 'classes': "plop tagada" }
+        }} %}
+        {% include 'work_time_tracker/elements/modal.html.twig' with { options } %}
+#}
+<div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{{ options.modaleTitle }}</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+          {% include 'work_time_tracker/forms/'~ options.formTemplateName ~'_form.html.twig' with {'form': options.formVar } only %}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary {{ (options.btns.save.classes is defined)?btns.save.classes:'' }}" id="{{ options.btns.save.id }}">{{ options.btns.save.label }}</button>
+        <button type="button" class="btn btn-secondary{{ (options.btns.close.classes is defined)?btns.close.classes:'' }}" id="{{ options.btns.close.id }}" data-dismiss="modal">{{ options.btns.close.label }}</button>
+      </div>
+    </div>
+</div>

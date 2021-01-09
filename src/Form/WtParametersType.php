@@ -32,6 +32,8 @@ class WtParametersType extends AbstractType {
             ->add('annualHolidayDaysNumber')
             ->add('noWorkBefore')
             ->add('noWorkAfter')
+                
+            ->add('dayParameters', DayParametersType::class, ['label' => false])
         ;
     }
 

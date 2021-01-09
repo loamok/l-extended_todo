@@ -7,6 +7,7 @@ use App\Repository\WtParametersRepository;
 use ApiPlatform\Core\Annotation\ApiResource;
 use ApiPlatform\Core\Annotation\ApiFilter;
 use ApiPlatform\Core\Annotation\ApiProperty;
+use ApiPlatform\Core\Annotation\ApiSubresource;
 
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -169,6 +170,12 @@ class WtParameters {
      * @ORM\Column(type="time", nullable=true)
      */
     private $noWorkAfter;
+
+    /**
+     * @ORM\OneToOne(targetEntity=DayParameters::class, mappedBy="wtParameter", cascade={"persist", "remove"})
+     * @ApiSubresource
+     */
+    private $dayParameters;
 
     public function __construct() {
         $this->global = false;
@@ -383,6 +390,23 @@ class WtParameters {
 
     public function setNoWorkAfter(?\DateTimeInterface $noWorkAfter): self {
         $this->noWorkAfter = $noWorkAfter;
+
+        return $this;
+    }
+
+    public function getDayParameters(): ?DayParameters
+    {
+        return $this->dayParameters;
+    }
+
+    public function setDayParameters(DayParameters $dayParameters): self
+    {
+        // set the owning side of the relation if necessary
+        if ($dayParameters->getWtParameter() !== $this) {
+            $dayParameters->setWtParameter($this);
+        }
+
+        $this->dayParameters = $dayParameters;
 
         return $this;
     }

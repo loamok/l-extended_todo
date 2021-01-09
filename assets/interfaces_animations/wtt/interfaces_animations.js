@@ -90,12 +90,28 @@ const btnsActions = {
     },
     'btn-calculator-action': {
         actions: {},
-        all: {
+        beetwenModes: [btnOutlineDark, btnOutlineDanger],
+        0: {
             all: {
+                always: [btnOutlineDanger],
                 elem: [letBgClass],
                 span: [letHiddenClass]
             }
         },
+        1: {
+            all: {
+                always: [btnOutlineDark],
+                elem: [letBgClass],
+                span: [letHiddenClass]
+            }
+        },
+        2: {
+            all: {
+                always: [btnOutlineDark],
+                elem: [letBgClass],
+                span: [letHiddenClass]
+            }
+        }
     },
     'btn-rewind-action': {
         actions: {},
@@ -169,6 +185,7 @@ const btnsActions = {
         }
     },
     'btn-stop-action': {
+        beetwenModes: [btnOutlineDark, btnOutlineInfo],
         actions: {
             all: {
                 click: function(e) {
@@ -181,8 +198,23 @@ const btnsActions = {
                 }
             }
         },
-        all: {
+        0: {
             all: {
+                always: [btnOutlineDark],
+                elem: [letBgClass],
+                span: [letHiddenClass]
+            }
+        },
+        1: {
+            all: {
+                always: [btnOutlineInfo],
+                elem: [letBgClass],
+                span: [letHiddenClass]
+            }
+        },
+        2: {
+            all: {
+                always: [btnOutlineInfo],
                 elem: [letBgClass],
                 span: [letHiddenClass]
             }
@@ -211,7 +243,7 @@ const btnsActions = {
                 elem: [letBgClass],
                 span: [letHiddenClass]
             }
-        },
+        }
     }
 };
 

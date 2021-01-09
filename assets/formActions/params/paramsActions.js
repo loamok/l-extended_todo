@@ -148,6 +148,7 @@ function getCbValue(name) {
 }
 
 function setParamValues(param) {
+    
     for(const field of paramsSimpleFieldsIds) {
         setSimpleValues(field, param[field]);
     }

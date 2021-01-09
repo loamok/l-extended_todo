@@ -1,0 +1,9 @@
+{# 
+Use it with 'parameters': {'label': "Duration label", 'id': "container_id", 'widget': form.timeDurationField }
+#}
+<div class="form-group mb-3">
+    <label>{{ parameters.label }} : </label>
+    <div id="{{ parameters.id }}"></div>
+    <div class="clearfix"></div>
+    {{ form_widget(parameters.widget) }}
+</div>

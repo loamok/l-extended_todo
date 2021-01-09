@@ -1,0 +1,65 @@
+{% set definesPd = {
+    'apd': {
+        'label': "Am break duration", 'id': "wt_parameters_amPauseDuration_ph", 'widget': form.amPauseDuration
+    }, 
+    'lpd': {
+        'label': "Lunch break duration", 'id': "wt_parameters_amPmPauseDuration_ph", 'widget': form.amPmPauseDuration
+    }, 
+    'ppd': {
+        'label': "Pm break duration", 'id': "wt_parameters_pmPauseDuration_ph", 'widget': form.pmPauseDuration
+    }
+} %}
+    <fieldset id="tcdFs" name="durationsFs" class="card">
+        <div class="card-header" id="headingDss">
+            <h5 class="mb-0">Typical course of the day <button class="btn btn-secondary"
+                    type="button" data-toggle="collapse" data-target="#dayStartStop" aria-expanded="false" aria-controls="dayStartStop">
+                <i class="bi bi-caret-down-fill"></i>
+            </button></h5>
+        </div>
+        <div id="dayStartStop" class="collapse" aria-labelledby="headingDss" data-parent="#{{ parentid }}">
+            <div class="form-group mb-3">
+                {{ form_label(form.amStart) }}
+                {{ form_widget(form.amStart) }}
+            </div>
+            <div class="form-group mb-3">
+                {{ form_label(form.amEnd) }}
+                {{ form_widget(form.amEnd) }}
+            </div>
+            {% include 'work_time_tracker/forms/templates/time_duration.html.twig' with { parameters: definesPd.lpd } %}
+            <div class="form-group mb-3">
+                {{ form_label(form.pmStart) }}
+                {{ form_widget(form.pmStart) }}
+            </div>
+            <div class="form-group mb-3">
+                {{ form_label(form.pmEnd) }}
+                {{ form_widget(form.pmEnd) }}
+            </div>
+        </div>
+        <div class="card-header" id="headingPd">
+            <h5 class="mb-0">Breaks definition <button class="btn btn-secondary"
+                    type="button" data-toggle="collapse" data-target="#pausesDurations" aria-expanded="false" aria-controls="pausesDurations">
+                <i class="bi bi-caret-down-fill"></i>
+            </button></h5>
+        </div>
+        <div id="pausesDurations" class="collapse" aria-labelledby="headingPd" data-parent="#{{ parentid }}">
+            <div class="form-group mb-3">
+                {{ form_label(form.amPauseStart) }}
+                {{ form_widget(form.amPauseStart) }}
+            </div>
+            {% include 'work_time_tracker/forms/templates/time_duration.html.twig' with { parameters: definesPd.apd } %}
+            <div class="form-group mb-3">
+                {{ form_label(form.amPauseEnd) }}
+                {{ form_widget(form.amPauseEnd) }}
+            </div>
+            <div class="form-group mb-3">
+                {{ form_label(form.pmPauseStart) }}
+                {{ form_widget(form.pmPauseStart) }}
+            </div>
+            {% include 'work_time_tracker/forms/templates/time_duration.html.twig' with { parameters: definesPd.ppd } %}
+            <div class="form-group mb-3">
+                {{ form_label(form.pmPauseEnd) }}
+                {{ form_widget(form.pmPauseEnd) }}
+            </div>
+        </div>
+    </fieldset>
+{{ (parentDoRest==false)?form_rest(form):"" }}

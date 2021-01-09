@@ -46,23 +46,13 @@
 {#    <div class="let-hidden">#}
     <div id="templates" class="">
         <div id="params-form" class="modal" tabindex="-1" role="dialog">
-          <div class="modal-dialog" role="document">
-            <div class="modal-content">
-              <div class="modal-header">
-                <h5 class="modal-title">Parameters</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                  <span aria-hidden="true">&times;</span>
-                </button>
-              </div>
-              <div class="modal-body">
-                  {% include 'work_time_tracker/params/wtparameters_form.html.twig' with {'form': epFormView} %}
-              </div>
-              <div class="modal-footer">
-                  <button type="button" class="btn btn-primary" id="params-form-save">Save changes</button>
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-              </div>
-            </div>
-          </div>
+            {% set options = {
+            'modaleTitle': "Parameters", 'formTemplateName': "params/wtparameters", 'formVar': epFormView,
+            'btns': { 
+                'save': { 'id':'params-form-save', 'label': "Save Changes" },
+                'close': { 'id':'btn-close', 'label': "Close" }
+        }} %}
+          {% include 'work_time_tracker/elements/form_modale.html.twig' with { options } only %}
         </div>
               <script type="application/json" id="currentParam">{ "id": null }</script>
               <script type="application/json" id="globalParam">{ "id": {% if globalParam is not null %}"{{ globalParam.id }}"{% else %}null{% endif %} }</script>

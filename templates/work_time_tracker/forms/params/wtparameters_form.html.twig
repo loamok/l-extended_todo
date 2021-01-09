@@ -1,0 +1,10 @@
+{# empty Twig template #}
+{{ form_start(form) }}
+<div id="wt_parameters" class="card">
+    {% include 'work_time_tracker/forms/params/subs/wtparameters_form_sub.html.twig' with { parentDoRest: true, parentid: "wt_parameters", form: form } only %}
+    <fieldset><legend class="h4">Day parameters</legend></fieldset>
+    {% include 'work_time_tracker/forms/params/subs/dayparameters_form_sub.html.twig' with { parentDoRest: true, parentid: "wt_parameters", form: form.dayParameters } only %}
+{#    {% do form.dayParameters['label'].setRendered %}#}
+{{ form_rest(form) }}
+</div>
+{{ form_end(form) }}

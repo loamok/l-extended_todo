@@ -49,7 +49,8 @@ export function getOneWtParameter(id, successCallback, errorCallback) {
             url: Routing.generate('api_wt_parameters_get_item', {'id': id}),
             method: 'GET',
             success: baseCallFunction.success,
-            error: baseCallFunction.error
+            error: baseCallFunction.error,
+            dataType: 'json'
     };
     global.additionnalHeaders = [{'name': 'Accept', 'value': "application/ld+json"}];
     call(callFunction);
