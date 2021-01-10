@@ -10,7 +10,9 @@ const debug = false;
 var globalParam = null;
 
 import { 
-    paramsFieldsIds, paramsFieldsIdsSuffix, paramsFieldsIdsPrefix, paramsHoursFieldsIds, 
+    addDayFieldToSomething,
+    paramsFieldsIds, paramsFieldsIdsSuffix, paramsFieldsDayParametersIdsPrefix,
+    paramsAutoDurationFieldsIds, paramsFieldsIdsPrefix, paramsHoursFieldsIds, 
     paramsSimpleFieldsIds, paramsUuidFieldsIds, paramsCbFieldsIds, paramsIntFieldsIds, jsonRepresentation
 } from './paramFields';
 
@@ -184,7 +186,11 @@ function prepareValuesForAjax() {
     for(const input of paramsFieldsIds) {
         translateValuesFromSelector(input);
         translateValuesForAjax(input);
-        res[input] = getSimpleValues(input);
+        if(input.includes(paramsFieldsDayParametersIdsPrefix)) {
+            res = addDayFieldToSomething(input, res, getSimpleValues(input));
+        } else {
+            res[input] = getSimpleValues(input);
+        }
         translateValuesFromAjax(input);
     }
     
@@ -193,13 +199,22 @@ function prepareValuesForAjax() {
     }
     
     for(const input of paramsHoursFieldsIds) {
-        res[input] = getHoursStringForJson(input);
+        if(input.includes(paramsFieldsDayParametersIdsPrefix)) {
+            res = addDayFieldToSomething(input, res, getHoursStringForJson(input));
+        } else {
+            res[input] = getHoursStringForJson(input);
+        }
     }
     
     for (const f of paramsUuidFieldsIds) {
-        setSimpleValues(f.name, getUuidValues(f.name));
-        translateUpUuid(f);
-        res[f.name] = getSimpleValues(f.name, true);
+        if(f.name.includes(paramsFieldsDayParametersIdsPrefix)) {
+            setSimpleValues(f.name, getUuidValues(f.name));
+//            @todo res = addDayFieldToSomething(input, res, getSimpleValues(input));
+        } else {
+            setSimpleValues(f.name, getUuidValues(f.name));
+            translateUpUuid(f);
+            res[f.name] = getSimpleValues(f.name, true);
+        }
     }
     
     for (const f of paramsCbFieldsIds) {
@@ -230,6 +245,10 @@ $(document).ready(function(){
     if($('#params-form').length > 0) {
         $('#params-form-save').click(function(e){
             var values = prepareValuesForAjax();
+            
+            console.log('prepared', values);
+            return; 
+            /*
             var id = JSON.parse($('script#globalParam').text()).id;
             if(id === null) {
                 if(debug)
@@ -240,6 +259,8 @@ $(document).ready(function(){
                     console.log('id is not null :', id);
                 putOneWtParameter(id, values, setParamValues);
             }
+             * 
+             */
             if(debug)
                 console.log('values :', values);
     

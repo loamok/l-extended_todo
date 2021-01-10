@@ -1,7 +1,8 @@
 {# empty Twig template #}
 {{ form_start(form) }}
 <div id="day_parameters" class="card">
-    {% include 'work_time_tracker/forms/params/subs/dayparameters_form_sub.html.twig' with { parentDoRest: true, parentid: "day_parameters", form: form } only %}
+    {% include 'work_time_tracker/forms/params/subs/dayparameters_form_sub.html.twig' with { 
+parentDoRest: true, parentid: "day_parameters", form: form, idPrefix: "wt_dayParameters" } only %}
 {{ form_rest(form) }}
 </div>
 {{ form_end(form) }}

@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Agenda;
+use App\Entity\User;
 use App\Entity\WtParameters;
 use App\Form\AgendaFormType;
+use App\Form\WtParametersType;
 use App\Repository\AgendaRepository;
 use App\WorkTrackServices\AgendaService;
 use App\WorkTrackServices\WtParametersService;
@@ -33,14 +35,15 @@ class WorkTimeTrackerController extends AbstractController {
         $this->wtParamsSvc = $wtParamsSvc;
     }
 
-    protected function getCommonVariables(UserInterface $user, ?Agenda $agenda = null, ?WtParameters $params = null) {
+    protected function getCommonVariables(?User $user = null, ?Agenda $agenda = null, ?WtParameters $params = null) {
+        $user = $user ?? $this->getUser();
         $agenda = $agenda ?? new Agenda();
         $this->denyAccessUnlessGranted('list', $agenda);
         $params = $params ?? new WtParameters();
         $this->denyAccessUnlessGranted('list', $params);
         
         $emptyParams = new WtParameters();
-        $epForm = $this->createForm(\App\Form\WtParametersType::class, $emptyParams);
+        $epForm = $this->createForm(WtParametersType::class, $emptyParams);
         
         return [
             'agendas' => $this->agendaSvc->getWTAgendasForUser($user),
@@ -55,8 +58,8 @@ class WorkTimeTrackerController extends AbstractController {
      * @Route("/worktime_tracker", name="worktime_tracker")
      * @IsGranted("ROLE_USER")
      */
-    public function index(UserInterface $user): Response {
-        
+    public function index(?User $user = null): Response {
+        $user = $user ?? $this->getUser();
         return $this->render('work_time_tracker/index.html.twig', array_merge([
             'controller_name' => 'WorkTimeTrackerController',
         ], $this->getCommonVariables($user)));
@@ -66,7 +69,8 @@ class WorkTimeTrackerController extends AbstractController {
      * @Route("/worktime_tracker/create", name="worktime_tracker_create")
      * @IsGranted("ROLE_USER")
      */
-    public function create(UserInterface $user, Request $request): Response {
+    public function create(Request $request, ?User $user = null): Response {
+        $user = $user ?? $this->getUser();
         $agenda = new Agenda();
         $this->denyAccessUnlessGranted('create', $agenda);
         
@@ -92,7 +96,8 @@ class WorkTimeTrackerController extends AbstractController {
      * @Route("/worktime_tracker/{id}", name="worktime_tracker_display")
      * @IsGranted("ROLE_USER")
      */
-    public function display(UserInterface $user, Agenda $agenda): Response {
+    public function display(Agenda $agenda, ?User $user = null): Response {
+        $user = $user ?? $this->getUser();
         $this->denyAccessUnlessGranted('read', $agenda);
         
         return $this->render('work_time_tracker/display.html.twig',  array_merge([

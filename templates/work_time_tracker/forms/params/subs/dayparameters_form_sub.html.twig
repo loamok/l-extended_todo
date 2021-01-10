@@ -1,12 +1,12 @@
 {% set definesPd = {
     'apd': {
-        'label': "Am break duration", 'id': "wt_parameters_amPauseDuration_ph", 'widget': form.amPauseDuration
+        'label': "Am break duration", 'id': idPrefix ~ "_amPauseDuration_ph", 'widget': form.amPauseDuration
     }, 
     'lpd': {
-        'label': "Lunch break duration", 'id': "wt_parameters_amPmPauseDuration_ph", 'widget': form.amPmPauseDuration
+        'label': "Lunch break duration", 'id': idPrefix ~ "_amPmPauseDuration_ph", 'widget': form.amPmPauseDuration
     }, 
     'ppd': {
-        'label': "Pm break duration", 'id': "wt_parameters_pmPauseDuration_ph", 'widget': form.pmPauseDuration
+        'label': "Pm break duration", 'id': idPrefix ~ "_pmPauseDuration_ph", 'widget': form.pmPauseDuration
     }
 } %}
     <fieldset id="tcdFs" name="durationsFs" class="card">
