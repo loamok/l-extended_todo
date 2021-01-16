@@ -11,10 +11,14 @@
 } %}
     <fieldset id="tcdFs" name="durationsFs" class="card">
         <div class="card-header" id="headingDss">
-            <h5 class="mb-0">Typical course of the day <button class="btn btn-secondary"
-                    type="button" data-toggle="collapse" data-target="#dayStartStop" aria-expanded="false" aria-controls="dayStartStop">
-                <i class="bi bi-caret-down-fill"></i>
-            </button></h5>
+            <h5 class="mb-0">
+                <a href="#" class="noClick" data-toggle="collapse" data-target="#dayStartStop" aria-expanded="false" aria-controls="dayStartStop">
+                    Typical course of the day 
+                    <button class="btn btn-secondary" type="button">
+                        <i class="bi bi-caret-down-fill"></i>
+                    </button>
+                </a>
+            </h5>
         </div>
         <div id="dayStartStop" class="collapse" aria-labelledby="headingDss" data-parent="#{{ parentid }}">
             <div class="form-group mb-3">
@@ -36,10 +40,14 @@
             </div>
         </div>
         <div class="card-header" id="headingPd">
-            <h5 class="mb-0">Breaks definition <button class="btn btn-secondary"
-                    type="button" data-toggle="collapse" data-target="#pausesDurations" aria-expanded="false" aria-controls="pausesDurations">
-                <i class="bi bi-caret-down-fill"></i>
-            </button></h5>
+            <h5 class="mb-0">
+                <a href="#" class="noClick" data-toggle="collapse" data-target="#pausesDurations" aria-expanded="false" aria-controls="pausesDurations">
+                    Breaks definition 
+                    <button class="btn btn-secondary" type="button">
+                        <i class="bi bi-caret-down-fill"></i>
+                    </button>
+                </a>
+            </h5>
         </div>
         <div id="pausesDurations" class="collapse" aria-labelledby="headingPd" data-parent="#{{ parentid }}">
             <div class="form-group mb-3">

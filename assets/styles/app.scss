@@ -4,6 +4,11 @@
 @import 'jquery.timesetter.min';
 @import 'app.css';
 
+.modal-dialog {
+    min-width: 255px;
+    max-width: 75%;
+}
+
 .login-form-element {
 }
 

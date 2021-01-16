@@ -35,7 +35,7 @@ global.dissmissAlert = dissmissAlert;
 
 import './js/notYet';
 import './manipulateToken';
-import './api/getAgTypes';
+import './api/ag_types/getAgTypes';
 import './api/wt_parameters/wt_parameters';
 import './formActions/params/paramFields';
 import './formActions/params/times_selectors';
