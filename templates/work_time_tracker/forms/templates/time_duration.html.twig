@@ -1,9 +1,24 @@
 {# 
+@todo : gérer les classes comme les datas
 Use it with 'parameters': {'label': "Duration label", 'id': "container_id", 'widget': form.timeDurationField }
 #}
+{% if parameters.additionnalClasses is defined %}
+    {% set additionnalClasses = parameters.additionnalClasses %}
+{% else %}
+    {% set additionnalClasses = "" %}
+{% endif %}
+{% if parameters.datas is defined %}
+    {% set datas = parameters.datas %}
+{% else %}
+    {% set datas = [] %}
+{% endif %}
 <div class="form-group mb-3">
     <label>{{ parameters.label }} : </label>
-    <div id="{{ parameters.id }}"></div>
+    <div id="{{ parameters.id }}" class="{{ additionnalClasses }}"
+         {% for key, data in datas %}
+             data-{{ key }}="{{ data }}"
+         {% endfor %}
+         ></div>
     <div class="clearfix"></div>
     {{ form_widget(parameters.widget) }}
 </div>

@@ -1,12 +1,15 @@
 {% set definesPd = {
     'apd': {
-        'label': "Am break duration", 'id': idPrefix ~ "_amPauseDuration_ph", 'widget': form.amPauseDuration
+        'label': "Am break duration", 'id': idPrefix ~ "_amPauseDuration_ph", 'widget': form.amPauseDuration, 
+        'additionnalClasses': "pauseCallbackDuration", 'datas': {'start': idPrefix ~ "_amPauseStart", 'end': idPrefix ~ "_amPauseEnd"}
     }, 
     'lpd': {
-        'label': "Lunch break duration", 'id': idPrefix ~ "_amPmPauseDuration_ph", 'widget': form.amPmPauseDuration
+        'label': "Lunch break duration", 'id': idPrefix ~ "_amPmPauseDuration_ph", 'widget': form.amPmPauseDuration, 
+        'additionnalClasses': "pauseCallbackDuration", 'datas': {'start': idPrefix ~ "_amEnd", 'end': idPrefix ~ "_pmStart"}
     }, 
     'ppd': {
-        'label': "Pm break duration", 'id': idPrefix ~ "_pmPauseDuration_ph", 'widget': form.pmPauseDuration
+        'label': "Pm break duration", 'id': idPrefix ~ "_pmPauseDuration_ph", 'widget': form.pmPauseDuration, 
+        'additionnalClasses': "pauseCallbackDuration", 'datas': {'start': idPrefix ~ "_pmPauseStart", 'end': idPrefix ~ "_pmPauseEnd"}
     }
 } %}
     <fieldset id="tcdFs" name="durationsFs" class="card">
@@ -27,12 +30,18 @@
             </div>
             <div class="form-group mb-3">
                 {{ form_label(form.amEnd) }}
-                {{ form_widget(form.amEnd) }}
+                {{ form_widget(form.amEnd, {'attr': {
+                    'class': 'pauseCallbackFields', 
+                    'data-duration': idPrefix ~ "_amPmPauseDuration_ph", 
+                    'data-end': idPrefix ~ "_pmStart"}}) }}
             </div>
             {% include 'work_time_tracker/forms/templates/time_duration.html.twig' with { parameters: definesPd.lpd } %}
             <div class="form-group mb-3">
                 {{ form_label(form.pmStart) }}
-                {{ form_widget(form.pmStart) }}
+                {{ form_widget(form.pmStart, {'attr': {
+                    'class': 'pauseCallbackFields', 
+                    'data-duration': idPrefix ~ "_amPmPauseDuration_ph", 
+                    'data-start': idPrefix ~ "_amEnd"}}) }}
             </div>
             <div class="form-group mb-3">
                 {{ form_label(form.pmEnd) }}
@@ -52,21 +61,33 @@
         <div id="pausesDurations" class="collapse" aria-labelledby="headingPd" data-parent="#{{ parentid }}">
             <div class="form-group mb-3">
                 {{ form_label(form.amPauseStart) }}
-                {{ form_widget(form.amPauseStart) }}
+                {{ form_widget(form.amPauseStart, {'attr': {
+                    'class': 'pauseCallbackFields', 
+                    'data-duration': idPrefix ~ "_amPauseDuration_ph", 
+                    'data-end': idPrefix ~ "_amPauseEnd"}}) }}
             </div>
             {% include 'work_time_tracker/forms/templates/time_duration.html.twig' with { parameters: definesPd.apd } %}
             <div class="form-group mb-3">
                 {{ form_label(form.amPauseEnd) }}
-                {{ form_widget(form.amPauseEnd) }}
+                {{ form_widget(form.amPauseEnd, {'attr': {
+                    'class': 'pauseCallbackFields', 
+                    'data-duration': idPrefix ~ "_amPauseDuration_ph", 
+                    'data-start': idPrefix ~ "_amPauseStart"}}) }}
             </div>
             <div class="form-group mb-3">
                 {{ form_label(form.pmPauseStart) }}
-                {{ form_widget(form.pmPauseStart) }}
+                {{ form_widget(form.pmPauseStart, {'attr': {
+                    'class': 'pauseCallbackFields', 
+                    'data-duration': idPrefix ~ "_pmPauseDuration_ph", 
+                    'data-end': idPrefix ~ "_pmPauseEnd"}}) }}
             </div>
             {% include 'work_time_tracker/forms/templates/time_duration.html.twig' with { parameters: definesPd.ppd } %}
             <div class="form-group mb-3">
                 {{ form_label(form.pmPauseEnd) }}
-                {{ form_widget(form.pmPauseEnd) }}
+                {{ form_widget(form.pmPauseEnd, {'attr': {
+                    'class': 'pauseCallbackFields', 
+                    'data-duration': idPrefix ~ "_pmPauseDuration_ph", 
+                    'data-start': idPrefix ~ "_pmPauseStart"}}) }}
             </div>
         </div>
     </fieldset>

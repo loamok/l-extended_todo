@@ -1,3 +1,5 @@
+const debug = true;
+
 const paramsFieldsIdsPrefix = 'wt_parameters_';
 const paramsFieldsDayParametersIdsPrefix = 'dayParameters_';
 const paramsFieldsIdsSuffix = '_ph';
@@ -15,20 +17,19 @@ const paramsFieldsIds = [
     'dayParameters_amPmPauseDuration',
     'dayParameters_pmPauseDuration'
 ];
+
 const paramsAutoDurationFieldsIds = [
     {
         dayParameters_amPauseDuration: {
             start: 'dayParameters_amPauseStart',
             end: 'dayParameters_amPauseEnd'
         }
-    },
-    {
+    }, {
         dayParameters_amPmPauseDuration: {
             start: 'dayParameters_amEnd',
             end: 'dayParameters_pmStart'
         }
-    },
-    { 
+    }, { 
         dayParameters_pmPauseDuration: {
             start: 'dayParameters_pmPauseStart',
             end: 'dayParameters_pmPauseEnd'
@@ -62,6 +63,7 @@ const paramsCbFieldsIds = [
 const paramsUuidFieldsIds = [
     { name: 'user', identifier: "/api/users/" },
     { name: 'agenda', identifier: "/api/agendas/" },
+    { name: 'dayParameters_id', identifier: "/api/day_parameters/" },
     { name: 'dayParameters_wtParameter', identifier: "/api/wt_parameters/" }
 ];
 
@@ -85,7 +87,7 @@ export function addDayFieldToSomething(f, something, value) {
     
     something['dayParameters'] = dayParameters;
     
-    return something
+    return something;
 }
 
 for (const f of paramsFieldsIds) {
@@ -120,7 +122,7 @@ for (const f of paramsCbFieldsIds) {
     jsonRepresentation[f] = null;
 }
 
-console.log('representation', jsonRepresentation);
+if(debug) console.log('representation', jsonRepresentation);
 
 export { 
     paramsFieldsIdsSuffix, paramsFieldsIdsPrefix, paramsFieldsDayParametersIdsPrefix,

@@ -7,6 +7,7 @@ import { getOneWtParameter, postOneWtParameter, putOneWtParameter } from '../../
 
 const debug = false;
 
+var callbackEnded = true;
 var globalParam = null;
 
 import { 
@@ -83,7 +84,9 @@ function getUuidValues(name) {
 function translateUpUuid(uuid) {
     var uuidVal = $('#'+paramsFieldsIdsPrefix+ uuid.name).val();
     
-    if(uuidVal.length < 1) {
+    if(uuidVal === undefined || uuidVal.length < 1) {
+        if (debug) 
+            console.log('missing Uuid element : ', uuid);
         return;
     }
     
@@ -233,16 +236,263 @@ function prepareValuesForAjax() {
 
 function loadGlobalParam() {
     globalParam = JSON.parse($('#globalParam').text());
-    if(debug) {
+    if(debug) 
         console.log("globalParam : ", globalParam);
-    }
-    if(globalParam.id !== null) {
+    
+    if(globalParam.id !== null) 
         getOneWtParameter(globalParam.id, setParamValues);
+}
+
+function dayParamsCalculateDurationsAndBounds(start, end, duration, trigger) {
+    if(!callbackEnded)
+        return false;
+    callbackEnded = false;
+    if(debug) {
+        console.log('start : ', start);
+        console.log('end : ', end);
+        console.log('duration : ', duration);
+        console.log('trigger : ', trigger);
     }
+    
+    /* récupération des valeurs */
+    /* start */
+    const startId = start.attr('id');
+    var startValH = $('#'+startId+"_hour").val();
+    startValH = (startValH > 9)?startValH:(startValH>0)?'0'+startValH:"00";
+    var startValM = $('#'+startId+"_minute").val();
+    startValM = (startValM > 9)?startValM:(startValM>0)?'0'+startValM:"00";
+    var startVal = new Date("1970-01-01T"+startValH+":"+startValM+":00");
+    /* end */
+    const endId = end.attr('id');
+    var endValH = $('#'+endId+"_hour").val();
+    endValH = (endValH > 9)?endValH:(endValH>0)?'0'+endValH:"00";
+    var endValM = $('#'+endId+"_minute").val();
+    endValM = (endValM > 9)?endValM:(endValM>0)?'0'+endValM:"00";
+    var endVal = new Date("1970-01-01T"+endValH+":"+endValM+":00");
+    /* duration */
+    const durId = duration.attr('id');
+    var durValH = $('#'+durId).timesetter().getHoursValue();
+    durValH = (durValH > 9)?durValH:(durValH>0)?'0'+durValH:"00";
+    var durValM = $('#'+durId).timesetter().getMinutesValue();
+    durValM = (durValM > 9)?durValM:(durValM>0)?'0'+durValM:"00";
+    var durVal = new Date("1970-01-01T"+durValH+":"+durValM+":00");
+    
+    if(debug) {
+        console.log('startVal : ', startVal);
+        console.log('endVal : ', endVal);
+        console.log('durVal : ', durVal);
+    }
+    
+    startValH = parseInt(startValH);
+    startValM = parseInt(startValM);
+    durValH = parseInt(durValH);
+    durValM = parseInt(durValM);
+    endValH = parseInt(endValH);
+    endValM = parseInt(endValM);
+    var finalStartH;
+    var finalStartM;
+    var finalDurH;
+    var finalDurM;
+    var finalEndH;
+    var finalEndM;
+    
+    switch (trigger) {
+        case 'start':
+            finalStartH = startValH;
+            finalStartM = startValM;
+            
+            if(durValH > 0 || durValM > 0) {
+                finalDurH = durValH;
+                finalDurM = durValM;
+                finalEndH = startValH + durValH;
+                finalEndM = startValM + durValM;
+                
+                if(finalEndM >= 60) {
+                    finalEndM -= 60;
+                    finalEndH += 1;
+                }
+                
+            } else if(endValH > 0 || endValM > 0) {
+                finalEndH = endValH;
+                finalEndM = endValM;
+                if(endValH < startValH)
+                    endValH += 24;
+                finalDurH = endValH - startValH;
+                if(endValM < startValM)
+                    endValM += 60;
+                finalDurM = endValM - startValM;
+                
+                if(finalDurM >= 60) { 
+                    finalDurM -= 60;
+                    finalDurH += 1;
+                }
+                
+            } else if (durValH < 1 && durValM < 1) {
+                finalEndH = finalStartH;
+                finalEndM = finalStartM;                
+            }
+            break;
+        case 'end':
+            finalEndH = endValH;
+            finalEndM = endValM;
+            
+            if(durValH > 0 || durValM > 0) {
+                finalDurH = durValH;
+                finalDurM = durValM;
+                finalStartH = endValH - durValH;
+                finalStartM = endValM - durValM;
+                
+                if(finalStartM < 0) {
+                    finalStartM += 60;
+                    finalStartH -= 1;
+                }
+            } else if(startValH > 0 || startValM > 0) {
+                finalStartH = startValH;
+                finalStartM = startValM;
+                
+                if(endValH < startValH)
+                    endValH += 24;
+                finalDurH = endValH - startValH;
+                if(endValM < startValM)
+                    endValM += 60;
+                finalDurM = endValM - startValM;
+                
+                if(finalDurM >= 60) { 
+                    finalDurM -= 60;
+                    finalDurH += 1;
+                }
+                
+            } else if (durValH < 1 && durValM < 1) {
+                finalStartH = finalEndH;
+                finalStartM = finalEndM;                
+            }
+            break;
+        case 'duration':
+            finalDurH = durValH;
+            finalDurM = durValM;
+            
+            if(startValH > 0 || startValM > 0) {
+                finalStartH = startValH;
+                finalStartM = startValM;
+                finalEndH = startValH + durValH;
+                finalEndM = startValM + durValM;
+                
+                if(finalEndM >= 60) {
+                    finalEndM -= 60;
+                    finalEndH += 1;
+                }
+            } else if(endValH > 0 || endValM > 0) {
+                finalEndH = endValH;
+                finalEndM = endValM;
+                
+                finalStartH = endValH - durValH;
+                finalStartM = endValM - durValM;
+                
+                if(finalStartM < 0) { 
+                    finalStartM += 60;
+                    finalStartH -= 1;
+                }
+            }
+            
+            break;
+            
+        default:
+            
+            break;
+    }
+    
+    if(finalDurH <= 0) 
+        finalDurH += 24;
+    if(finalDurH >= 24) 
+        finalDurH -= 24;
+    if(finalStartH < 0) 
+        finalStartH += 24;
+    if(finalStartH >= 24) 
+        finalStartH -= 24;
+    if(finalEndH < 0) 
+        finalEndH += 24;
+    if(finalEndH >= 24) 
+        finalEndH -= 24;
+    
+    if(debug) {
+        console.log('finalStart: ', {H: finalStartH, M: finalStartM});
+        console.log('finalEndVal : ', {H: finalEndH, M: finalEndM});
+        console.log('finalDurVal : ', {H: finalDurH, M: finalDurM});
+    }
+        
+    $('#'+startId+"_hour").val(parseInt(finalStartH));
+    if(finalStartH < 1)
+        $('#'+startId+'_hour').val($('#'+startId+'_hour option[value="0"]').attr('value'));
+    $('#'+startId+"_minute").val(parseInt(finalStartM));
+    if(finalStartM < 1)
+        $('#'+startId+'_minute').val($('#'+startId+'_minute option[value="0"]').attr('value'));
+    $('#'+durId).timesetter().setHour(parseInt(finalDurH));
+    $('#'+durId).timesetter().setMinute(parseInt(finalDurM));
+    $('#'+endId+"_hour").val(parseInt(finalEndH));
+    if(finalEndH < 1)
+        $('#'+endId+'_hour').val($('#'+endId+'_hour option[value="0"]').attr('value'));
+    $('#'+endId+"_minute").val(parseInt(finalEndM));
+    if(finalEndM < 1)
+        $('#'+endId+'_minute').val($('#'+startId+'_minute option[value="0"]').attr('value'));
+    
+    callbackEnded = true;
+}
+function dayParamsExecPauseCallbackDuration(event, element) {
+    var hasStart = false;
+    var hasEnd = false;
+    var hasDuration = false;
+    var duration;
+    var start;
+    var end;
+    var trigger;
+    
+    if(typeof $(element).data('start') !== 'undefined') {
+        start = $('#'+$(element).data('start'));
+        hasStart = true;
+    } else {
+        start = $(element);
+    }
+    if(typeof $(element).data('end') !== 'undefined') {
+        end = $('#'+$(element).data('end'));
+        hasEnd = true;
+    } else {
+        end = $(element);
+    }
+    if(typeof $(element).data('duration') !== 'undefined') {
+        duration = $('#'+$(element).data('duration'));
+        hasDuration = true;
+    } else {
+        duration = $(element);
+        trigger = 'duration';
+    }
+    
+    if(hasDuration && !hasStart) {
+        trigger = 'start';
+    } else if (hasDuration && !hasEnd) {
+        trigger = 'end';
+    }
+
+    dayParamsCalculateDurationsAndBounds(start, end, duration, trigger);
+}
+function dayParamsSetPauseCallbackDuration(element) {
+    $(element).timesetter().change(function(e) {
+        dayParamsExecPauseCallbackDuration(e, this);
+    });
+}
+function dayParamsSetPauseCallbackFields(element) {
+    $(element).change(function(e) {
+        dayParamsExecPauseCallbackDuration(e, this);
+    });
 }
 
 $(document).ready(function(){
     if($('#params-form').length > 0) {
+        $('.pauseCallbackDuration').each(function (i,e) {
+            dayParamsSetPauseCallbackDuration(this);
+        });
+        $('.pauseCallbackFields').each(function (i,e) {
+            dayParamsSetPauseCallbackFields(this);
+        });
         $('#params-form-save').click(function(e){
             var values = prepareValuesForAjax();
             

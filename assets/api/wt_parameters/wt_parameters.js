@@ -1,4 +1,3 @@
-import { call, additionnalHeaders } from '../../manipulateToken';
 import { baseCallback, postOne, putOne, getOne } from '../commons/functions';
 
 const debug = false;
