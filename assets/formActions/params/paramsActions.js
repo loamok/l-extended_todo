@@ -1,5 +1,6 @@
 
 import { getOneWtParameter, postOneWtParameter, putOneWtParameter } from '../../api/wt_parameters/wt_parameters';
+import { getTimeVal, getTimeValTs, addTime, subsTime, parseIntTime, checkTimeVals, setTimeVal } from '../../js/let/let_utils';
 
 const debug = false;
 
@@ -244,25 +245,17 @@ function dayParamsCalculateDurationsAndBounds(start, end, duration, trigger) {
     /* récupération des valeurs */
     /* start */
     const startId = start.attr('id');
-    var startValH = $('#'+ startId +'_hour').val();
-    startValH = (startValH > 9) ? startValH : (startValH > 0) ? '0' + startValH : '00';
-    var startValM = $('#'+startId+'_minute').val();
-    startValM = (startValM > 9) ? startValM : (startValM > 0) ? '0' + startValM : '00';
-    var startVal = new Date('1970-01-01T' + startValH + ':' + startValM + ':00');
+    var startVal = getTimeVal(startId) ;
     /* end */
     const endId = end.attr('id');
-    var endValH = $('#' + endId + '_hour').val();
-    endValH = (endValH > 9) ? endValH : (endValH > 0) ? '0' + endValH: '00';
-    var endValM = $('#' + endId + '_minute').val();
-    endValM = (endValM > 9) ? endValM : (endValM > 0) ? '0' + endValM : '00';
-    var endVal = new Date('1970-01-01T' + endValH + ':' + endValM + ':00');
+    var endVal = getTimeVal(endId) ;
     /* duration */
     const durId = duration.attr('id');
-    var durValH = $('#' + durId).timesetter().getHoursValue();
-    durValH = (durValH > 9) ? durValH : (durValH > 0) ? '0' + durValH : '00';
-    var durValM = $('#' + durId).timesetter().getMinutesValue();
-    durValM = (durValM > 9) ? durValM: (durValM > 0) ? '0' + durValM : '00';
-    var durVal = new Date('1970-01-01T' + durValH + ':' + durValM + ':00');
+    var durVal = getTimeValTs(durId) ;
+    
+    startVal = parseIntTime(startVal);
+    durVal = parseIntTime(durVal);
+    endVal = parseIntTime(endVal);
     
     if(debug) {
         console.log('startVal : ', startVal);
@@ -270,153 +263,73 @@ function dayParamsCalculateDurationsAndBounds(start, end, duration, trigger) {
         console.log('durVal : ', durVal);
     }
     
-    startValH = parseInt(startValH);
-    startValM = parseInt(startValM);
-    durValH = parseInt(durValH);
-    durValM = parseInt(durValM);
-    endValH = parseInt(endValH);
-    endValM = parseInt(endValM);
-    var finalStartH;
-    var finalStartM;
-    var finalDurH;
-    var finalDurM;
-    var finalEndH;
-    var finalEndM;
+    var finalStart;
+    var finalDur;
+    var finalEnd;
+    
+    if(debug) console.log('trigger: ', trigger);
     
     switch (trigger) {
         case 'start':
-            finalStartH = startValH;
-            finalStartM = startValM;
+            finalStart = startVal;
             
-            if(durValH > 0 || durValM > 0) {
-                finalDurH = durValH;
-                finalDurM = durValM;
-                finalEndH = startValH + durValH;
-                finalEndM = startValM + durValM;
+            if(durVal.H > 0 || durVal.M > 0) {
+                finalDur = durVal;
                 
-                if(finalEndM >= 60) {
-                    finalEndM -= 60;
-                    finalEndH += 1;
-                }
+                finalEnd = addTime(startVal, durVal);
+            } else if(endVal.H > 0 || endVal.M > 0) {
+                finalEnd = endVal;
                 
-            } else if(endValH > 0 || endValM > 0) {
-                finalEndH = endValH;
-                finalEndM = endValM;
-                if(endValH < startValH)
-                    endValH += 24;
-                finalDurH = endValH - startValH;
-                if(endValM < startValM)
-                    endValM += 60;
-                finalDurM = endValM - startValM;
-                
-                if(finalDurM >= 60) { 
-                    finalDurM -= 60;
-                    finalDurH += 1;
-                }
-                
-            } else if (durValH < 1 && durValM < 1) {
-                finalEndH = finalStartH;
-                finalEndM = finalStartM;                
-            }
+                finalDur = subsTime(endVal, startVal);
+            } else if (durVal.H < 1 && durVal.M < 1) 
+                finalEnd = finalStart;
+            
             break;
         case 'end':
-            finalEndH = endValH;
-            finalEndM = endValM;
+            finalEnd = endVal;
             
-            if(durValH > 0 || durValM > 0) {
-                finalDurH = durValH;
-                finalDurM = durValM;
-                finalStartH = endValH - durValH;
-                finalStartM = endValM - durValM;
+            if(durVal.H > 0 || durVal.M > 0) {
+                finalDur = durVal;
                 
-                if(finalStartM < 0) {
-                    finalStartM += 60;
-                    finalStartH -= 1;
-                }
-            } else if(startValH > 0 || startValM > 0) {
-                finalStartH = startValH;
-                finalStartM = startValM;
+                finalStart = subsTime(endVal, durVal);
+            } else if(startVal.H > 0 || startVal.M > 0) {
+                finalStart = startVal;
                 
-                if(endValH < startValH)
-                    endValH += 24;
-                finalDurH = endValH - startValH;
-                if(endValM < startValM)
-                    endValM += 60;
-                finalDurM = endValM - startValM;
-                
-                if(finalDurM >= 60) { 
-                    finalDurM -= 60;
-                    finalDurH += 1;
-                }
-                
-            } else if (durValH < 1 && durValM < 1) {
-                finalStartH = finalEndH;
-                finalStartM = finalEndM;                
-            }
+                finalDur = subsTime(endVal, startVal);
+            } else if (durVal.H < 1 && durVal.M < 1) 
+                finalStart = finalEnd;
+            
             break;
         case 'duration':
-            finalDurH = durValH;
-            finalDurM = durValM;
+            finalDur = durVal;
             
-            if(startValH > 0 || startValM > 0) {
-                finalStartH = startValH;
-                finalStartM = startValM;
-                finalEndH = startValH + durValH;
-                finalEndM = startValM + durValM;
+            if(startVal.H > 0 || startVal.M > 0) {
+                finalStart = startVal;
                 
-                if(finalEndM >= 60) {
-                    finalEndM -= 60;
-                    finalEndH += 1;
-                }
-            } else if(endValH > 0 || endValM > 0) {
-                finalEndH = endValH;
-                finalEndM = endValM;
+                finalEnd = addTime(startVal, durVal);
+            } else if(endVal.H > 0 || endVal.M > 0) {
+                finalEnd = endVal;
                 
-                finalStartH = endValH - durValH;
-                finalStartM = endValM - durValM;
-                
-                if(finalStartM < 0) { 
-                    finalStartM += 60;
-                    finalStartH -= 1;
-                }
+                finalStart = subsTime(endVal, durVal);
             }
             
             break;
     }
     
-    if(finalDurH <= 0) 
-        finalDurH += 24;
-    if(finalDurH >= 24) 
-        finalDurH -= 24;
-    if(finalStartH < 0) 
-        finalStartH += 24;
-    if(finalStartH >= 24) 
-        finalStartH -= 24;
-    if(finalEndH < 0) 
-        finalEndH += 24;
-    if(finalEndH >= 24) 
-        finalEndH -= 24;
+    finalDur = checkTimeVals(finalDur);
+    finalStart = checkTimeVals(finalStart);
+    finalEnd = checkTimeVals(finalEnd);
     
     if(debug) {
-        console.log('finalStart: ', { H: finalStartH, M: finalStartM });
-        console.log('finalEndVal : ', { H: finalEndH, M: finalEndM });
-        console.log('finalDurVal : ', { H: finalDurH, M: finalDurM });
+        console.log('finalStart: '  , finalStart);
+        console.log('finalDur: '    , finalDur);
+        console.log('finalEnd: '    , finalEnd);
     }
         
-    $('#'+startId+'_hour').val(parseInt(finalStartH));
-    if(finalStartH < 1)
-        $('#' + startId + '_hour').val($('#' + startId + '_hour option[value="0"]').attr('value'));
-    $('#'+startId+'_minute').val(parseInt(finalStartM));
-    if(finalStartM < 1)
-        $('#' + startId + '_minute').val($('#' + startId + '_minute option[value="0"]').attr('value'));
-    $('#' + durId).timesetter().setHour(parseInt(finalDurH));
-    $('#' + durId).timesetter().setMinute(parseInt(finalDurM));
-    $('#' + endId+'_hour').val(parseInt(finalEndH));
-    if(finalEndH < 1)
-        $('#' + endId + '_hour').val($('#' + endId + '_hour option[value="0"]').attr('value'));
-    $('#' + endId + '_minute').val(parseInt(finalEndM));
-    if(finalEndM < 1)
-        $('#' + endId + '_minute').val($('#' + startId + '_minute option[value="0"]').attr('value'));
+    setTimeVal(startId, finalStart);
+    $('#' + durId).timesetter().setHour(parseInt(finalDur.H));
+    $('#' + durId).timesetter().setMinute(parseInt(finalDur.M));
+    setTimeVal(endId, finalEnd);
     
     callbackEnded = true;
 }
