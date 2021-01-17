@@ -2,7 +2,7 @@ import { call, additionnalHeaders } from '../../manipulateToken';
 
 const debug = false;
 function fCall(callFunction) {
-    global.additionnalHeaders = [{'name': 'Accept', 'value': "application/ld+json"}];
+    global.additionnalHeaders = [{'name': 'Accept', 'value': 'application/ld+json'}];
     
     call(callFunction);
 }
@@ -12,7 +12,7 @@ export function baseCallback(successCallback, errorCallback) {
         url: null,
         data: null,
         dataType: 'json',
-        contentType: "application/json",
+        contentType: 'application/json',
         method: null,
         success: function(result,status,xhr){
             if(debug)
@@ -22,7 +22,7 @@ export function baseCallback(successCallback, errorCallback) {
         },
         error: function (xhr,status,result) {
             if(debug)
-                console.log("erreur : ", result);
+                console.log('erreur : ', result);
             if(errorCallback)
                 errorCallback(result, xhr, status);
         }  

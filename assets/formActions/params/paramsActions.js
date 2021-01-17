@@ -1,8 +1,4 @@
-/* 
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 import { getOneWtParameter, postOneWtParameter, putOneWtParameter } from '../../api/wt_parameters/wt_parameters';
 
 const debug = false;
@@ -18,31 +14,31 @@ import {
 } from './paramFields';
 
 function translateValuesFromSelector(input) {
-    var h = $('#'+paramsFieldsIdsPrefix+input+paramsFieldsIdsSuffix).timesetter().getHoursValue();
-    var m = $('#'+paramsFieldsIdsPrefix+input+paramsFieldsIdsSuffix).timesetter().getMinutesValue();
+    var h = $('#' + paramsFieldsIdsPrefix + input + paramsFieldsIdsSuffix).timesetter().getHoursValue();
+    var m = $('#' + paramsFieldsIdsPrefix + input + paramsFieldsIdsSuffix).timesetter().getMinutesValue();
 
-    h = (h < 10) ? '0'+h : h;
-    m = (m < 10) ? '0'+m : m;
+    h = (h < 10) ? '0' + h : h;
+    m = (m < 10) ? '0' + m : m;
 
-    $('#'+paramsFieldsIdsPrefix+input).val(""+ h + ":"+ m);
+    $('#'+paramsFieldsIdsPrefix+input).val('' + h + ':' + m);
     if(debug)
         console.log(input + ':' + $('#'+paramsFieldsIdsPrefix+input).val());
 }
 
 function translateValuesForAjax(input) {
-    var hoursMinVals = $('#'+paramsFieldsIdsPrefix+input).val().split(':');
-    if(debug)
+    var hoursMinVals = $('#' + paramsFieldsIdsPrefix + input).val().split(':');
+    if(debug) 
         console.log('hoursMinVals :', hoursMinVals);
     
-    $('#'+paramsFieldsIdsPrefix+input).val("P0Y0M0DT"+parseInt(hoursMinVals[0])+"H"+parseInt(hoursMinVals[1])+"M0S");
+    $('#'+paramsFieldsIdsPrefix+input).val('P0Y0M0DT' + parseInt(hoursMinVals[0]) + 'H' + parseInt(hoursMinVals[1]) + 'M0S');
     
     if(debug)
-        console.log(input + ':' + $('#'+paramsFieldsIdsPrefix+input).val());
+        console.log(input + ':' + $('#' + paramsFieldsIdsPrefix + input).val());
     
 }
 
 function translateValuesFromAjax(input) {
-    var intervalS = $('#'+paramsFieldsIdsPrefix+input).val();
+    var intervalS = $('#' + paramsFieldsIdsPrefix + input).val();
     var dateTimeSpec = intervalS.split('T');
     if(dateTimeSpec[1] === undefined) {
         return;
@@ -52,23 +48,23 @@ function translateValuesFromAjax(input) {
     var h = parseInt(hoursMinSpecs[0]);
     var m = parseInt(minSecSpecs[0]);
     
-    h = (h < 10) ? '0'+h : h;
-    m = (m < 10) ? '0'+m : m;
+    h = (h < 10) ? '0' + h : h;
+    m = (m < 10) ? '0' + m : m;
     
-    $('#'+paramsFieldsIdsPrefix+input+paramsFieldsIdsSuffix).timesetter().setHour(h);
-    $('#'+paramsFieldsIdsPrefix+input+paramsFieldsIdsSuffix).timesetter().setMinute(m);
+    $('#' + paramsFieldsIdsPrefix + input+paramsFieldsIdsSuffix).timesetter().setHour(h);
+    $('#' + paramsFieldsIdsPrefix + input+paramsFieldsIdsSuffix).timesetter().setMinute(m);
     
     if(debug)
-        console.log(input + ':' + $('#'+paramsFieldsIdsPrefix+input).val());
+        console.log(input + ':' + $('#' + paramsFieldsIdsPrefix + input).val());
     
     translateValuesFromSelector(input);
 }
 
 function getUuidValues(name) {
-    var uuidVal = $('#'+paramsFieldsIdsPrefix+ name).val();
+    var uuidVal = $('#' + paramsFieldsIdsPrefix + name).val();
     
     if(uuidVal.length < 1) {
-        var uuid = JSON.parse($('script#'+name).text());
+        var uuid = JSON.parse($('script#' + name).text());
         if(uuid.length > 0) {
             uuidVal = uuid.id;
         }
@@ -82,7 +78,7 @@ function getUuidValues(name) {
 }
 
 function translateUpUuid(uuid) {
-    var uuidVal = $('#'+paramsFieldsIdsPrefix+ uuid.name).val();
+    var uuidVal = $('#' + paramsFieldsIdsPrefix + uuid.name).val();
     
     if(uuidVal === undefined || uuidVal.length < 1) {
         if (debug) 
@@ -90,96 +86,88 @@ function translateUpUuid(uuid) {
         return;
     }
     
-    uuidVal = (uuidVal.indexOf(uuid.identifier) !== -1)?uuidVal:uuid.identifier+uuidVal;
-    
+    uuidVal = (uuidVal.indexOf(uuid.identifier) !== -1) ? uuidVal : uuid.identifier + uuidVal;
     $('#'+paramsFieldsIdsPrefix+ uuid.name).val(uuidVal);
 }
 
 function setUuidValues(name, value) {
-    $('#'+paramsFieldsIdsPrefix+ name).val(value);
+    $('#' + paramsFieldsIdsPrefix + name).val(value);
 }
 
 function setHourValues(name, value) {
-    if(value === undefined) {
+    if(value === undefined) 
         return;
-    }
     var hoursValue = value.split('T')[1].split(':');
     hoursValue = { h: parseInt(hoursValue[0]), m: parseInt(hoursValue[1])};
     
-    $('#'+paramsFieldsIdsPrefix+ name + "_hour").val(hoursValue.h);
-    $('#'+paramsFieldsIdsPrefix+ name + "_minute").val(hoursValue.m);
+    $('#' + paramsFieldsIdsPrefix + name + '_hour').val(hoursValue.h);
+    $('#' + paramsFieldsIdsPrefix + name + '_minute').val(hoursValue.m);
 }
 
 function getHoursStringForJson(name) {
     var hoursValue = {
-        h: parseInt($('#'+paramsFieldsIdsPrefix+ name + "_hour").val()), 
-        m: parseInt($('#'+paramsFieldsIdsPrefix+ name + "_minute").val())
+        h: parseInt($('#' + paramsFieldsIdsPrefix + name + '_hour').val()), 
+        m: parseInt($('#' + paramsFieldsIdsPrefix + name + '_minute').val())
     };
     
     hoursValue.h = (hoursValue.h < 10) ? '0' + hoursValue.h : hoursValue.h;
     hoursValue.m = (hoursValue.m < 10) ? '0' + hoursValue.m : hoursValue.m;
     
-    return "1970-01-01T" + hoursValue.h + ":" + hoursValue.m + ":00.000+01:00";
+    return '1970-01-01T' + hoursValue.h + ':' + hoursValue.m + ':00.000+01:00';
 }
 
 function getSimpleValues(name, setnull, integer) {
-    var val = $('#'+paramsFieldsIdsPrefix+ name).val()
+    var val = $('#' + paramsFieldsIdsPrefix + name).val()
     if((setnull && val.length < 1) || integer) {
-        if(integer && (!setnull)) {
+        if(integer && (!setnull)) 
             val = parseInt(val);
-        } else if (setnull && val.length < 1) {
+        else if (setnull && val.length < 1) 
             val = null;
-        } else if(!setnull && val.length < 1) {
+        else if(!setnull && val.length < 1) 
             val = 0;
-        }
     }
     
     return val;
 }
 
 function setSimpleValues(name, value) {
-    $('#'+paramsFieldsIdsPrefix+ name).val(value);
+    $('#' + paramsFieldsIdsPrefix + name).val(value);
 }
 
 function setCbValue(name, value) {
     if (value) 
-        $('#'+paramsFieldsIdsPrefix+ name).prop("checked", true); 
+        $('#' + paramsFieldsIdsPrefix + name).prop('checked', true); 
     else 
-        $('#'+paramsFieldsIdsPrefix+ name).prop("checked", false);
+        $('#' + paramsFieldsIdsPrefix + name).prop('checked', false);
 }
 
 function getCbValue(name) {
-    return $('#'+paramsFieldsIdsPrefix+ name).is(':checked');
+    return $('#' + paramsFieldsIdsPrefix + name).is(':checked');
 }
 
 function setParamValues(param) {
-    
-    for(const field of paramsSimpleFieldsIds) {
+    for(const field of paramsSimpleFieldsIds) 
         setSimpleValues(field, param[field]);
-    }
     
     for(const uuid of paramsUuidFieldsIds) {
         setUuidValues(uuid.name, param[uuid.name]);
         translateUpUuid(uuid);
     }
     
-    for(const cb of paramsCbFieldsIds) {
+    for(const cb of paramsCbFieldsIds) 
         setCbValue(cb, param[cb]);
-    }
     
     for(const durField of paramsFieldsIds) {
         setSimpleValues(durField, param[durField]);
         translateValuesFromAjax(durField);
     }
     
-    for(const hour of paramsHoursFieldsIds) {
+    for(const hour of paramsHoursFieldsIds) 
         setHourValues(hour, param[hour]);
-    }
     
     
-    for (const f of paramsIntFieldsIds) {
+    for (const f of paramsIntFieldsIds) 
         setSimpleValues(f, param[f]);
-    }
     
 }
 
@@ -189,11 +177,11 @@ function prepareValuesForAjax() {
     for(const input of paramsFieldsIds) {
         translateValuesFromSelector(input);
         translateValuesForAjax(input);
-        if(input.includes(paramsFieldsDayParametersIdsPrefix)) {
+        if(input.includes(paramsFieldsDayParametersIdsPrefix)) 
             res = addDayFieldToSomething(input, res, getSimpleValues(input));
-        } else {
+        else 
             res[input] = getSimpleValues(input);
-        }
+        
         translateValuesFromAjax(input);
     }
     
@@ -202,11 +190,10 @@ function prepareValuesForAjax() {
     }
     
     for(const input of paramsHoursFieldsIds) {
-        if(input.includes(paramsFieldsDayParametersIdsPrefix)) {
+        if(input.includes(paramsFieldsDayParametersIdsPrefix)) 
             res = addDayFieldToSomething(input, res, getHoursStringForJson(input));
-        } else {
+        else 
             res[input] = getHoursStringForJson(input);
-        }
     }
     
     for (const f of paramsUuidFieldsIds) {
@@ -220,13 +207,11 @@ function prepareValuesForAjax() {
         }
     }
     
-    for (const f of paramsCbFieldsIds) {
+    for (const f of paramsCbFieldsIds) 
         res[f] = getCbValue(f);
-    }
     
-    for (const f of paramsIntFieldsIds) {
+    for (const f of paramsIntFieldsIds) 
         res[f] = getSimpleValues(f, false, true);
-    }
 
     if(debug)
         console.log('res :' , res);
@@ -237,7 +222,7 @@ function prepareValuesForAjax() {
 function loadGlobalParam() {
     globalParam = JSON.parse($('#globalParam').text());
     if(debug) 
-        console.log("globalParam : ", globalParam);
+        console.log('globalParam : ', globalParam);
     
     if(globalParam.id !== null) 
         getOneWtParameter(globalParam.id, setParamValues);
@@ -246,7 +231,9 @@ function loadGlobalParam() {
 function dayParamsCalculateDurationsAndBounds(start, end, duration, trigger) {
     if(!callbackEnded)
         return false;
+    
     callbackEnded = false;
+    
     if(debug) {
         console.log('start : ', start);
         console.log('end : ', end);
@@ -257,25 +244,25 @@ function dayParamsCalculateDurationsAndBounds(start, end, duration, trigger) {
     /* récupération des valeurs */
     /* start */
     const startId = start.attr('id');
-    var startValH = $('#'+startId+"_hour").val();
-    startValH = (startValH > 9)?startValH:(startValH>0)?'0'+startValH:"00";
-    var startValM = $('#'+startId+"_minute").val();
-    startValM = (startValM > 9)?startValM:(startValM>0)?'0'+startValM:"00";
-    var startVal = new Date("1970-01-01T"+startValH+":"+startValM+":00");
+    var startValH = $('#'+ startId +'_hour').val();
+    startValH = (startValH > 9) ? startValH : (startValH > 0) ? '0' + startValH : '00';
+    var startValM = $('#'+startId+'_minute').val();
+    startValM = (startValM > 9) ? startValM : (startValM > 0) ? '0' + startValM : '00';
+    var startVal = new Date('1970-01-01T' + startValH + ':' + startValM + ':00');
     /* end */
     const endId = end.attr('id');
-    var endValH = $('#'+endId+"_hour").val();
-    endValH = (endValH > 9)?endValH:(endValH>0)?'0'+endValH:"00";
-    var endValM = $('#'+endId+"_minute").val();
-    endValM = (endValM > 9)?endValM:(endValM>0)?'0'+endValM:"00";
-    var endVal = new Date("1970-01-01T"+endValH+":"+endValM+":00");
+    var endValH = $('#' + endId + '_hour').val();
+    endValH = (endValH > 9) ? endValH : (endValH > 0) ? '0' + endValH: '00';
+    var endValM = $('#' + endId + '_minute').val();
+    endValM = (endValM > 9) ? endValM : (endValM > 0) ? '0' + endValM : '00';
+    var endVal = new Date('1970-01-01T' + endValH + ':' + endValM + ':00');
     /* duration */
     const durId = duration.attr('id');
-    var durValH = $('#'+durId).timesetter().getHoursValue();
-    durValH = (durValH > 9)?durValH:(durValH>0)?'0'+durValH:"00";
-    var durValM = $('#'+durId).timesetter().getMinutesValue();
-    durValM = (durValM > 9)?durValM:(durValM>0)?'0'+durValM:"00";
-    var durVal = new Date("1970-01-01T"+durValH+":"+durValM+":00");
+    var durValH = $('#' + durId).timesetter().getHoursValue();
+    durValH = (durValH > 9) ? durValH : (durValH > 0) ? '0' + durValH : '00';
+    var durValM = $('#' + durId).timesetter().getMinutesValue();
+    durValM = (durValM > 9) ? durValM: (durValM > 0) ? '0' + durValM : '00';
+    var durVal = new Date('1970-01-01T' + durValH + ':' + durValM + ':00');
     
     if(debug) {
         console.log('startVal : ', startVal);
@@ -395,10 +382,6 @@ function dayParamsCalculateDurationsAndBounds(start, end, duration, trigger) {
             }
             
             break;
-            
-        default:
-            
-            break;
     }
     
     if(finalDurH <= 0) 
@@ -415,25 +398,25 @@ function dayParamsCalculateDurationsAndBounds(start, end, duration, trigger) {
         finalEndH -= 24;
     
     if(debug) {
-        console.log('finalStart: ', {H: finalStartH, M: finalStartM});
-        console.log('finalEndVal : ', {H: finalEndH, M: finalEndM});
-        console.log('finalDurVal : ', {H: finalDurH, M: finalDurM});
+        console.log('finalStart: ', { H: finalStartH, M: finalStartM });
+        console.log('finalEndVal : ', { H: finalEndH, M: finalEndM });
+        console.log('finalDurVal : ', { H: finalDurH, M: finalDurM });
     }
         
-    $('#'+startId+"_hour").val(parseInt(finalStartH));
+    $('#'+startId+'_hour').val(parseInt(finalStartH));
     if(finalStartH < 1)
-        $('#'+startId+'_hour').val($('#'+startId+'_hour option[value="0"]').attr('value'));
-    $('#'+startId+"_minute").val(parseInt(finalStartM));
+        $('#' + startId + '_hour').val($('#' + startId + '_hour option[value="0"]').attr('value'));
+    $('#'+startId+'_minute').val(parseInt(finalStartM));
     if(finalStartM < 1)
-        $('#'+startId+'_minute').val($('#'+startId+'_minute option[value="0"]').attr('value'));
-    $('#'+durId).timesetter().setHour(parseInt(finalDurH));
-    $('#'+durId).timesetter().setMinute(parseInt(finalDurM));
-    $('#'+endId+"_hour").val(parseInt(finalEndH));
+        $('#' + startId + '_minute').val($('#' + startId + '_minute option[value="0"]').attr('value'));
+    $('#' + durId).timesetter().setHour(parseInt(finalDurH));
+    $('#' + durId).timesetter().setMinute(parseInt(finalDurM));
+    $('#' + endId+'_hour').val(parseInt(finalEndH));
     if(finalEndH < 1)
-        $('#'+endId+'_hour').val($('#'+endId+'_hour option[value="0"]').attr('value'));
-    $('#'+endId+"_minute").val(parseInt(finalEndM));
+        $('#' + endId + '_hour').val($('#' + endId + '_hour option[value="0"]').attr('value'));
+    $('#' + endId + '_minute').val(parseInt(finalEndM));
     if(finalEndM < 1)
-        $('#'+endId+'_minute').val($('#'+startId+'_minute option[value="0"]').attr('value'));
+        $('#' + endId + '_minute').val($('#' + startId + '_minute option[value="0"]').attr('value'));
     
     callbackEnded = true;
 }
@@ -447,19 +430,19 @@ function dayParamsExecPauseCallbackDuration(event, element) {
     var trigger;
     
     if(typeof $(element).data('start') !== 'undefined') {
-        start = $('#'+$(element).data('start'));
+        start = $('#' + $(element).data('start'));
         hasStart = true;
     } else {
         start = $(element);
     }
     if(typeof $(element).data('end') !== 'undefined') {
-        end = $('#'+$(element).data('end'));
+        end = $('#' + $(element).data('end'));
         hasEnd = true;
     } else {
         end = $(element);
     }
     if(typeof $(element).data('duration') !== 'undefined') {
-        duration = $('#'+$(element).data('duration'));
+        duration = $('#' + $(element).data('duration'));
         hasDuration = true;
     } else {
         duration = $(element);
@@ -498,7 +481,7 @@ $(document).ready(function(){
             
             console.log('prepared', values);
             return; 
-            /*
+            /* @todo
             var id = JSON.parse($('script#globalParam').text()).id;
             if(id === null) {
                 if(debug)

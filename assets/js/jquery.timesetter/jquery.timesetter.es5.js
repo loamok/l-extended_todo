@@ -61,7 +61,7 @@
         });
 
         // apply formatting for input fields
-        $(container).find("input[type=text]").each(function () {
+        $(container).find('input[type="text"]').each(function () {
             $(this).change(function (e) {
                 formatInput(e);
             });
@@ -91,10 +91,10 @@
      * Capture the time unit which is about to update from events.
      */
     function unitChanged(sender) {
-        var container = $(sender).parents(".divTimeSetterContainer");
+        var container = $(sender).parents('.divTimeSetterContainer');
         loadOptions(container);
 
-        unit = $(sender).data("unit");
+        unit = $(sender).data('unit');
 
         $.fn.settings.inputHourTextbox = container.find('#txtHours');
         $.fn.settings.inputMinuteTextbox = container.find('#txtMinutes');
@@ -106,7 +106,7 @@
      * Change the time setter values from UI events.
      */
     function updateTimeValue(sender) {
-        var container = $(sender).parents(".divTimeSetterContainer");
+        var container = $(sender).parents('.divTimeSetterContainer');
         loadOptions(container);
 
         $.fn.settings.inputHourTextbox = container.find('#txtHours');
@@ -115,7 +115,7 @@
         $.fn.settings.hour.value = parseInt($.fn.settings.inputHourTextbox.val());
         $.fn.settings.minute.value = parseInt($.fn.settings.inputMinuteTextbox.val());
 
-        $.fn.settings.direction = $(sender).data("direction");
+        $.fn.settings.direction = $(sender).data('direction');
 
         // validate hour and minute values
         if (isNaN($.fn.settings.hour.value)) {
@@ -131,7 +131,7 @@
             var oldHourValue = parseInt($($.fn.settings.inputHourTextbox).val().trim());
             var newHourValue = 0;
 
-            if ($.fn.settings.direction === "decrement") {
+            if ($.fn.settings.direction === 'decrement') {
                 newHourValue = oldHourValue - $.fn.settings.hour.step;
 
                 // tolerate the wrong step number and move to a valid step
@@ -142,7 +142,7 @@
                 if (newHourValue <= $.fn.settings.hour.min) {
                     newHourValue = $.fn.settings.hour.min;
                 }
-            } else if ($.fn.settings.direction === "increment") {
+            } else if ($.fn.settings.direction === 'increment') {
                 newHourValue = oldHourValue + $.fn.settings.hour.step;
 
                 // tolerate the wrong step number and move to a valid step
@@ -156,10 +156,10 @@
             }
 
             $($.fn.settings.inputHourTextbox).val(padLeft(newHourValue.toString(), getMaxLength($.fn.settings.hour), $.fn.settings.numberPaddingChar));
-            $(container).attr("data-hourvalue", newHourValue);
-            $(container).attr("data-minutevalue", newMinuteValue);
-            $($.fn.settings.inputHourTextbox).trigger("change").select();
-        } else if (unit === "minutes") // update time setter by changing minute value
+            $(container).attr('data-hourvalue', newHourValue);
+            $(container).attr('data-minutevalue', newMinuteValue);
+            $($.fn.settings.inputHourTextbox).trigger('change').select();
+        } else if (unit === 'minutes') // update time setter by changing minute value
             {
                 var oldHourValue = $.fn.settings.hour.value;
                 var newHourValue = oldHourValue;
@@ -167,7 +167,7 @@
                 var oldMinuteValue = $.fn.settings.minute.value;
                 var newMinuteValue = oldMinuteValue;
 
-                if ($.fn.settings.direction === "decrement") {
+                if ($.fn.settings.direction === 'decrement') {
                     newMinuteValue = oldMinuteValue - $.fn.settings.minute.step;
 
                     // tolerate the wrong step number and move to a valid step
@@ -179,7 +179,7 @@
                         newHourValue = $.fn.settings.hour.min;
                         newMinuteValue = $.fn.settings.minute.min;
                     }
-                } else if ($.fn.settings.direction === "increment") {
+                } else if ($.fn.settings.direction === 'increment') {
                     newMinuteValue = oldMinuteValue + $.fn.settings.minute.step;
 
                     // tolerate the wrong step number and move to a valid step
@@ -207,9 +207,9 @@
 
                 $($.fn.settings.inputHourTextbox).val(padLeft(newHourValue.toString(), getMaxLength($.fn.settings.hour), $.fn.settings.numberPaddingChar));
                 $($.fn.settings.inputMinuteTextbox).val(padLeft(newMinuteValue.toString(), getMaxLength($.fn.settings.minute), $.fn.settings.numberPaddingChar));
-                $(container).attr("data-hourvalue", newHourValue);
-                $(container).attr("data-minutevalue", newMinuteValue);
-                $($.fn.settings.inputMinuteTextbox).trigger("change").select();
+                $(container).attr('data-hourvalue', newHourValue);
+                $(container).attr('data-minutevalue', newMinuteValue);
+                $($.fn.settings.inputMinuteTextbox).trigger('change').select();
 
                 saveOptions(container, $.fn.settings);
             }
@@ -219,11 +219,11 @@
      * Change the time setter values from arrow up/down key events
      */
     function updateTimeValueByArrowKeys(sender, event) {
-        var container = $(sender).parents(".divTimeSetterContainer");
+        var container = $(sender).parents('.divTimeSetterContainer');
         loadOptions(container);
 
-        var senderUpBtn = $(container).find("#btnUp");
-        var senderDownBtn = $(container).find("#btnDown");
+        var senderUpBtn = $(container).find('#btnUp');
+        var senderDownBtn = $(container).find('#btnDown');
         switch (event.which) {
             case 13:
                 // return
@@ -262,14 +262,14 @@
     function formatInput(e) {
         var element = $(e.target);
 
-        var container = $(element).parents(".divTimeSetterContainer");
+        var container = $(element).parents('.divTimeSetterContainer');
         loadOptions(container);
 
         var unitSettings;
 
-        if (unit === "hours") {
+        if (unit === 'hours') {
             unitSettings = $.fn.settings.hour;
-        } else if (unit === "minutes") {
+        } else if (unit === 'minutes') {
             unitSettings = $.fn.settings.minute;
         }
 
@@ -314,8 +314,8 @@
      * get the hour value from the control.
      */
     $.fn.getHoursValue = function () {
-        var container = $(this).find(".divTimeSetterContainer");
-        var txtHour = $(container).find("#txtHours");
+        var container = $(this).find('.divTimeSetterContainer');
+        var txtHour = $(container).find('#txtHours');
         if ($.isNumeric(txtHour.val())) {
             return parseInt(txtHour.val());
         }
@@ -326,8 +326,8 @@
      * get the minute value from the control.
      */
     $.fn.getMinutesValue = function () {
-        var container = $(this).find(".divTimeSetterContainer");
-        var txtMinute = $(container).find("#txtMinutes");
+        var container = $(this).find('.divTimeSetterContainer');
+        var txtMinute = $(container).find('#txtMinutes');
         if ($.isNumeric(txtMinute.val())) {
             return parseInt(txtMinute.val());
         }
@@ -338,9 +338,9 @@
      * get the total number of minutes from the control.
      */
     $.fn.getTotalMinutes = function () {
-        var container = $(this).find(".divTimeSetterContainer");
-        var txtHour = $(container).find("#txtHours");
-        var txtMinute = $(container).find("#txtMinutes");
+        var container = $(this).find('.divTimeSetterContainer');
+        var txtHour = $(container).find('#txtHours');
+        var txtMinute = $(container).find('#txtMinutes');
 
         var hourValue = 0;
         var minuteValue = 0;
@@ -356,24 +356,24 @@
      * get the postfix display text.
      */
     $.fn.getPostfixText = function () {
-        var container = $(this).find(".divTimeSetterContainer");
-        return container.find(".postfix-position").text();
+        var container = $(this).find('.divTimeSetterContainer');
+        return container.find('.postfix-position').text();
     };
 
     /**
      * set the hour value to the control.
      */
     $.fn.setHour = function (hourValue) {
-        var container = $(this).find(".divTimeSetterContainer");
+        var container = $(this).find('.divTimeSetterContainer');
         loadOptions(container);
 
-        var txtHours = $(container).find("#txtHours");
+        var txtHours = $(container).find('#txtHours');
         if ($.isNumeric(hourValue)) {
             txtHours.val(hourValue);
         } else {
             txtHours.val(padLeft($.fn.settings.hour.min.toString(), getMaxLength($.fn.settings.hour), $.fn.settings.numberPaddingChar));
         }
-        unit = "hours";
+        unit = 'hours';
         saveOptions(container, $.fn.settings);
         txtHours.change();
         return this;
@@ -383,16 +383,16 @@
      * set the minute value to the control.
      */
     $.fn.setMinute = function (minuteValue) {
-        var container = $(this).find(".divTimeSetterContainer");
+        var container = $(this).find('.divTimeSetterContainer');
         loadOptions(container);
 
-        var txtMinute = $(container).find("#txtMinutes");
+        var txtMinute = $(container).find('#txtMinutes');
         if ($.isNumeric(minuteValue)) {
             txtMinute.val(minuteValue);
         } else {
             txtMinute.val(padLeft($.fn.settings.minute.min.toString(), getMaxLength($.fn.settings.minute), $.fn.settings.numberPaddingChar));
         }
-        unit = "minutes";
+        unit = 'minutes';
         saveOptions(container, $.fn.settings);
         txtMinute.change();
         return this;
@@ -402,11 +402,11 @@
      * set the values by calculating based on total number of minutes by caller.
      */
     $.fn.setValuesByTotalMinutes = function (totalMinutes) {
-        var container = $(this).find(".divTimeSetterContainer");
+        var container = $(this).find('.divTimeSetterContainer');
         loadOptions(container);
 
-        var txtHour = $(container).find("#txtHours");
-        var txtMinute = $(container).find("#txtMinutes");
+        var txtHour = $(container).find('#txtHours');
+        var txtMinute = $(container).find('#txtMinutes');
 
         var hourValue = 0;
         var minuteValue = 0;
@@ -421,7 +421,7 @@
         txtMinute.val(padLeft(minuteValue.toString(), getMaxLength($.fn.settings.minute), $.fn.settings.numberPaddingChar));
 
         // trigger formattings
-        unit = "minutes";
+        unit = 'minutes';
         saveOptions(container, $.fn.settings);
         txtMinute.change(); // one event is enough to do formatting one time for all the input fields
         return this;
@@ -431,8 +431,8 @@
      * set the postfix display text.
      */
     $.fn.setPostfixText = function (textValue) {
-        var container = $(this).find(".divTimeSetterContainer");
-        container.find(".postfix-position").text(textValue);
+        var container = $(this).find('.divTimeSetterContainer');
+        container.find('.postfix-position').text(textValue);
         return this;
     };
 
@@ -446,19 +446,19 @@
                 min: 0,
                 max: 24,
                 step: 1,
-                symbol: "h"
+                symbol: 'h'
             },
             minute: {
                 value: 0,
                 min: 0,
                 max: 60,
                 step: 15,
-                symbol: "mins"
+                symbol: 'm'
             },
-            direction: "increment", // increment or decrement
+            direction: 'increment', // increment or decrement
             inputHourTextbox: null, // hour textbox
             inputMinuteTextbox: null, // minutes textbox
-            postfixText: "", // text to display after the input fields
+            postfixText: '', // text to display after the input fields
             numberPaddingChar: '0' // number left padding character ex: 00052
         };
     };
@@ -471,7 +471,7 @@
     /**
      * unit is taken out from $.fn.settings to make it globally affect as currently user is concern about which unit to change.
      */
-    var unit = "minutes"; /* minutes or hours */
+    var unit = 'minutes'; /* minutes or hours */
 
     /**
      * get max length based on input field options max value.
@@ -525,23 +525,23 @@ $(document).ready(function () {
             min: 0,
             max: 24,
             step: 1,
-            symbol: "hrs"
+            symbol: 'hrs'
         },
         minute: {
             value: 0,
             min: 0,
             max: 60,
             step: 15,
-            symbol: "mins"
+            symbol: 'mins'
         },
-        direction: "increment", // increment or decrement
+        direction: 'increment', // increment or decrement
         inputHourTextbox: null, // hour textbox
         inputMinuteTextbox: null, // minutes textbox
-        postfixText: "", // text to display after the input fields
+        postfixText: '', // text to display after the input fields
         numberPaddingChar: '0' // number left padding character ex: 00052
     };
 
-    $(".div1").timesetter(options1).setHour(17);
-    $(".div2").timesetter().setValuesByTotalMinutes(175);
+    $('.div1').timesetter(options1).setHour(17);
+    $('.div2').timesetter().setValuesByTotalMinutes(175);
 });
 

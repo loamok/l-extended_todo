@@ -10,7 +10,7 @@ $(document).ready(function () {
             if(debug) console.log('ajax : ', result);
         };
         var error = function (xhr,status,result) {
-            if(debug) console.log("erreur : ", result);
+            if(debug) console.log('erreur : ', result);
         };
         
         getCollection(success, error, Routing.generate('api_ag_types_get_collection'));

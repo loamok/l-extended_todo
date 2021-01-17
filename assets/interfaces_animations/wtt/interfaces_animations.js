@@ -1,3 +1,4 @@
+const debug = false;
 
 const classWttBaseXPath = '.wtt';
 const classDisplayBaseXPath = '.display';
@@ -43,100 +44,67 @@ const btnsActions = {
         runModeChanged: function () {
             switch (runMode) {
                 case 0:
-                    for(const disE of btnsActions.baseActions.disabledBtns.l1) {
-                        $('#'+disE).removeClass(disabled);
-                    }
-                    for(const disE of btnsActions.baseActions.disabledBtns.l2) {
-                        $('#'+disE).removeClass(disabled);
-                    }
-                    for(const disE of btnsActions.baseActions.disabledBtns.l0) {
+                    for(const disE of btnsActions.baseActions.disabledBtns.l1) 
+                        $('#' + disE).removeClass(disabled);
+                    
+                    for(const disE of btnsActions.baseActions.disabledBtns.l2) 
+                        $('#' + disE).removeClass(disabled);
+                    
+                    for(const disE of btnsActions.baseActions.disabledBtns.l0) 
                         $('#'+disE).addClass(disabled);
-                    }
+                    
                     break;
+                    
                 case 1:
-                    for(const disE of btnsActions.baseActions.disabledBtns.l0) {
-                        $('#'+disE).removeClass(disabled);
-                    }
-                    for(const disE of btnsActions.baseActions.disabledBtns.l2) {
-                        $('#'+disE).removeClass(disabled);
-                    }
-                    for(const disE of btnsActions.baseActions.disabledBtns.l1) {
-                        $('#'+disE).addClass(disabled);
-                    }
+                    for(const disE of btnsActions.baseActions.disabledBtns.l0) 
+                        $('#' + disE).removeClass(disabled);
+                    
+                    for(const disE of btnsActions.baseActions.disabledBtns.l2) 
+                        $('#' + disE).removeClass(disabled);
+                    
+                    for(const disE of btnsActions.baseActions.disabledBtns.l1) 
+                        $('#' + disE).addClass(disabled);
+                    
                     break;
+                    
                 case 2:
-                    for(const disE of btnsActions.baseActions.disabledBtns.l0) {
-                        $('#'+disE).removeClass(disabled);
-                    }
-                    for(const disE of btnsActions.baseActions.disabledBtns.l1) {
-                        $('#'+disE).removeClass(disabled);
-                    }
-                    for(const disE of btnsActions.baseActions.disabledBtns.l2) {
-                        $('#'+disE).addClass(disabled);
-                    }
+                    for(const disE of btnsActions.baseActions.disabledBtns.l0) 
+                        $('#' + disE).removeClass(disabled);
+                    
+                    for(const disE of btnsActions.baseActions.disabledBtns.l1) 
+                        $('#' + disE).removeClass(disabled);
+                    
+                    for(const disE of btnsActions.baseActions.disabledBtns.l2) 
+                        $('#' + disE).addClass(disabled);
+                    
                     break;
                     
                 default:
-                    for(const disE of btnsActions.baseActions.disabledBtns) {
-                        $('#'+disE).removeClass(disabled);
-                    }
+                    for(const disE of btnsActions.baseActions.disabledBtns) 
+                        $('#' + disE).removeClass(disabled);
+                    
                     break;
             }
-            $('#'+toolsIconsContainer + ' .btn').each(function (i,e) {
+            
+            $('#' + toolsIconsContainer + ' .btn').each(function () {
                 setOutAnim(this);
             });
-//            console.log('runMode', runMode);
+            if(debug) console.log('runMode', runMode);
         }
     },
     'btn-calculator-action': {
         actions: {},
         beetwenModes: [btnOutlineDark, btnOutlineDanger],
-        0: {
-            all: {
-                always: [btnOutlineDanger],
-                elem: [letBgClass],
-                span: [letHiddenClass]
-            }
-        },
-        1: {
-            all: {
-                always: [btnOutlineDark],
-                elem: [letBgClass],
-                span: [letHiddenClass]
-            }
-        },
-        2: {
-            all: {
-                always: [btnOutlineDark],
-                elem: [letBgClass],
-                span: [letHiddenClass]
-            }
-        }
+        0: { all: { always: [btnOutlineDanger], elem: [letBgClass], span: [letHiddenClass] } },
+        1: { all: { always: [btnOutlineDark], elem: [letBgClass], span: [letHiddenClass] } },
+        2: { all: { always: [btnOutlineDark], elem: [letBgClass], span: [letHiddenClass] } }
     },
     'btn-rewind-action': {
         actions: {},
         beetwenModes: [btnOutlineDark, btnOutlineWarning],
-        0: {
-            all: {
-                always: [btnOutlineDark],
-                elem: [letBgClass],
-                span: [letHiddenClass]
-            }
-        },
-        1: {
-            all: {
-                always: [btnOutlineWarning],
-                elem: [letBgClass],
-                span: [letHiddenClass]
-            }
-        },
-        2: {
-            all: {
-                always: [btnOutlineWarning],
-                elem: [letBgClass],
-                span: [letHiddenClass]
-            }
-        }
+        0: { all: { always: [btnOutlineDark], elem: [letBgClass], span: [letHiddenClass] } },
+        1: { all: { always: [btnOutlineWarning], elem: [letBgClass], span: [letHiddenClass] } },
+        2: { all: { always: [btnOutlineWarning], elem: [letBgClass], span: [letHiddenClass] } }
     },
     'btn-playpause-action': {
         actions: {
@@ -145,12 +113,17 @@ const btnsActions = {
                     switch (runMode) {
                         case 0:
                             runMode = 1;
+                            
                             break;
+                            
                         case 1:
                             runMode = 2;
+                            
                             break;
+                            
                         case 2:
                             runMode = 1;
+                            
                             break;
                     }
                     btnsActions.baseActions.runModeChanged();
@@ -162,25 +135,19 @@ const btnsActions = {
         0: {
             all: {
                 alwaysSpan: {id: 'btn-playpause-action-1', class: [letHiddenClass]},
-                always: [btnOutlineSuccess],
-                elem: [letBgClass],
-                span: [letHiddenClass]
+                always: [btnOutlineSuccess], elem: [letBgClass], span: [letHiddenClass]
             }
         },
         1: {
             all: {
                 alwaysSpan: {id: 'btn-playpause-action-0', class: [letHiddenClass]},
-                always: [btnSuccess],
-                elem: [],
-                span: [letHiddenClass]
+                always: [btnSuccess], elem: [], span: [letHiddenClass]
             }
         },
         2: {
             all: {
                 alwaysSpan: {id: 'btn-playpause-action-1', class: [letHiddenClass]},
-                always: [btnSuccess],
-                elem: [],
-                span: [letHiddenClass]
+                always: [btnSuccess], elem: [], span: [letHiddenClass]
             }
         }
     },
@@ -192,58 +159,23 @@ const btnsActions = {
                     switch (runMode) {
                         default:
                             runMode = 0;
+                            
                             break;
                     }
                     btnsActions.baseActions.runModeChanged();
                 }
             }
         },
-        0: {
-            all: {
-                always: [btnOutlineDark],
-                elem: [letBgClass],
-                span: [letHiddenClass]
-            }
-        },
-        1: {
-            all: {
-                always: [btnOutlineInfo],
-                elem: [letBgClass],
-                span: [letHiddenClass]
-            }
-        },
-        2: {
-            all: {
-                always: [btnOutlineInfo],
-                elem: [letBgClass],
-                span: [letHiddenClass]
-            }
-        }
+        0: { all: { always: [btnOutlineDark], elem: [letBgClass], span: [letHiddenClass] } },
+        1: { all: { always: [btnOutlineInfo], elem: [letBgClass], span: [letHiddenClass] } },
+        2: { all: { always: [btnOutlineInfo], elem: [letBgClass], span: [letHiddenClass] } }
     },
     'btn-end-action': {
         actions: {},
         beetwenModes: [btnOutlineDark, btnOutlineWarning],
-        0: {
-            all: {
-                always: [btnOutlineDark],
-                elem: [letBgClass],
-                span: [letHiddenClass]
-            }
-        },
-        1: {
-            all: {
-                always: [btnOutlineWarning],
-                elem: [letBgClass],
-                span: [letHiddenClass]
-            }
-        },
-        2: {
-            all: {
-                always: [btnOutlineWarning],
-                elem: [letBgClass],
-                span: [letHiddenClass]
-            }
-        }
+        0: { all: { always: [btnOutlineDark], elem: [letBgClass], span: [letHiddenClass] } },
+        1: { all: { always: [btnOutlineWarning], elem: [letBgClass], span: [letHiddenClass] } },
+        2: { all: { always: [btnOutlineWarning], elem: [letBgClass], span: [letHiddenClass] } }
     }
 };
 
@@ -260,9 +192,9 @@ function getSel(elem) {
 
 function getConfig(elem) {
     var id = $(elem).attr('id');
-    var modeOrAll = (btnsActions[id].hasOwnProperty('all'))?btnsActions[id].all:btnsActions[id][runMode];
+    var modeOrAll = (btnsActions[id].hasOwnProperty('all')) ? btnsActions[id].all : btnsActions[id][runMode];
     var res = {
-        beetwenModes: (btnsActions[id].hasOwnProperty('beetwenModes'))?btnsActions[id].beetwenModes:null,
+        beetwenModes: (btnsActions[id].hasOwnProperty('beetwenModes')) ? btnsActions[id].beetwenModes : null,
         mode: modeOrAll
     };
     
@@ -278,11 +210,13 @@ function setOverAnim(elem) {
             $(elem).removeClass(className);
         }
     }
+    
     if(config.mode.all.hasOwnProperty('always')) {
         for(const className of config.mode.all.always) {
             $(elem).addClass(className);
         }
     }
+    
     if(config.mode.all.hasOwnProperty('alwaysSpan')) {
         for(const className of config.mode.all.alwaysSpan.class) {
             $(elem).children('span#' + config.mode.all.alwaysSpan.id).addClass(className);
@@ -293,12 +227,11 @@ function setOverAnim(elem) {
         for(const className of config.mode.all.elem) {
             $(elem).removeClass(className);
         }
+        
         for(const className of config.mode.all.span) {
             $(selector).removeClass(className);
         }
-//        
-//        $(selector).removeClass(hiddenClass)
-//        $(elem).removeClass(bgClass);
+          
     }
 }
 
@@ -311,24 +244,27 @@ function setOutAnim(elem) {
             $(elem).removeClass(className);
         }
     }
+    
     if(config.mode.all.hasOwnProperty('always')) {
         for(const className of config.mode.all.always) {
             $(elem).addClass(className);
         }
     }
+    
     if(config.mode.all.hasOwnProperty('alwaysSpan')) {
         for(const className of config.mode.all.alwaysSpan.class) {
             $(elem).children('span#' + config.mode.all.alwaysSpan.id).addClass(className);
         }
     }
+    
     for(const className of config.mode.all.elem) {
-            $(elem).addClass(className);
+        $(elem).addClass(className);
     }
+        
     for(const className of config.mode.all.span) {
         $(selector).addClass(className);
     }
-//    $(selector).addClass(hiddenClass);
-//    $(elem).addClass(bgClass);
+    
 }
 
 function runTrigeredAction(event, triggerName, elem) {
@@ -336,35 +272,31 @@ function runTrigeredAction(event, triggerName, elem) {
     const fnDef = btnsActions[id].actions;
     var entryPoint = null;
     
-    if(fnDef.hasOwnProperty(runMode)) {
+    if(fnDef.hasOwnProperty(runMode)) 
         entryPoint = fnDef[runMode];
-    } else if(fnDef.hasOwnProperty('all')) {
+    else if(fnDef.hasOwnProperty('all')) 
         entryPoint = fnDef.all;
-    }
     
     if(entryPoint !== null) {
         if(typeof entryPoint[triggerName] === 'function') {
-            if(btnsActions.baseActions.all.hasOwnProperty('before')) {
-                if(typeof btnsActions.baseActions.all.before[triggerName]  === 'function') {
+            if(btnsActions.baseActions.all.hasOwnProperty('before')) 
+                if(typeof btnsActions.baseActions.all.before[triggerName]  === 'function') 
                     btnsActions.baseActions.all.before[triggerName](event);
-                }
-            }
+            
             entryPoint[triggerName](event);
-            if(btnsActions.baseActions.all.hasOwnProperty('after')) {
-                if(typeof btnsActions.baseActions.all.after[triggerName]  === 'function') {
+            if(btnsActions.baseActions.all.hasOwnProperty('after')) 
+                if(typeof btnsActions.baseActions.all.after[triggerName]  === 'function') 
                     btnsActions.baseActions.all.after[triggerName](event);
-                }
-            }
         }
     }
 }
 
 $(document).ready(function () {
     if($(btnClass).length) {
-        $(btnClass).mouseenter(function (e) {
+        $(btnClass).mouseenter(function () {
             setOverAnim(this);
         });
-        $(btnClass).mouseleave(function (e) {
+        $(btnClass).mouseleave(function () {
             setOutAnim(this);
         });
         $(btnClass).click(function (e) {

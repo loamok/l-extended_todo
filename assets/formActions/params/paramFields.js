@@ -1,4 +1,4 @@
-const debug = true;
+const debug = false;
 
 const paramsFieldsIdsPrefix = 'wt_parameters_';
 const paramsFieldsDayParametersIdsPrefix = 'dayParameters_';
@@ -61,10 +61,10 @@ const paramsCbFieldsIds = [
     'global'
 ];
 const paramsUuidFieldsIds = [
-    { name: 'user', identifier: "/api/users/" },
-    { name: 'agenda', identifier: "/api/agendas/" },
-    { name: 'dayParameters_id', identifier: "/api/day_parameters/" },
-    { name: 'dayParameters_wtParameter', identifier: "/api/wt_parameters/" }
+    { name: 'user', identifier: '/api/users/' },
+    { name: 'agenda', identifier: '/api/agendas/' },
+    { name: 'dayParameters_id', identifier: '/api/day_parameters/' },
+    { name: 'dayParameters_wtParameter', identifier: '/api/wt_parameters/' }
 ];
 
 const jsonRepresentation = { };
@@ -75,7 +75,7 @@ function addDayFieldToRepresentation(f) {
 export function addDayFieldToSomething(f, something, value) {
     var dayParameters = something.dayParameters;
     const dp = {};
-    const rg = new RegExp(paramsFieldsDayParametersIdsPrefix, "g");
+    const rg = new RegExp(paramsFieldsDayParametersIdsPrefix, 'g');
     const name = f.replace(rg, '');
     const val = (value)?value:null;
     
