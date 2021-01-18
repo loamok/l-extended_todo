@@ -54,6 +54,7 @@
         }} %}
           {% include 'work_time_tracker/elements/form_modale.html.twig' with { options } only %}
         </div>
+              <script type="application/json" id="dayParameters">{ "id": null }</script>
               <script type="application/json" id="currentParam">{ "id": null }</script>
               <script type="application/json" id="globalParam">{ "id": {% if globalParam is not null %}"{{ globalParam.id }}"{% else %}null{% endif %} }</script>
               <script type="application/json" id="agenda">{ "id": {% if agenda is defined and agenda.id is not null %}"{{ agenda.id }}"{% else %}null{% endif %} }</script>

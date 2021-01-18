@@ -1,5 +1,6 @@
 
-import { paramsFieldsIdsPrefix, paramsFieldsIdsSuffix , paramsFieldsIds } from './paramFields';
+import { prefix as wtFieldsIdsPrefix, suffix as wtFieldsIdsSuffix, fields as wtFieldsIds } from './wt/wtFields';
+import { prefix as dayFieldsIdsPrefix, fields as dayFieldsIds } from './day/dayFields';
     
 const commonParams = {
     hour: {
@@ -22,9 +23,12 @@ const commonParams = {
 };
 
 $(document).ready(function(){
-    if($('#params-form').length > 0) {
-        for(const input of paramsFieldsIds) {
-            $('#' + paramsFieldsIdsPrefix + input + paramsFieldsIdsSuffix).timesetter(commonParams);
+    if($('#wt-form').length > 0) {
+        for(const input of wtFieldsIds) {
+            $('#' + wtFieldsIdsPrefix + input + wtFieldsIdsSuffix).timesetter(commonParams);
+        }
+        for(const input of dayFieldsIds) {
+            $('#' + wtFieldsIdsPrefix + dayFieldsIdsPrefix + input + wtFieldsIdsSuffix).timesetter(commonParams);
         }
     }
 });
