@@ -1,8 +1,7 @@
+const debug = false;
 
 import { getOneWtParameter, postOneWtParameter, putOneWtParameter } from '../../api/wt_parameters/wt_parameters';
-import { getTimeVal, getTimeValTs, addTime, subsTime, parseIntTime, checkTimeVals, setTimeVal } from '../../js/let/let_utils';
-
-const debug = false;
+import { getTimeVal, getTimeValTs, addTime, subsTime, parseIntTime, checkTimeVals, setTimeVal, zeroVal } from '../../js/let/let_utils';
 
 var callbackEnded = true;
 var globalParam = null;
@@ -268,62 +267,49 @@ function dayParamsCalculateDurationsAndBounds(start, end, duration, trigger) {
     var finalEnd;
     
     if(debug) console.log('trigger: ', trigger);
+    finalStart = startVal;
+    finalDur = durVal;
+    finalEnd = endVal;
     
     switch (trigger) {
-        case 'start':
-            finalStart = startVal;
-            
-            if(durVal.H > 0 || durVal.M > 0) {
-                finalDur = durVal;
-                
-                finalEnd = addTime(startVal, durVal);
-            } else if(endVal.H > 0 || endVal.M > 0) {
-                finalEnd = endVal;
-                
-                finalDur = subsTime(endVal, startVal);
-            } else if (durVal.H < 1 && durVal.M < 1) 
+        case 'start':            
+            if(finalDur.H > 0 || finalDur.M > 0) 
+                finalEnd = addTime(finalStart, finalDur);
+            else if(finalEnd.H > 0 || endVal.M > 0) 
+                finalDur = subsTime(finalEnd, finalStart);
+            else if (finalDur.H < 1 && finalDur.M < 1) 
                 finalEnd = finalStart;
             
             break;
         case 'end':
-            finalEnd = endVal;
-            
-            if(durVal.H > 0 || durVal.M > 0) {
-                finalDur = durVal;
-                
-                finalStart = subsTime(endVal, durVal);
-            } else if(startVal.H > 0 || startVal.M > 0) {
-                finalStart = startVal;
-                
-                finalDur = subsTime(endVal, startVal);
-            } else if (durVal.H < 1 && durVal.M < 1) 
+            if(finalDur.H > 0 || finalDur.M > 0) 
+                finalStart = subsTime(finalEnd, finalDur);
+            else if(finalStart.H > 0 || finalStart.M > 0) 
+                finalDur = subsTime(finalEnd, finalStart);
+            else if (finalDur.H < 1 && finalDur.M < 1) 
                 finalStart = finalEnd;
             
             break;
         case 'duration':
-            finalDur = durVal;
-            
-            if(startVal.H > 0 || startVal.M > 0) {
-                finalStart = startVal;
-                
-                finalEnd = addTime(startVal, durVal);
-            } else if(endVal.H > 0 || endVal.M > 0) {
-                finalEnd = endVal;
-                
-                finalStart = subsTime(endVal, durVal);
-            }
+            if(finalStart.H > 0 || finalStart.M > 0) 
+                finalEnd = addTime(finalStart, finalDur);
+            else if(finalEnd.H > 0 || finalEnd.M > 0) 
+                finalStart = subsTime(finalEnd, finalDur);
             
             break;
     }
     
     finalDur = checkTimeVals(finalDur);
+    if(finalDur === null) finalDur = zeroVal;
     finalStart = checkTimeVals(finalStart);
+    if(finalStart === null) finalStart = zeroVal;
     finalEnd = checkTimeVals(finalEnd);
+    if(finalEnd === null) finalEnd = zeroVal;
     
     if(debug) {
-        console.log('finalStart: '  , finalStart);
-        console.log('finalDur: '    , finalDur);
-        console.log('finalEnd: '    , finalEnd);
+        console.log('finalStart: ', finalStart);
+        console.log('finalDur: '  , finalDur);
+        console.log('finalEnd: '  , finalEnd);
     }
         
     setTimeVal(startId, finalStart);
@@ -345,15 +331,15 @@ function dayParamsExecPauseCallbackDuration(event, element) {
     if(typeof $(element).data('start') !== 'undefined') {
         start = $('#' + $(element).data('start'));
         hasStart = true;
-    } else {
+    } else 
         start = $(element);
-    }
+    
     if(typeof $(element).data('end') !== 'undefined') {
         end = $('#' + $(element).data('end'));
         hasEnd = true;
-    } else {
+    } else 
         end = $(element);
-    }
+    
     if(typeof $(element).data('duration') !== 'undefined') {
         duration = $('#' + $(element).data('duration'));
         hasDuration = true;
@@ -364,9 +350,8 @@ function dayParamsExecPauseCallbackDuration(event, element) {
     
     if(hasDuration && !hasStart) {
         trigger = 'start';
-    } else if (hasDuration && !hasEnd) {
+    } else if (hasDuration && !hasEnd) 
         trigger = 'end';
-    }
 
     dayParamsCalculateDurationsAndBounds(start, end, duration, trigger);
 }
