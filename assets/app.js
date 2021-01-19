@@ -33,12 +33,17 @@ import { showAlert, dissmissAlert } from './js/alerts';
 global.showAlert = showAlert;
 global.dissmissAlert = dissmissAlert;
 
+import { recordSmartEvent, triggerMeOn } from './js/let/smartEvents';
+global.recordSmartEvent = recordSmartEvent;
+global.triggerMeOn = triggerMeOn;
+
 import './js/notYet';
 import './manipulateToken';
 import './api/ag_types/getAgTypes';
-import './api/wt_parameters/wt_parameters';
+//import './api/wt_parameters/wt_parameters';
 import './formActions/params/times_selectors';
 import './formActions/params/wt/wtActions';
+import './formActions/params/day/dayActions';
 
 // Animations
 import './interfaces_animations/wtt/interfaces_animations';

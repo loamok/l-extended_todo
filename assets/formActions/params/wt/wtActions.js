@@ -1,5 +1,16 @@
 const debug = false;
 
+var paramsFormSave = smartEventDefine;
+
+paramsFormSave = { ...smartEventDefine };
+paramsFormSave.event = 'click';
+paramsFormSave.handler = function (obj, event) {
+    console.log('wt-callback');
+    console.log('obj: ', obj);
+    console.log('event: ', event);
+};
+paramsFormSave.once = false;
+
 import { getOneWtParameter, postOneWtParameter, putOneWtParameter } from '../../../api/wt_parameters/wt_parameters';
 import { getOneDayParameters, postOneDayParameters, putOneDayParameters } from '../../../api/day_parameters/day_parameters';
 
@@ -15,11 +26,6 @@ import {
     simpleFields as wtSimpleFields, uuidFields as wtUuidFields, 
     cbFields as wtCbFields, intFields as wtIntFields, jsonRepresentation as wtJsonRepresentation
 } from './wtFields';
-//import {  
-//    fields as dayFields, 
-//    prefix as dayPrefix, hoursFields as dayHoursFields, 
-//    uuidFields as dayUuidFields, jsonRepresentation as dayJsonRepresentation
-//} from './day/dayParamFields';
 
 function translateValuesFromSelector(input) {
     var h = $('#' + wtPrefix + input + wtSuffix).timesetter().getHoursValue();
@@ -28,9 +34,9 @@ function translateValuesFromSelector(input) {
     h = (h < 10) ? '0' + h : h;
     m = (m < 10) ? '0' + m : m;
 
-    $('#'+wtPrefix+input).val('' + h + ':' + m);
+    $('#' + wtPrefix + input).val('' + h + ':' + m);
     if(debug)
-        console.log(input + ':' + $('#'+wtPrefix+input).val());
+        console.log(input + ':' + $('#' + wtPrefix + input).val());
 }
 
 function translateValuesForAjax(input) {
@@ -59,8 +65,8 @@ function translateValuesFromAjax(input) {
     h = (h < 10) ? '0' + h : h;
     m = (m < 10) ? '0' + m : m;
     
-    $('#' + wtPrefix + input+wtSuffix).timesetter().setHour(h);
-    $('#' + wtPrefix + input+wtSuffix).timesetter().setMinute(m);
+    $('#' + wtPrefix + input + wtSuffix).timesetter().setHour(h);
+    $('#' + wtPrefix + input + wtSuffix).timesetter().setMinute(m);
     
     if(debug)
         console.log(input + ':' + $('#' + wtPrefix + input).val());
@@ -95,7 +101,7 @@ function translateUpUuid(uuid) {
     }
     
     uuidVal = (uuidVal.indexOf(uuid.identifier) !== -1) ? uuidVal : uuid.identifier + uuidVal;
-    $('#'+wtPrefix+ uuid.name).val(uuidVal);
+    $('#' + wtPrefix + uuid.name).val(uuidVal);
 }
 
 function setUuidValues(name, value) {
@@ -179,7 +185,7 @@ function setParamValues(param) {
 }
 
 function prepareValuesForAjax() {
-    var res = jsonRepresentation;
+    var res = wtJsonRepresentation;
     
     for(const input of wtFields) {
         translateValuesFromSelector(input);
@@ -227,29 +233,32 @@ function loadGlobalParam() {
 $(document).ready(function(){
     if($('#params-form').length > 0) {
         
-        $('#params-form-save').click(function(e){
-            var values = prepareValuesForAjax();
-            
-            if(debug)
-                console.log('prepared', values);
-            
-            var id = JSON.parse($('script#globalParam').text()).id;
-            if(id === null) {
-                if(debug)
-                    console.log('id is null :', id);
-            
-                postOneWtParameter(values, setParamValues);
-            } else {
-                if(debug)
-                    console.log('id is not null :', id);
-                putOneWtParameter(id, values, setParamValues);
-            }
-             /**/
-            if(debug)
-                console.log('values :', values);
-    
-        });
-
+//        $('#params-form-save').click(function(e){
+//            var values = prepareValuesForAjax();
+//            
+//            if(debug)
+//                console.log('prepared', values);
+//            
+//            var id = JSON.parse($('script#globalParam').text()).id;
+//            if(id === null) {
+//                if(debug)
+//                    console.log('id is null :', id);
+//            
+//                postOneWtParameter(values, setParamValues);
+//            } else {
+//                if(debug)
+//                    console.log('id is not null :', id);
+//                putOneWtParameter(id, values, setParamValues);
+//            }
+//             /**/
+//            if(debug)
+//                console.log('values :', values);
+//    
+//        });
+       
+        paramsFormSave.owner = $('#params-form-save');
+        recordSmartEvent(paramsFormSave, 1);
+        
         loadGlobalParam();
         
     }

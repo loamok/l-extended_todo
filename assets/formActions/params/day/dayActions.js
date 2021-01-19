@@ -1,6 +1,18 @@
 const debug = false;
 
-import { getOneWtParameter, postOneWtParameter, putOneWtParameter } from '../../../api/wt_parameters/wt_parameters';
+var dayFormSave = smartEventDefine;
+
+dayFormSave = { ...smartEventDefine };
+dayFormSave.event = 'click';
+dayFormSave.handler = function (obj, event) {
+    console.log('day-callback');
+    console.log('obj: ', obj);
+    console.log('event: ', event);
+};
+dayFormSave.once = false;
+
+
+import { getOneWtParameter } from '../../../api/wt_parameters/wt_parameters';
 import { getOneDayParameters, postOneDayParameters, putOneDayParameters } from '../../../api/day_parameters/day_parameters';
 
 import { getTimeVal, getTimeValTs, addTime, subsTime, parseIntTime, checkTimeVals, setTimeVal, zeroVal } from '../../../js/let/let_utils';
@@ -10,43 +22,43 @@ var globalParam = null;
 var globalDayParams = null;
 
 import {  
-    fields as wtFields, suffix as wtSuffix, 
+    fields as wtFields, suffix as wtSuffix, wtDayParametersId,
     prefix as wtPrefix, hoursFields as wtHoursFields, 
     simpleFields as wtSimpleFields, uuidFields as wtUuidFields, 
     cbFields as wtCbFields, intFields as wtIntFields, jsonRepresentation as wtJsonRepresentation
-} from './wtFields';
-//import {  
-//    fields as dayFields, 
-//    prefix as dayPrefix, hoursFields as dayHoursFields, 
-//    uuidFields as dayUuidFields, jsonRepresentation as dayJsonRepresentation
-//} from './day/dayParamFields';
+} from '../wt/wtFields';
+import {  
+    fields as dayFields, 
+    prefix as dayPrefix, hoursFields as dayHoursFields, 
+    uuidFields as dayUuidFields, jsonRepresentation as dayJsonRepresentation
+} from './dayFields';
 
 function translateValuesFromSelector(input) {
-    var h = $('#' + wtPrefix + input + wtSuffix).timesetter().getHoursValue();
-    var m = $('#' + wtPrefix + input + wtSuffix).timesetter().getMinutesValue();
+    var h = $('#' + dayPrefix + input + wtSuffix).timesetter().getHoursValue();
+    var m = $('#' + dayPrefix + input + wtSuffix).timesetter().getMinutesValue();
 
     h = (h < 10) ? '0' + h : h;
     m = (m < 10) ? '0' + m : m;
 
-    $('#'+wtPrefix+input).val('' + h + ':' + m);
+    $('#' + dayPrefix + input).val('' + h + ':' + m);
     if(debug)
-        console.log(input + ':' + $('#'+wtPrefix+input).val());
+        console.log(input + ':' + $('#' + dayPrefix + input).val());
 }
 
 function translateValuesForAjax(input) {
-    var hoursMinVals = $('#' + wtPrefix + input).val().split(':');
+    var hoursMinVals = $('#' + dayPrefix + input).val().split(':');
     if(debug) 
         console.log('hoursMinVals :', hoursMinVals);
     
-    $('#'+wtPrefix+input).val('P0Y0M0DT' + parseInt(hoursMinVals[0]) + 'H' + parseInt(hoursMinVals[1]) + 'M0S');
+    $('#' + dayPrefix + input).val('P0Y0M0DT' + parseInt(hoursMinVals[0]) + 'H' + parseInt(hoursMinVals[1]) + 'M0S');
     
     if(debug)
-        console.log(input + ':' + $('#' + wtPrefix + input).val());
+        console.log(input + ':' + $('#' + dayPrefix + input).val());
     
 }
 
 function translateValuesFromAjax(input) {
-    var intervalS = $('#' + wtPrefix + input).val();
+    var intervalS = $('#' + dayPrefix + input).val();
     var dateTimeSpec = intervalS.split('T');
     if(dateTimeSpec[1] === undefined) {
         return;
@@ -59,17 +71,17 @@ function translateValuesFromAjax(input) {
     h = (h < 10) ? '0' + h : h;
     m = (m < 10) ? '0' + m : m;
     
-    $('#' + wtPrefix + input+wtSuffix).timesetter().setHour(h);
-    $('#' + wtPrefix + input+wtSuffix).timesetter().setMinute(m);
+    $('#' + dayPrefix + input + wtSuffix).timesetter().setHour(h);
+    $('#' + dayPrefix + input + wtSuffix).timesetter().setMinute(m);
     
     if(debug)
-        console.log(input + ':' + $('#' + wtPrefix + input).val());
+        console.log(input + ':' + $('#' + dayPrefix + input).val());
     
     translateValuesFromSelector(input);
 }
 
 function getUuidValues(name) {
-    var uuidVal = $('#' + wtPrefix + name).val();
+    var uuidVal = $('#' + dayPrefix + name).val();
     
     if(uuidVal !== undefined && uuidVal.length > 0) {
         var uuid = JSON.parse($('script#' + name).text());
@@ -86,7 +98,7 @@ function getUuidValues(name) {
 }
 
 function translateUpUuid(uuid) {
-    var uuidVal = $('#' + wtPrefix + uuid.name).val();
+    var uuidVal = $('#' + dayPrefix + uuid.name).val();
     
     if(uuidVal === undefined || uuidVal.length < 1) {
         if (debug) 
@@ -95,11 +107,11 @@ function translateUpUuid(uuid) {
     }
     
     uuidVal = (uuidVal.indexOf(uuid.identifier) !== -1) ? uuidVal : uuid.identifier + uuidVal;
-    $('#'+wtPrefix+ uuid.name).val(uuidVal);
+    $('#' + dayPrefix + uuid.name).val(uuidVal);
 }
 
 function setUuidValues(name, value) {
-    $('#' + wtPrefix + name).val(value);
+    $('#' + dayPrefix + name).val(value);
 }
 
 function setHourValues(name, value) {
@@ -108,14 +120,14 @@ function setHourValues(name, value) {
     var hoursValue = value.split('T')[1].split(':');
     hoursValue = { h: parseInt(hoursValue[0]), m: parseInt(hoursValue[1])};
     
-    $('#' + wtPrefix + name + '_hour').val(hoursValue.h);
-    $('#' + wtPrefix + name + '_minute').val(hoursValue.m);
+    $('#' + dayPrefix + name + '_hour').val(hoursValue.h);
+    $('#' + dayPrefix + name + '_minute').val(hoursValue.m);
 }
 
 function getHoursStringForJson(name) {
     var hoursValue = {
-        h: parseInt($('#' + wtPrefix + name + '_hour').val()), 
-        m: parseInt($('#' + wtPrefix + name + '_minute').val())
+        h: parseInt($('#' + dayPrefix + name + '_hour').val()), 
+        m: parseInt($('#' + dayPrefix + name + '_minute').val())
     };
     
     hoursValue.h = (hoursValue.h < 10) ? '0' + hoursValue.h : hoursValue.h;
@@ -125,7 +137,7 @@ function getHoursStringForJson(name) {
 }
 
 function getSimpleValues(name, setnull, integer) {
-    var val = $('#' + wtPrefix + name).val()
+    var val = $('#' + dayPrefix + name).val()
     if((setnull && val.length < 1) || integer) {
         if(integer && (!setnull)) 
             val = parseInt(val);
@@ -139,129 +151,60 @@ function getSimpleValues(name, setnull, integer) {
 }
 
 function setSimpleValues(name, value) {
-    $('#' + wtPrefix + name).val(value);
-}
-
-function setCbValue(name, value) {
-    if (value) 
-        $('#' + wtPrefix + name).prop('checked', true); 
-    else 
-        $('#' + wtPrefix + name).prop('checked', false);
-}
-
-function getCbValue(name) {
-    return $('#' + wtPrefix + name).is(':checked');
+    $('#' + dayPrefix + name).val(value);
 }
 
 function setParamValues(param) {
-    for(const field of wtSimpleFields) 
-        setSimpleValues(field, param[field]);
-    
-    for(const uuid of wtUuidFields) {
+    for(const uuid of dayUuidFields) {
         setUuidValues(uuid.name, param[uuid.name]);
         translateUpUuid(uuid);
     }
     
-    for(const cb of wtCbFields) 
-        setCbValue(cb, param[cb]);
-    
-    for(const durField of wtFields) {
+    for(const durField of dayFields) {
         setSimpleValues(durField, param[durField]);
         translateValuesFromAjax(durField);
     }
     
-    for(const hour of wtHoursFields) 
+    for(const hour of dayHoursFields) 
         setHourValues(hour, param[hour]);
-    
-    for (const f of wtIntFields) 
-        setSimpleValues(f, param[f]);
-    
-}
-function setDayParamValues(param) {
-    for(const field of dayParamsFields) 
-        setSimpleValues(wtPrefix + wtDayParametersIdsPrefix + field, param[field]);
-    
-    for(const uuid of wtUuidFields) {
-        setUuidValues(uuid.name, param[uuid.name]);
-        translateUpUuid(uuid);
-    }
-    
-    for(const durField of wtFields) {
-        setSimpleValues(durField, param[durField]);
-        translateValuesFromAjax(durField);
-    }
-    
-    for(const hour of wtHoursFields) 
-        setHourValues(hour, param[hour]);
-    
-    for (const f of wtIntFields) 
-        setSimpleValues(f, param[f]);
     
 }
 
 function prepareValuesForAjax() {
-    var res = jsonRepresentation;
+    var res = dayJsonRepresentation;
     
-    for(const input of wtFields) {
+    for(const input of dayFields) {
         translateValuesFromSelector(input);
         translateValuesForAjax(input);
-        if(input.includes(wtDayParametersIdsPrefix)) 
-            res = addDayFieldToSomething(input, res, getSimpleValues(input));
-        else 
-            res[input] = getSimpleValues(input);
+        res[input] = getSimpleValues(input);
         
         translateValuesFromAjax(input);
     }
     
-    for(const input of wtSimpleFields) {
-        res[input] = getSimpleValues(input);
+    for(const input of dayHoursFields) {
+        res[input] = getHoursStringForJson(input);
     }
     
-    for(const input of wtHoursFields) {
-        if(input.includes(wtDayParametersIdsPrefix)) 
-            res = addDayFieldToSomething(input, res, getHoursStringForJson(input));
-        else 
-            res[input] = getHoursStringForJson(input);
+    for (const f of dayUuidFields) {
+        setSimpleValues(f.name, getUuidValues(f.name));
+        translateUpUuid(f);
+        res[f.name] = getSimpleValues(f.name, true);
+        
     }
     
-    for (const f of wtUuidFields) {
-        if(f.name.includes(wtDayParametersIdsPrefix)) {
-            setSimpleValues(f.name, getUuidValues(f.name));
-//            @todo res = addDayFieldToSomething(input, res, getSimpleValues(input));
-        } else {
-            setSimpleValues(f.name, getUuidValues(f.name));
-            translateUpUuid(f);
-            res[f.name] = getSimpleValues(f.name, true);
-        }
-    }
-    
-    for (const f of wtCbFields) 
-        res[f] = getCbValue(f);
-    
-    for (const f of wtIntFields) 
-        res[f] = getSimpleValues(f, false, true);
-
     if(debug)
         console.log('res :' , res);
     
     return res;
 }
 
-function loadGlobalParam() {
-    globalParam = JSON.parse($('#globalParam').text());
-    if(debug) 
-        console.log('globalParam : ', globalParam);
-    
-    if(globalParam.id !== null) 
-        getOneWtParameter(globalParam.id, setParamValues);
-}
 function loadGlobalDayParams() {
-    globalDayParams = JSON.parse($('#dayParameters_id').text());
+    globalDayParams = JSON.parse($('#' + wtDayParametersId).text());
     if(debug) 
         console.log('globalDayParams: ', globalDayParams);
     
     if(globalDayParams.id !== null) 
-        getOneDayParameters(globalDayParams.id, setDayParamValues);
+        getOneDayParameters(globalDayParams.id, setParamValues);
 }
 
 function dayParamsCalculateDurationsAndBounds(start, end, duration, trigger) {
@@ -401,38 +344,20 @@ function dayParamsSetPauseCallbackFields(element) {
 
 $(document).ready(function(){
     if($('#params-form').length > 0) {
-        $('.pauseCallbackDuration').each(function (i,e) {
+        $('.pauseCallbackDuration').each(function () {
             dayParamsSetPauseCallbackDuration(this);
         });
-        $('.pauseCallbackFields').each(function (i,e) {
+        $('.pauseCallbackFields').each(function () {
             dayParamsSetPauseCallbackFields(this);
         });
-        $('#params-form-save').click(function(e){
-            var values = prepareValuesForAjax();
-            
-            console.log('prepared', values);
-//            return; 
-//            /* @todo */
-            var id = JSON.parse($('script#globalParam').text()).id;
-            if(id === null) {
-//                if(debug)
-                    console.log('id is null :', id);
-                globalDayParams = values.dayParameters;
-                values.dayParameters = null;
-                postOneWtParameter(values, setParamValues);
-                
-            } else {
-//                if(debug)
-                    console.log('id is not null :', id);
-                putOneWtParameter(id, values, setParamValues);
-            }
-             /**/
-//            if(debug)
-                console.log('values :', values);
-    
-        });
+//        $('#params-form-save').click(function(){
+//              return; 
+//            /* @todo trouver une méthode pour 'empiler' les callbacks */
+        dayFormSave.owner = $('#params-form-save');
+        recordSmartEvent(dayFormSave, 0);
+//        });
 
-        loadGlobalParam();
+        loadGlobalDayParams();
         
     }
 });

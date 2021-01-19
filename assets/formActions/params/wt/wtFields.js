@@ -3,6 +3,8 @@ const debug = false;
 const prefix = 'wt_parameters_';
 const suffix = '_ph';
 
+export const wtDayParametersId = 'dayParameters';
+
 const fields = [
     'baseLunchBreakDuration', 
     'extendedLunchBreakDuration', 
