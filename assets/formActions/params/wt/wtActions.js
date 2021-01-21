@@ -230,6 +230,20 @@ function loadGlobalParam() {
         getOneWtParameter(globalParam.id, setParamValues);
 }
 
+var premierDef = { ...smartEventDefine };
+var secondDef  = { ...smartEventDefine };
+
+premierDef.event = 'click';
+premierDef.handler = function (obj, event) {
+    $('#out').append('plop 1 <br>');
+};
+premierDef.once = false;
+secondDef.event = 'click';
+secondDef.handler = function (obj, event) {
+    $('#out').append('plop 2 <br>');
+};
+secondDef.once = false;
+
 $(document).ready(function(){
     if($('#params-form').length > 0) {
         
@@ -257,9 +271,41 @@ $(document).ready(function(){
 //        });
        
         paramsFormSave.owner = $('#params-form-save');
-        recordSmartEvent(paramsFormSave, 1);
+        setMeLast(paramsFormSave);
         
         loadGlobalParam();
         
     }
+    
+    $('#clear').click(function(e){
+  	$('#out').html("");
+  })
+
+	$('#zero').click(function(e){
+  	$('#out').append('plop 2 <br>');
+  });
+  $('#zero').click(function(e){
+  	$('#out').append('plop 1 <br>');
+  });
+	
+  premierDef.owner = $('#first');
+	recordSmartEvent(premierDef, 0);
+  secondDef.owner = $('#first');
+	recordSmartEvent(secondDef, 0);
+  
+  premierDef.owner = $('#second');
+	recordSmartEvent(premierDef, 1);
+  secondDef.owner = $('#second');
+	setMeFirst(secondDef);
+  
+  premierDef.owner = $('#third');
+	setMeLast(premierDef);
+  secondDef.owner = $('#third');
+	recordSmartEvent(secondDef,1);
+  
+  
+  premierDef.owner = $('#fourth');
+	recordSmartEvent(premierDef,1);
+  secondDef.owner = $('#fourth');
+	recordSmartEvent(secondDef,1);
 });

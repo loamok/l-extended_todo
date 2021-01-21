@@ -33,9 +33,11 @@ import { showAlert, dissmissAlert } from './js/alerts';
 global.showAlert = showAlert;
 global.dissmissAlert = dissmissAlert;
 
-import { recordSmartEvent, triggerMeOn } from './js/let/smartEvents';
+import { recordSmartEvent, triggerMeOn, setMeFirst, setMeLast } from './js/let/smartEvents';
 global.recordSmartEvent = recordSmartEvent;
 global.triggerMeOn = triggerMeOn;
+global.setMeFirst = setMeFirst;
+global.setMeLast = setMeLast;
 
 import './js/notYet';
 import './manipulateToken';
