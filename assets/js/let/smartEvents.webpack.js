@@ -1,68 +1,89 @@
+/* 
+ * LICENSE is attached to the project and is GNU LGPLv3
+ * See the license file to the root of the project tree
+ * 
+ * @license GNU LGPLv3
+ */
 
 /**
- * A smart event base definition
+ * A smart event base definition set like : 
+ *  owner : event.data.obj : the jQuery html element who have the event to be attached
+ *  event : the event name to be attached on. @todo give the possibility to trigger on several event names
+ *  handler : the event function to trigger.  @see triggerMeOn for full description.
+ *  
  * @type Object
  */
 export const smartEventDefine = {
-    /*[Object])*/ owner: null, /*String*/ event: null, /*Function*/ handler: null, /*Boolean*/ once: null
+    /*[Object])*/ owner: null, /*String*/ event: null, /*Function*/ handler: null
 };
 
-// For internal use only
+// For internal use only, but you can tune thoses constants for matching your needs
 /**
+ * Starting order number for forcing the 'setMeFirst' ability.
+ * Next setMeFirst call would have -1000, -1001 order and so on.
  * 
  * @type integer
  */
 const firstOrder = -999;
 /**
+ * Order number for forcing the 'setMeLast' ability.
+ * Next setMeLast call would have 1000, 1001 order and so on.
  * 
  * @type integer
  */
 const lastOrder = 999;
 /**
+ * Since javascript confuse null and 0 even with '===' comparison, 
+ * ordering numbers are converted to strings with this prefix. (and a separator set below)
+ * Ordering strings would look like "<sOrderKey><sOrderKeySep><order>" so it means sOrder_5 for an order of 5.
  * 
  * @type String
  */
 const sOrderKey = 'sOrder';
 /**
+ * Separator for separating ordering string prefix from order number.
  * 
  * @type String
  */
 const sOrderKeySep = '_';
-
 /**
+ * All the smartEvents definitions collection
  * 
  * @type Object
  */
-export var smartEvents = {};
+var smartEvents = {};
 
 /**
- * Optimized BubbleSort function
+ * Optimized sorting function.
+ * Used to ensure functions will be triggered in the correct order.
+ * This is a mix between Bubble and Insertion sorting.
+ * I put in index.html an ugly benchmark between thoses 3 algorithms.
+ * This function can be 3 times faster of the others.
  * 
- * @param {Array} toSort
- * @returns {Array}
+ * @param {Array} toSort array to sort
+ * @returns {Array} sorted array
  */
-function bubbleSortMe(/*Array*/ toSort) {
+function sortMe(/*Array*/ toSort) {
     var swapped = true;
     
     do {
         swapped = false;
         for(var j = 0; j < toSort.length; j++) {
+            
             for(var i = toSort.length - 1; i > 0; i--) {
                 if(i === j)
                     break;
             
-                const elemOrder = parseInt(toSort[j].split(sOrderKeySep)[1]);
-                const nextOrder = parseInt(toSort[i].split(sOrderKeySep)[1]);
+                var elemOrder = parseInt(toSort[j].split(sOrderKeySep)[1]);
+                var nextOrder = parseInt(toSort[i].split(sOrderKeySep)[1]);
 
                 if(elemOrder > nextOrder) {
-                    const tmp = toSort[j];
+                    var tmp = toSort[j];
                     toSort[j] = toSort[i];
                     toSort[i] = tmp;
                     swapped = true;
                 }
             }
-            if(i === j)
-                break;
         }
     } while (swapped);
     
@@ -106,6 +127,7 @@ export function recordSmartEvent(/*[Object])*/ definition, /*integer*/ order, /*
             if(!smartEvent[definition.event][sOrder]) {
                 // store the handler definition like smartEvents.myId.click.sOrder_0
                 smartEvent[definition.event][sOrder] = definition;
+                
                 // ordering the handler calls (array natural sort)
                 smartEvent[definition.event].toTrigger.push(sOrder);
                 if(!smartEvent[definition.event].defined) {
@@ -114,20 +136,30 @@ export function recordSmartEvent(/*[Object])*/ definition, /*integer*/ order, /*
                     // and never put another jquery callback on the html element
                     smartEvent[definition.event].defined = true;
                 }
-              // avoiding order numbers collisions if number is already registered increase and redo
-            } else if(!smartEvent[definition.event][sOrder].once) {
-                recordSmartEvent(definition, order + 1, isLast, isFirst);
+                
+            // Avoiding order numbers collisions. If number is already registered increase (or decrease (for setMeFirst) and self call
+            // Only 
+            } else {
+                var nextOrder = (order < 0) ? order - 1: order + 1;
+                
+                recordSmartEvent(definition, nextOrder, isLast, isFirst);
                 return;
             }
             
             // sorting the handlers to call (optimized bubble sort, my personal choice)
-            smartEvent[definition.event].toTrigger = bubbleSortMe(smartEvent[definition.event].toTrigger);
+            smartEvent[definition.event].toTrigger = sortMe(smartEvent[definition.event].toTrigger);
             
         }
         
     }
 }
 
+/**
+ * Set the definition as the 'first' to trigger
+ * 
+ * @param {Object} definition
+ * @returns {void}
+ */
 export function setMeFirst(/*[Object])*/ definition) {
     // more complex not work (replacing the definitions with new one with current def as first call) 
     // instead give it a '-999' order
@@ -135,6 +167,12 @@ export function setMeFirst(/*[Object])*/ definition) {
 
 }
 
+/**
+ * Set the definition as the 'last' to trigger
+ * 
+ * @param {Object} definition
+ * @returns {void}
+ */
 export function setMeLast(/*[Object])*/ definition) {
     // no deal here there is no events recorded yet we simply record a simple event with order 999
     // since ordinary orders would be before 999 and 999 could only be replaced by another 'setMe"Something"' call
@@ -142,6 +180,18 @@ export function setMeLast(/*[Object])*/ definition) {
     recordSmartEvent(definition, lastOrder, true);
 }
 
+/**
+ * Trigger the recorded event Handlers
+ * Parameters gived to handlers are (in this order !) :
+ *  event.data.obj: the jQuery object (HTML element) to which the event (click, change, anything ...) is attached
+ *  event : the full jQuery Event object
+ *  
+ * An event handler can be write like :
+ *  function (owner, event) { .... }
+ * 
+ * @param {Event} event https://api.jquery.com/category/events/event-object/
+ * @returns {void}
+ */
 export function triggerMeOn(/*[Object])*/ event) {
     if(event.data.obj.attr('id')) { // do nothing wihtout a definition
         var smartEvent = smartEvents[event.data.obj.attr('id')];
@@ -155,7 +205,7 @@ export function triggerMeOn(/*[Object])*/ event) {
             
             // have we got a collection of handlers and an ordered one
             for (const sOrder of smartEvent[event.data.eventName].toTrigger) {
-                // trigger all handlers that are not flagged "last"
+                // trigger all handlers that are not flagged "last" or "first"
                 if(sOrder !== smartEvent[event.data.eventName].last && sOrder !== smartEvent[event.data.eventName].first) {
                     smartEvent[event.data.eventName][sOrder].handler(event.data.obj, event);
                 }

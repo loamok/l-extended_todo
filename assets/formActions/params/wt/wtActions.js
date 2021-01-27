@@ -1,8 +1,10 @@
+/* global global */
+
+const smartEventDefine = global.smartEventDefine;
 const debug = false;
 
-var paramsFormSave = smartEventDefine;
+var paramsFormSave = { ...smartEventDefine };
 
-paramsFormSave = { ...smartEventDefine };
 paramsFormSave.event = 'click';
 paramsFormSave.handler = function (obj, event) {
     console.log('wt-callback');
@@ -230,46 +232,70 @@ function loadGlobalParam() {
         getOneWtParameter(globalParam.id, setParamValues);
 }
 
-var premierDef = { ...smartEventDefine };
+var firstDef = { ...smartEventDefine };
 var secondDef  = { ...smartEventDefine };
+var thirdDef  = { ...smartEventDefine };
+var fourthDef  = { ...smartEventDefine };
+var fifthDef  = { ...smartEventDefine };
+var sixDef  = { ...smartEventDefine };
 
-premierDef.event = 'click';
-premierDef.handler = function (obj, event) {
-    $('#out').append('plop 1 <br>');
+firstDef.event = 'click';
+firstDef.handler = function (obj, event) {
+    $('#out').append('1 <br>');
 };
-premierDef.once = false;
+firstDef.once = false;
 secondDef.event = 'click';
 secondDef.handler = function (obj, event) {
-    $('#out').append('plop 2 <br>');
+    $('#out').append('2 <br>');
 };
 secondDef.once = false;
+thirdDef.event = 'click';
+thirdDef.handler = function (obj, event) {
+    $('#out').append('3 <br>');
+};
+thirdDef.once = false;
+fourthDef.event = 'click';
+fourthDef.handler = function (obj, event) {
+    $('#out').append('4 <br>');
+};
+fourthDef.once = false;
+fifthDef.event = 'click';
+fifthDef.handler = function (obj, event) {
+    $('#out').append('5 <br>');
+};
+fifthDef.once = false;
+sixDef.event = 'click';
+sixDef.handler = function (obj, event) {
+    $('#out').append('6 <br>');
+};
+sixDef.once = false;
 
 $(document).ready(function(){
     if($('#params-form').length > 0) {
-        
-//        $('#params-form-save').click(function(e){
-//            var values = prepareValuesForAjax();
-//            
-//            if(debug)
-//                console.log('prepared', values);
-//            
-//            var id = JSON.parse($('script#globalParam').text()).id;
-//            if(id === null) {
-//                if(debug)
-//                    console.log('id is null :', id);
-//            
-//                postOneWtParameter(values, setParamValues);
-//            } else {
-//                if(debug)
-//                    console.log('id is not null :', id);
-//                putOneWtParameter(id, values, setParamValues);
-//            }
-//             /**/
-//            if(debug)
-//                console.log('values :', values);
-//    
-//        });
-       
+        /*
+        $('#params-form-save').click(function(e){
+            var values = prepareValuesForAjax();
+            
+            if(debug)
+                console.log('prepared', values);
+            
+            var id = JSON.parse($('script#globalParam').text()).id;
+            if(id === null) {
+                if(debug)
+                    console.log('id is null :', id);
+            
+                postOneWtParameter(values, setParamValues);
+            } else {
+                if(debug)
+                    console.log('id is not null :', id);
+                putOneWtParameter(id, values, setParamValues);
+            }
+          
+            if(debug)
+                console.log('values :', values);
+    
+        });
+       */
         paramsFormSave.owner = $('#params-form-save');
         setMeLast(paramsFormSave);
         
@@ -279,33 +305,52 @@ $(document).ready(function(){
     
     $('#clear').click(function(e){
   	$('#out').html("");
-  })
+    })
 
-	$('#zero').click(function(e){
+    $('#zero').click(function(e){
   	$('#out').append('plop 2 <br>');
-  });
-  $('#zero').click(function(e){
-  	$('#out').append('plop 1 <br>');
-  });
+    });
+    $('#zero').click(function(e){
+        $('#out').append('plop 1 <br>');
+    });
 	
-  premierDef.owner = $('#first');
-	recordSmartEvent(premierDef, 0);
-  secondDef.owner = $('#first');
-	recordSmartEvent(secondDef, 0);
-  
-  premierDef.owner = $('#second');
-	recordSmartEvent(premierDef, 1);
-  secondDef.owner = $('#second');
-	setMeFirst(secondDef);
-  
-  premierDef.owner = $('#third');
-	setMeLast(premierDef);
-  secondDef.owner = $('#third');
-	recordSmartEvent(secondDef,1);
-  
-  
-  premierDef.owner = $('#fourth');
-	recordSmartEvent(premierDef,1);
-  secondDef.owner = $('#fourth');
-	recordSmartEvent(secondDef,1);
+//    firstDef.owner = $('#first');
+//	recordSmartEvent(firstDef, 0);
+//    secondDef.owner = $('#first');
+//	recordSmartEvent(secondDef, 0);
+//  
+//    firstDef.owner = $('#second');
+//	recordSmartEvent(firstDef, 1);
+//    secondDef.owner = $('#second');
+//	setMeFirst(secondDef);
+//  
+//    firstDef.owner = $('#third');
+//	setMeLast(firstDef);
+//    secondDef.owner = $('#third');
+//	recordSmartEvent(secondDef,1);
+//  
+//    firstDef.owner = $('#fourth');
+//	recordSmartEvent(firstDef,1);
+//    secondDef.owner = $('#fourth');
+//	recordSmartEvent(secondDef,1);
+//        
+//    firstDef.owner = $('#fifth');
+//	recordSmartEvent(firstDef,0);
+//    secondDef.owner = $('#fifth');
+//	setMeLast(secondDef);
+//    thirdDef.owner = $('#fifth');
+//	setMeFirst(thirdDef);
+        
+    sixDef.owner = $('#six');
+        setMeFirst(sixDef);
+    fifthDef.owner = $('#six');
+	setMeFirst(fifthDef);
+    fourthDef.owner = $('#six');
+	recordSmartEvent(fourthDef);
+    thirdDef.owner = $('#six');
+	recordSmartEvent(thirdDef, 0);
+    firstDef.owner = $('#six');
+	setMeLast(firstDef);
+    secondDef.owner = $('#six');
+	setMeLast(secondDef);
 });

@@ -1,3 +1,7 @@
+/* global global */
+
+const smartEventDefine = global.smartEventDefine;
+
 const debug = false;
 
 var dayFormSave = smartEventDefine;

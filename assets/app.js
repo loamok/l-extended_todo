@@ -5,6 +5,8 @@
  * (and its CSS file) in your base layout (base.html.twig).
  */
 
+/* global global */
+
 // any CSS you import will output into a single css file (app.css in this case)
 const $ = require('jquery');
 global.$ = global.jQuery = $;
@@ -33,11 +35,12 @@ import { showAlert, dissmissAlert } from './js/alerts';
 global.showAlert = showAlert;
 global.dissmissAlert = dissmissAlert;
 
-import { recordSmartEvent, triggerMeOn, setMeFirst, setMeLast } from './js/let/smartEvents';
+import { recordSmartEvent, triggerMeOn, setMeFirst, setMeLast,  smartEventDefine } from './js/let/smartEvents.webpack';
 global.recordSmartEvent = recordSmartEvent;
 global.triggerMeOn = triggerMeOn;
 global.setMeFirst = setMeFirst;
 global.setMeLast = setMeLast;
+global.smartEventDefine = smartEventDefine;
 
 import './js/notYet';
 import './manipulateToken';

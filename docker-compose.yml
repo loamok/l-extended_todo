@@ -35,9 +35,7 @@ services:
     depends_on:
       - database
   nginx:
-    build:
-      context: ./docker/nginx/
-      dockerfile: Dockerfile
+    build: ./docker/nginx/
     image: 'nginx:1.19.0-alpine'
     volumes:
       - './:/var/www/l-extended_todo/'
@@ -49,13 +47,8 @@ services:
   encore:
     build:
       context: ./docker/encore/
-      dockerfile: Dockerfile
-      args:
-        docker_proxy: '${PROXY}'
-        dockers_proxy: '${PROXYS}'
-        no_proxy: '${NO_PROXY}'
-        apply_acl_to_root: '${ROOT_ACL:-0}'
-    image: node:12
+      args: {}
+    image: 'node:12'
     volumes:
       - './:/var/www/l-extended_todo/'
     ports:
