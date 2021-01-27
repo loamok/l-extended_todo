@@ -3,20 +3,33 @@
 const smartEventDefine = global.smartEventDefine;
 const debug = false;
 
-var paramsFormSave = { ...smartEventDefine };
-
-paramsFormSave.event = 'click';
-paramsFormSave.handler = function (obj, event) {
-    console.log('wt-callback');
-    console.log('obj: ', obj);
-    console.log('event: ', event);
-};
-paramsFormSave.once = false;
-
 import { getOneWtParameter, postOneWtParameter, putOneWtParameter } from '../../../api/wt_parameters/wt_parameters';
 import { getOneDayParameters, postOneDayParameters, putOneDayParameters } from '../../../api/day_parameters/day_parameters';
 
 import { getTimeVal, getTimeValTs, addTime, subsTime, parseIntTime, checkTimeVals, setTimeVal, zeroVal } from '../../../js/let/let_utils';
+
+var paramsFormSave = { ...smartEventDefine };
+
+paramsFormSave.event = 'click';
+paramsFormSave.handler = function (obj, event) {
+    var values = prepareValuesForAjax();
+            
+    if(debug)
+        console.log('prepared', values);
+
+    var id = JSON.parse($('script#globalParam').text()).id;
+    if(id === null) {
+        if(debug)
+            console.log('id is null :', id);
+
+        postOneWtParameter(values, setParamValues);
+    } else {
+        if(debug)
+            console.log('id is not null :', id);
+        putOneWtParameter(id, values, setParamValues);
+    }
+          
+};
 
 var callbackEnded = true;
 var globalParam = null;
@@ -232,44 +245,6 @@ function loadGlobalParam() {
         getOneWtParameter(globalParam.id, setParamValues);
 }
 
-var firstDef = { ...smartEventDefine };
-var secondDef  = { ...smartEventDefine };
-var thirdDef  = { ...smartEventDefine };
-var fourthDef  = { ...smartEventDefine };
-var fifthDef  = { ...smartEventDefine };
-var sixDef  = { ...smartEventDefine };
-
-firstDef.event = 'click';
-firstDef.handler = function (obj, event) {
-    $('#out').append('1 <br>');
-};
-firstDef.once = false;
-secondDef.event = 'click';
-secondDef.handler = function (obj, event) {
-    $('#out').append('2 <br>');
-};
-secondDef.once = false;
-thirdDef.event = 'click';
-thirdDef.handler = function (obj, event) {
-    $('#out').append('3 <br>');
-};
-thirdDef.once = false;
-fourthDef.event = 'click';
-fourthDef.handler = function (obj, event) {
-    $('#out').append('4 <br>');
-};
-fourthDef.once = false;
-fifthDef.event = 'click';
-fifthDef.handler = function (obj, event) {
-    $('#out').append('5 <br>');
-};
-fifthDef.once = false;
-sixDef.event = 'click';
-sixDef.handler = function (obj, event) {
-    $('#out').append('6 <br>');
-};
-sixDef.once = false;
-
 $(document).ready(function(){
     if($('#params-form').length > 0) {
         /*
@@ -297,60 +272,10 @@ $(document).ready(function(){
         });
        */
         paramsFormSave.owner = $('#params-form-save');
-        setMeLast(paramsFormSave);
+        recordSmartEvent(paramsFormSave);
         
         loadGlobalParam();
         
     }
     
-    $('#clear').click(function(e){
-  	$('#out').html("");
-    })
-
-    $('#zero').click(function(e){
-  	$('#out').append('plop 2 <br>');
-    });
-    $('#zero').click(function(e){
-        $('#out').append('plop 1 <br>');
-    });
-	
-//    firstDef.owner = $('#first');
-//	recordSmartEvent(firstDef, 0);
-//    secondDef.owner = $('#first');
-//	recordSmartEvent(secondDef, 0);
-//  
-//    firstDef.owner = $('#second');
-//	recordSmartEvent(firstDef, 1);
-//    secondDef.owner = $('#second');
-//	setMeFirst(secondDef);
-//  
-//    firstDef.owner = $('#third');
-//	setMeLast(firstDef);
-//    secondDef.owner = $('#third');
-//	recordSmartEvent(secondDef,1);
-//  
-//    firstDef.owner = $('#fourth');
-//	recordSmartEvent(firstDef,1);
-//    secondDef.owner = $('#fourth');
-//	recordSmartEvent(secondDef,1);
-//        
-//    firstDef.owner = $('#fifth');
-//	recordSmartEvent(firstDef,0);
-//    secondDef.owner = $('#fifth');
-//	setMeLast(secondDef);
-//    thirdDef.owner = $('#fifth');
-//	setMeFirst(thirdDef);
-        
-    sixDef.owner = $('#six');
-        setMeFirst(sixDef);
-    fifthDef.owner = $('#six');
-	setMeFirst(fifthDef);
-    fourthDef.owner = $('#six');
-	recordSmartEvent(fourthDef);
-    thirdDef.owner = $('#six');
-	recordSmartEvent(thirdDef, 0);
-    firstDef.owner = $('#six');
-	setMeLast(firstDef);
-    secondDef.owner = $('#six');
-	setMeLast(secondDef);
 });

@@ -1,20 +1,7 @@
 /* global global */
 
 const smartEventDefine = global.smartEventDefine;
-
 const debug = false;
-
-var dayFormSave = smartEventDefine;
-
-dayFormSave = { ...smartEventDefine };
-dayFormSave.event = 'click';
-dayFormSave.handler = function (obj, event) {
-    console.log('day-callback');
-    console.log('obj: ', obj);
-    console.log('event: ', event);
-};
-dayFormSave.once = false;
-
 
 import { getOneWtParameter } from '../../../api/wt_parameters/wt_parameters';
 import { getOneDayParameters, postOneDayParameters, putOneDayParameters } from '../../../api/day_parameters/day_parameters';
@@ -36,6 +23,40 @@ import {
     prefix as dayPrefix, hoursFields as dayHoursFields, 
     uuidFields as dayUuidFields, jsonRepresentation as dayJsonRepresentation
 } from './dayFields';
+
+var dayFormSave = smartEventDefine;
+
+dayFormSave = { ...smartEventDefine };
+dayFormSave.event = 'click';
+dayFormSave.handler = function (obj, event) {
+    console.log('day-callback');
+    console.log('obj: ', obj);
+    console.log('event: ', event);
+    
+    var values = prepareValuesForAjax();
+            
+    if(debug)
+        console.log('prepared', values);
+
+    var id = JSON.parse($('script#globalDayParam').text()).id;
+    var paramId = JSON.parse($('script#globalParam').text()).id;
+    values.paramId = paramId;
+    if(id === null) {
+        if(debug) {
+            console.log('id is null :', id);
+            console.log('id is null, paramId :', paramId);
+        }
+
+        postOneDayParameters(values, setParamValues);
+    } else {
+        if(debug) {
+            console.log('id is not null :', id);
+            console.log('id is not null, paramId :', paramId);
+        }
+        
+        putOneDayParameters(id, values, setParamValues);
+    }
+};
 
 function translateValuesFromSelector(input) {
     var h = $('#' + dayPrefix + input + wtSuffix).timesetter().getHoursValue();
@@ -358,7 +379,7 @@ $(document).ready(function(){
 //              return; 
 //            /* @todo trouver une méthode pour 'empiler' les callbacks */
         dayFormSave.owner = $('#params-form-save');
-        recordSmartEvent(dayFormSave, 0);
+        setMeLast(dayFormSave);
 //        });
 
         loadGlobalDayParams();
