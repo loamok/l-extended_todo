@@ -12,5 +12,6 @@ export function putOneWtParameter(id, values, successCallback, errorCallback) {
 }
 
 export function getOneWtParameter(id, successCallback, errorCallback) {
+    console.debug('here', true);
     getOne(successCallback, errorCallback, Routing.generate('api_wt_parameters_get_item', {'id': id}));
 }

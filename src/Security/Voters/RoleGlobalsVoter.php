@@ -39,7 +39,7 @@ class RoleGlobalsVoter extends BaseVoter {
         $this->entities = [
             Agenda::class, Delegation::class, Event::class, 
             Todo::class, Journal::class, Freebusy::class, Related::class, 
-            WtParameters::class
+            WtParameters::class, \App\Entity\DayParameters::class
         ];
     }
     

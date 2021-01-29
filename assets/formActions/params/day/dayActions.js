@@ -31,10 +31,10 @@ var dayFormSave = smartEventDefine;
 dayFormSave = { ...smartEventDefine };
 dayFormSave.event = 'click';
 dayFormSave.handler = function (obj, event) {
-    console.log('day-callback');
-    console.log('obj: ', obj);
-    console.log('event: ', event);
+    var start = new Date().getTime();
+    while (global.allCBEnded === false && new Date().getTime() < start + 1000);
     
+    addCbToPending('dayFormSave');
     var id = JSON.parse($('script#dayParameters').text()).id;
     var paramId = JSON.parse($('script#globalParam').text()).id;
     
@@ -44,22 +44,22 @@ dayFormSave.handler = function (obj, event) {
     if(debug)
         console.log('preparedDay', values);
 
-//    values.paramId = paramId;
     if(id === null) {
         if(debug) {
             console.log('id is null :', id);
             console.log('id is null, paramId :', paramId);
         }
         
-//        postOneDayParameters(values, setParamValues);
+        postOneDayParameters(values, setParamValues);
     } else {
         if(debug) {
             console.log('id is not null :', id);
             console.log('id is not null, paramId :', paramId);
         }
         
-//        putOneDayParameters(id, values, setParamValues);
+        putOneDayParameters(id, values, setParamValues);
     }
+    
 };
 
 function translateValuesFromSelector(input) {
@@ -117,7 +117,7 @@ function getUuidValues(name) {
     if(debug)
         console.log('uuidVal ' + name, uuidVal);
     
-    if(uuidVal === undefined || uuidVal.length <= 0) {
+    if((uuidVal === undefined || uuidVal.length <= 0) && $('script#' + name).length > 0 ) {
         var uuid = JSON.parse($('script#' + name).text());
         if(uuid.length > 0) {
             uuidVal = uuid.id;
@@ -189,6 +189,8 @@ function setSimpleValues(name, value) {
 }
 
 function setParamValues(param) {
+    removeCbFromPending('dayFormSave')
+    $('script#dayParameters').text(JSON.stringify({id: param.id}));
     for(const uuid of dayUuidFields) {
         setUuidValues(uuid.name, param[uuid.name]);
         translateUpUuid(uuid);
@@ -388,7 +390,7 @@ $(document).ready(function(){
 //              return; 
 //            /* @todo trouver une méthode pour 'empiler' les callbacks */
         dayFormSave.owner = $('#params-form-save');
-        setMeLast(dayFormSave);
+        recordSmartEvent(dayFormSave, 5);
 //        });
 
         loadGlobalDayParams();

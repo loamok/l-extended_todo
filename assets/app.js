@@ -42,6 +42,28 @@ global.setMeFirst = setMeFirst;
 global.setMeLast = setMeLast;
 global.smartEventDefine = smartEventDefine;
 
+var allCBEnded = true;
+var pendingCB = [];
+global.allCBEnded = allCBEnded;
+global.pendingCB = pendingCB;
+
+function addCbToPending(cb) {
+    allCBEnded = false;
+    pendingCB.push(cb);
+}
+global.addCbToPending = addCbToPending;
+function removeCbFromPending(cb) {
+    for (const [i, cbName] of pendingCB) {
+        if(cbName === cb) {
+            pendingCB.splice(i, 1);
+            break;
+        }
+    }
+    if(pendingCB.length === 0)
+        allCBEnded = true;
+}
+global.removeCbFromPending = removeCbFromPending;
+
 import './js/notYet';
 import './manipulateToken';
 import './api/ag_types/getAgTypes';
