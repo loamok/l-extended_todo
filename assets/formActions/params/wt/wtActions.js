@@ -1,7 +1,7 @@
 /* global global */
 
 const smartEventDefine = global.smartEventDefine;
-const debug = false;
+const debug = true;
 
 import { getOneWtParameter, postOneWtParameter, putOneWtParameter } from '../../../api/wt_parameters/wt_parameters';
 import { getOneDayParameters, postOneDayParameters, putOneDayParameters } from '../../../api/day_parameters/day_parameters';
@@ -15,18 +15,18 @@ paramsFormSave.handler = function (obj, event) {
     var values = prepareValuesForAjax();
             
     if(debug)
-        console.log('prepared', values);
+        console.log('preparedWt', values);
 
     var id = JSON.parse($('script#globalParam').text()).id;
     if(id === null) {
         if(debug)
             console.log('id is null :', id);
 
-        postOneWtParameter(values, setParamValues);
+//        postOneWtParameter(values, setParamValues);
     } else {
         if(debug)
             console.log('id is not null :', id);
-        putOneWtParameter(id, values, setParamValues);
+//        putOneWtParameter(id, values, setParamValues);
     }
           
 };

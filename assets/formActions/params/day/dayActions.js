@@ -1,7 +1,7 @@
 /* global global */
 
 const smartEventDefine = global.smartEventDefine;
-const debug = false;
+const debug = true;
 
 import { getOneWtParameter } from '../../../api/wt_parameters/wt_parameters';
 import { getOneDayParameters, postOneDayParameters, putOneDayParameters } from '../../../api/day_parameters/day_parameters';
@@ -20,9 +20,11 @@ import {
 } from '../wt/wtFields';
 import {  
     fields as dayFields, 
-    prefix as dayPrefix, hoursFields as dayHoursFields, 
+    prefix as dayBasePrefix, hoursFields as dayHoursFields, 
     uuidFields as dayUuidFields, jsonRepresentation as dayJsonRepresentation
 } from './dayFields';
+
+const dayPrefix = wtPrefix + dayBasePrefix;
 
 var dayFormSave = smartEventDefine;
 
@@ -33,34 +35,39 @@ dayFormSave.handler = function (obj, event) {
     console.log('obj: ', obj);
     console.log('event: ', event);
     
+    var id = JSON.parse($('script#dayParameters').text()).id;
+    var paramId = JSON.parse($('script#globalParam').text()).id;
+    
+    setSimpleValues('wtParameter', paramId);
     var values = prepareValuesForAjax();
             
     if(debug)
-        console.log('prepared', values);
+        console.log('preparedDay', values);
 
-    var id = JSON.parse($('script#globalDayParam').text()).id;
-    var paramId = JSON.parse($('script#globalParam').text()).id;
-    values.paramId = paramId;
+//    values.paramId = paramId;
     if(id === null) {
         if(debug) {
             console.log('id is null :', id);
             console.log('id is null, paramId :', paramId);
         }
-
-        postOneDayParameters(values, setParamValues);
+        
+//        postOneDayParameters(values, setParamValues);
     } else {
         if(debug) {
             console.log('id is not null :', id);
             console.log('id is not null, paramId :', paramId);
         }
         
-        putOneDayParameters(id, values, setParamValues);
+//        putOneDayParameters(id, values, setParamValues);
     }
 };
 
 function translateValuesFromSelector(input) {
-    var h = $('#' + dayPrefix + input + wtSuffix).timesetter().getHoursValue();
-    var m = $('#' + dayPrefix + input + wtSuffix).timesetter().getMinutesValue();
+    const inputId = '' + dayPrefix + input + wtSuffix;
+    if(debug)
+        console.log('inputId', inputId);
+    var h = $('#' + inputId).timesetter().getHoursValue();
+    var m = $('#' + inputId).timesetter().getMinutesValue();
 
     h = (h < 10) ? '0' + h : h;
     m = (m < 10) ? '0' + m : m;
@@ -107,8 +114,10 @@ function translateValuesFromAjax(input) {
 
 function getUuidValues(name) {
     var uuidVal = $('#' + dayPrefix + name).val();
+    if(debug)
+        console.log('uuidVal ' + name, uuidVal);
     
-    if(uuidVal !== undefined && uuidVal.length > 0) {
+    if(uuidVal === undefined || uuidVal.length <= 0) {
         var uuid = JSON.parse($('script#' + name).text());
         if(uuid.length > 0) {
             uuidVal = uuid.id;
