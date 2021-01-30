@@ -1,7 +1,7 @@
 /* global global */
 
 const smartEventDefine = global.smartEventDefine;
-const debug = true;
+const debug = false;
 
 import { getOneWtParameter, postOneWtParameter, putOneWtParameter } from '../../../api/wt_parameters/wt_parameters';
 import { getOneDayParameters, postOneDayParameters, putOneDayParameters } from '../../../api/day_parameters/day_parameters';
@@ -12,12 +12,12 @@ var paramsFormSave = { ...smartEventDefine };
 var paramsPostFormSave = { ...smartEventDefine };
 
 paramsFormSave.event = 'click';
-paramsPostFormSave.event = 'click';
+paramsPostFormSave.event = 'wtParam:postRecord';
 paramsPostFormSave.handler = function (obj, event) {
     var start = new Date().getTime();
     while (allCBEnded === false && new Date().getTime() < start + 1000);
     
-    addCbToPending('loadGlobalParam');
+//    addCbToPending('loadGlobalParam');
     loadGlobalParam();
 };
 paramsFormSave.handler = function (obj, event) {
@@ -25,12 +25,13 @@ paramsFormSave.handler = function (obj, event) {
     setSimpleValues('user', JSON.parse($('script#user').text()).id);
     
     var values = prepareValuesForAjax();
-    addCbToPending('postOneWtParameter');
+//    addCbToPending('postOneWtParameter');
             
     if(debug)
         console.log('preparedWt', values);
 
     var id = JSON.parse($('script#globalParam').text()).id;
+    propagate = true;
     if(id === null) {
         if(debug)
             console.log('id is null :', id);
@@ -129,10 +130,12 @@ function translateUpUuid(uuid) {
     
     uuidVal = (uuidVal.indexOf(uuid.identifier) !== -1) ? uuidVal : uuid.identifier + uuidVal;
     $('#' + wtPrefix + uuid.name).val(uuidVal);
+    if($('script#' + uuid.name).length > 0)
+        $('script#' + uuid.name).text(JSON.stringify({id: uuidVal.replace(uuid.identifier, '')}));
 }
 
 function setUuidValues(name, value) {
-    $('#' + wtPrefix + name).val(value);
+    $('#' + wtPrefix + name).val(value);    
 }
 
 function setHourValues(name, value) {
@@ -186,12 +189,14 @@ function getCbValue(name) {
     return $('#' + wtPrefix + name).is(':checked');
 }
 
+var propagate = false;
+
 function setParamValues(param) {
     $('script#globalParam').text(JSON.stringify({id: param.id}));
 
-    removeCbFromPending('loadGlobalParam');
-    removeCbFromPending('getOneWtParameter');
-    removeCbFromPending('postOneWtParameter');
+//    removeCbFromPending('loadGlobalParam');
+//    removeCbFromPending('getOneWtParameter');
+//    removeCbFromPending('postOneWtParameter');
     for(const field of wtSimpleFields) 
         setSimpleValues(field, param[field]);
     
@@ -214,7 +219,14 @@ function setParamValues(param) {
     for (const f of wtIntFields) 
         setSimpleValues(f, param[f]);
     
+    if(propagate) {
+        propagate = false;
+        var event = $.Event('wtParam:postRecord');
+        event.wtParam = param;
+        $('#params-form-save').trigger(event);
+    }
     
+    $('#params-form-save').trigger('wtParam:postLoad');
 }
 
 function prepareValuesForAjax() {
@@ -262,7 +274,7 @@ function loadGlobalParam() {
     if(debug) 
         console.log('globalParam : ', globalParam);
     
-    addCbToPending('getOneWtParameter');
+//    addCbToPending('getOneWtParameter');
     if(globalParam.id !== null)  {
         getOneWtParameter(globalParam.id, setParamValues);
     }

@@ -1,7 +1,7 @@
 /* global global */
 
 const smartEventDefine = global.smartEventDefine;
-const debug = true;
+const debug = false;
 
 import { getOneWtParameter } from '../../../api/wt_parameters/wt_parameters';
 import { getOneDayParameters, postOneDayParameters, putOneDayParameters } from '../../../api/day_parameters/day_parameters';
@@ -26,17 +26,23 @@ import {
 
 const dayPrefix = wtPrefix + dayBasePrefix;
 
-var dayFormSave = smartEventDefine;
-
-dayFormSave = { ...smartEventDefine };
-dayFormSave.event = 'click';
+var dayFormSave = { ...smartEventDefine };
+var dayFormLoad = { ...smartEventDefine };
+dayFormSave.event = 'wtParam:postRecord';
+dayFormLoad.event = 'wtParam:postLoad';
+dayFormLoad.handler = function (obj, event) {
+    loadGlobalDayParams();
+};
 dayFormSave.handler = function (obj, event) {
+    if(debug)
+        console.log("event :", event);
+    
     var start = new Date().getTime();
     while (global.allCBEnded === false && new Date().getTime() < start + 1000);
     
-    addCbToPending('dayFormSave');
+//    addCbToPending('dayFormSave');
     var id = JSON.parse($('script#dayParameters').text()).id;
-    var paramId = JSON.parse($('script#globalParam').text()).id;
+    var paramId = event.wtParam.id;
     
     setSimpleValues('wtParameter', paramId);
     var values = prepareValuesForAjax();
@@ -44,14 +50,14 @@ dayFormSave.handler = function (obj, event) {
     if(debug)
         console.log('preparedDay', values);
 
-    if(id === null) {
+    if(id === null && paramId !== null) {
         if(debug) {
             console.log('id is null :', id);
             console.log('id is null, paramId :', paramId);
         }
         
         postOneDayParameters(values, setParamValues);
-    } else {
+    } else if(paramId !== null) {
         if(debug) {
             console.log('id is not null :', id);
             console.log('id is not null, paramId :', paramId);
@@ -189,7 +195,7 @@ function setSimpleValues(name, value) {
 }
 
 function setParamValues(param) {
-    removeCbFromPending('dayFormSave')
+//    removeCbFromPending('dayFormSave')
     $('script#dayParameters').text(JSON.stringify({id: param.id}));
     for(const uuid of dayUuidFields) {
         setUuidValues(uuid.name, param[uuid.name]);
@@ -391,9 +397,11 @@ $(document).ready(function(){
 //            /* @todo trouver une méthode pour 'empiler' les callbacks */
         dayFormSave.owner = $('#params-form-save');
         recordSmartEvent(dayFormSave, 5);
+        dayFormLoad.owner = $('#params-form-save');
+        recordSmartEvent(dayFormLoad);
 //        });
 
-        loadGlobalDayParams();
+//        loadGlobalDayParams();
         
     }
 });
