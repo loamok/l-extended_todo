@@ -1,6 +1,6 @@
 
-import { prefix as wtFieldsIdsPrefix, suffix as wtFieldsIdsSuffix, fields as wtFieldsIds } from './wt/wtFields';
-import { prefix as dayFieldsIdsPrefix, fields as dayFieldsIds } from './day/dayFields';
+import { prefix as wtFieldsIdsPrefix, suffix as wtFieldsIdsSuffix, fields as wtFieldsIds } from './wt/fields';
+import { prefix as dayFieldsIdsPrefix, fields as dayFieldsIds } from './day/fields';
     
 const commonParams = {
     hour: {

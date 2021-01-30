@@ -17,12 +17,12 @@ import {
     prefix as wtPrefix, hoursFields as wtHoursFields, 
     simpleFields as wtSimpleFields, uuidFields as wtUuidFields, 
     cbFields as wtCbFields, intFields as wtIntFields, jsonRepresentation as wtJsonRepresentation
-} from '../wt/wtFields';
+} from '../wt/fields';
 import {  
     fields as dayFields, 
     prefix as dayBasePrefix, hoursFields as dayHoursFields, 
     uuidFields as dayUuidFields, jsonRepresentation as dayJsonRepresentation
-} from './dayFields';
+} from './fields';
 
 const dayPrefix = wtPrefix + dayBasePrefix;
 

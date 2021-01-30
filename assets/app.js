@@ -69,8 +69,8 @@ import './manipulateToken';
 import './api/ag_types/getAgTypes';
 //import './api/wt_parameters/wt_parameters';
 import './formActions/params/times_selectors';
-import './formActions/params/wt/wtActions';
-import './formActions/params/day/dayActions';
+import './formActions/params/wt/actions';
+import './formActions/params/day/actions';
 
 // Animations
 import './interfaces_animations/wtt/interfaces_animations';

@@ -8,6 +8,13 @@ import { getOneDayParameters, postOneDayParameters, putOneDayParameters } from '
 
 import { getTimeVal, getTimeValTs, addTime, subsTime, parseIntTime, checkTimeVals, setTimeVal, zeroVal } from '../../../js/let/let_utils';
 
+import {  
+    fields as wtFields, suffix as wtSuffix, 
+    prefix as wtPrefix, hoursFields as wtHoursFields, 
+    simpleFields as wtSimpleFields, uuidFields as wtUuidFields, 
+    cbFields as wtCbFields, intFields as wtIntFields, jsonRepresentation as wtJsonRepresentation
+} from './fields';
+
 var paramsFormSave = { ...smartEventDefine };
 var paramsPostFormSave = { ...smartEventDefine };
 
@@ -48,12 +55,6 @@ var callbackEnded = true;
 var globalParam = null;
 var globalDayParams = null;
 
-import {  
-    fields as wtFields, suffix as wtSuffix, 
-    prefix as wtPrefix, hoursFields as wtHoursFields, 
-    simpleFields as wtSimpleFields, uuidFields as wtUuidFields, 
-    cbFields as wtCbFields, intFields as wtIntFields, jsonRepresentation as wtJsonRepresentation
-} from './wtFields';
 
 function translateValuesFromSelector(input) {
     var h = $('#' + wtPrefix + input + wtSuffix).timesetter().getHoursValue();
