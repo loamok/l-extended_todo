@@ -18,6 +18,7 @@ import {
     simpleFields as wtSimpleFields, uuidFields as wtUuidFields, 
     cbFields as wtCbFields, intFields as wtIntFields, jsonRepresentation as wtJsonRepresentation
 } from '../wt/fields';
+
 import {  
     fields as dayFields, 
     prefix as dayBasePrefix, hoursFields as dayHoursFields, 
@@ -28,19 +29,20 @@ const dayPrefix = wtPrefix + dayBasePrefix;
 
 var dayFormSave = { ...smartEventDefine };
 var dayFormLoad = { ...smartEventDefine };
+
 dayFormSave.event = 'wtParam:postRecord';
 dayFormLoad.event = 'wtParam:postLoad';
+
 dayFormLoad.handler = function (obj, event) {
+        console.log(":dayFormLoad", event);
     loadGlobalDayParams();
 };
+
 dayFormSave.handler = function (obj, event) {
+        console.log(":dayFormSave", event);
     if(debug)
         console.log("event :", event);
     
-    var start = new Date().getTime();
-    while (global.allCBEnded === false && new Date().getTime() < start + 1000);
-    
-//    addCbToPending('dayFormSave');
     var id = JSON.parse($('script#dayParameters').text()).id;
     var paramId = event.wtParam.id;
     
@@ -70,8 +72,10 @@ dayFormSave.handler = function (obj, event) {
 
 function translateValuesFromSelector(input) {
     const inputId = '' + dayPrefix + input + wtSuffix;
+    
     if(debug)
         console.log('inputId', inputId);
+    
     var h = $('#' + inputId).timesetter().getHoursValue();
     var m = $('#' + inputId).timesetter().getMinutesValue();
 
@@ -85,6 +89,7 @@ function translateValuesFromSelector(input) {
 
 function translateValuesForAjax(input) {
     var hoursMinVals = $('#' + dayPrefix + input).val().split(':');
+    
     if(debug) 
         console.log('hoursMinVals :', hoursMinVals);
     
@@ -98,9 +103,10 @@ function translateValuesForAjax(input) {
 function translateValuesFromAjax(input) {
     var intervalS = $('#' + dayPrefix + input).val();
     var dateTimeSpec = intervalS.split('T');
-    if(dateTimeSpec[1] === undefined) {
+    
+    if(dateTimeSpec[1] === undefined) 
         return;
-    }
+        
     var hoursMinSpecs = dateTimeSpec[1].split('H');
     var minSecSpecs = hoursMinSpecs[1].split('M');
     var h = parseInt(hoursMinSpecs[0]);
@@ -177,7 +183,8 @@ function getHoursStringForJson(name) {
 }
 
 function getSimpleValues(name, setnull, integer) {
-    var val = $('#' + dayPrefix + name).val()
+    var val = $('#' + dayPrefix + name).val();
+    
     if((setnull && val.length < 1) || integer) {
         if(integer && (!setnull)) 
             val = parseInt(val);
@@ -195,7 +202,6 @@ function setSimpleValues(name, value) {
 }
 
 function setParamValues(param) {
-//    removeCbFromPending('dayFormSave')
     $('script#dayParameters').text(JSON.stringify({id: param.id}));
     for(const uuid of dayUuidFields) {
         setUuidValues(uuid.name, param[uuid.name]);
@@ -262,7 +268,7 @@ function dayParamsCalculateDurationsAndBounds(start, end, duration, trigger) {
         console.log('trigger : ', trigger);
     }
     
-    /* récupération des valeurs */
+    // récupération des valeurs
     /* start */
     const startId = start.attr('id');
     var startVal = getTimeVal(startId) ;
@@ -337,6 +343,7 @@ function dayParamsCalculateDurationsAndBounds(start, end, duration, trigger) {
     
     callbackEnded = true;
 }
+
 function dayParamsExecPauseCallbackDuration(event, element) {
     var hasStart = false;
     var hasEnd = false;
@@ -392,16 +399,9 @@ $(document).ready(function(){
         $('.pauseCallbackFields').each(function () {
             dayParamsSetPauseCallbackFields(this);
         });
-//        $('#params-form-save').click(function(){
-//              return; 
-//            /* @todo trouver une méthode pour 'empiler' les callbacks */
-        dayFormSave.owner = $('#params-form-save');
-        recordSmartEvent(dayFormSave, 5);
-        dayFormLoad.owner = $('#params-form-save');
-        recordSmartEvent(dayFormLoad);
-//        });
 
-//        loadGlobalDayParams();
+        $('#params-form-save').smartEvent(dayFormSave);
+        $('#params-form-save').smartEvent(dayFormLoad);
         
     }
 });
