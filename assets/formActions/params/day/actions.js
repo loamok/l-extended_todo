@@ -13,6 +13,7 @@ var globalParam = null;
 var globalDayParams = null;
 
 import {  
+    wtPostLoadEventOwnerId,
     fields as wtFields, suffix as wtSuffix, wtDayParametersId,
     prefix as wtPrefix, hoursFields as wtHoursFields, 
     simpleFields as wtSimpleFields, uuidFields as wtUuidFields, 
@@ -34,12 +35,10 @@ dayFormSave.event = 'wtParam:postRecord';
 dayFormLoad.event = 'wtParam:postLoad';
 
 dayFormLoad.handler = function (obj, event) {
-        console.log(":dayFormLoad", event);
     loadGlobalDayParams();
 };
 
 dayFormSave.handler = function (obj, event) {
-        console.log(":dayFormSave", event);
     if(debug)
         console.log("event :", event);
     
@@ -400,8 +399,8 @@ $(document).ready(function(){
             dayParamsSetPauseCallbackFields(this);
         });
 
-        $('#params-form-save').smartEvent(dayFormSave);
-        $('#params-form-save').smartEvent(dayFormLoad);
+        $(wtPostLoadEventOwnerId).smartEvent(dayFormSave);
+        $(wtPostLoadEventOwnerId).smartEvent(dayFormLoad);
         
     }
 });
