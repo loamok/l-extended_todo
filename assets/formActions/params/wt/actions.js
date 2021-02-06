@@ -9,6 +9,7 @@ import { getOneWtParameter, postOneWtParameter, putOneWtParameter } from '../../
 import { getTimeVal, getTimeValTs, addTime, subsTime, parseIntTime, checkTimeVals, setTimeVal, zeroVal } from '../../../js/let/let_utils';
 
 import {  
+    wtPostLoadEventOwnerId,
     fields as wtFields, suffix as wtSuffix, 
     prefix as wtPrefix, hoursFields as wtHoursFields, 
     simpleFields as wtSimpleFields, uuidFields as wtUuidFields, 
@@ -21,7 +22,6 @@ var paramsPostFormSave = { ...smartEventDefine };
 paramsFormSave.event = 'click';
 paramsPostFormSave.event = 'wtParam:postRecord';
 paramsPostFormSave.handler = function (obj, event) {
-    
     loadGlobalParam();
 };
 paramsFormSave.handler = function (obj, event) {
@@ -217,10 +217,10 @@ function setParamValues(param) {
         propagate = false;
         var event = $.Event('wtParam:postRecord');
         event.wtParam = param;
-        $('#params-form-save').trigger(event);
-    }
+        $(wtPostLoadEventOwnerId).trigger(event);
+    } else 
+        $(wtPostLoadEventOwnerId).trigger('wtParam:postLoad');
     
-    $('#params-form-save').trigger('wtParam:postLoad');
 }
 
 function prepareValuesForAjax() {
@@ -281,7 +281,7 @@ $(document).ready(function(){
         }
       
         $('#params-form-save').smartEvent(paramsFormSave);
-        $('#params-form-save').smartEventLast(paramsPostFormSave);
+        $(wtPostLoadEventOwnerId).smartEventLast(paramsPostFormSave);
         
         loadGlobalParam();
         
