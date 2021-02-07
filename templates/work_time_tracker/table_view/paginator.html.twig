@@ -1,0 +1,65 @@
+{# empty Twig template #}
+{% if params.mode == "month" %}
+    {% set pathParams = basePathParams|merge({ 'mode': "month" }) %}
+    {% set paginator = { 'previous': {}, 'next': {}, 'pages': [] } %}
+    {% if params.month *1 == 1 %}
+        {% set previous = { 'year': (params.year * 1) -1, 'month': 12, 'week': null, 'day': null } %}
+    {% else %}
+        {% set previous = { 'year': (params.year * 1), 'month': (params.month * 1) -1, 'week': null, 'day': null } %}
+    {% endif %}
+    {% set paginator = paginator|merge({ 'previous': previous }) %}
+    {% if params.month *1 == 12 %}
+        {% set next = { 'year': (params.year * 1) +1, 'month': 1, 'week': null, 'day': null } %}
+    {% else %}
+        {% set next = { 'year': (params.year * 1), 'month': (params.month * 1) +1, 'week': null, 'day': null } %}
+    {% endif %}
+    {% set paginator = paginator|merge({ 'next': next }) %}
+    {% set pages = [] %}
+    {% for m in -2..2 %}
+        {% set y = params.year * 1 %}
+        {% set mm = params.month + m %}
+        {% if mm < 1 %}
+            {% set y = y - 1 %}
+            {% set mm = mm + 12 %}
+        {% elseif mm > 12 %}
+            {% set y = y + 1 %}
+            {% set mm = mm - 12 %}
+        {% endif %}
+        {% set pages = pages|merge([{ 'year': y, 'month': mm, 'week': null, 'day': null }]) %}
+    {% endfor %}
+    {% set paginator = paginator|merge({'pages': pages}) %}
+{% elseif params.mode == "week" %}
+    
+{% elseif params.mode == "day" %}
+    
+{% endif %}
+<div class="row">
+    <div class="col-12">
+        <ul class="pagination">
+            <li class="page-item">
+                {% set ppPath = pathParams|merge({ 'year': (params.year * 1) - 1, 'month': 12, 'week': null, 'day': null }) %}
+                <a class="page-link" href="{{ path('worktime_tracker_display', ppPath) }}">{{ (params.year * 1) - 1 }}</a>
+            </li>
+            <li class="page-item">
+                {% set pPath = pathParams|merge(paginator.previous) %}
+                <a class="page-link" href="{{ path('worktime_tracker_display', pPath) }}">Previous</a>
+            </li>
+            {% for page in paginator.pages %}
+                <li class="page-item {{ ((params.month * 1) == page.month) ? "active" : "" }}">
+                    {% set pPath = pathParams|merge(page) %}
+                    <a class="page-link" href="{{ path('worktime_tracker_display', pPath) }}">
+                        {{ ((pPath.month * 1) < 10) ? "0" : "" }}{{ pPath.month  }}
+                    </a>
+                </li>
+            {% endfor %}
+            <li class="page-item">
+                {% set nPath = pathParams|merge(paginator.next) %}
+                <a class="page-link" href="{{ path('worktime_tracker_display', nPath) }}">Next</a>
+            </li>
+            <li class="page-item">
+                {% set pnPath = pathParams|merge({ 'year': (params.year * 1) + 1, 'month': 1, 'week': null, 'day': null }) %}
+                <a class="page-link" href="{{ path('worktime_tracker_display', pnPath) }}">{{ (params.year * 1) + 1 }}</a>
+            </li>
+        </ul>
+    </div>
+</div>

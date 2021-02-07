@@ -1,0 +1,18 @@
+<div class="row">
+    <div class="col-12">
+        <ul class="nav nav-tabs" id="mode_tabs" role="tablist">
+            <li class="nav-item">
+                {% set monthPathParams = { 'mode': "month", 'year': null, 'month': null, 'week': null, 'day': null }|merge(basePathParams) %}
+                <a class="nav-link {{ (params.mode == 'month') ? "active" : "" }}" href="{{ path('worktime_tracker_display', monthPathParams) }}" >Month view</a>
+            </li>
+            <li class="nav-item">
+                {% set weekPathParams = { 'mode': "week", 'year': null, 'month': null, 'week': null, 'day': null }|merge(basePathParams) %}
+                <a class="nav-link {{ (params.mode == 'week') ? "active" : "" }}" href="{{ path('worktime_tracker_display', weekPathParams) }}" >Week view</a>
+            </li>
+            <li class="nav-item">
+                {% set dayPathParams = { 'mode': "day", 'year': null, 'month': null, 'week': null, 'day': null }|merge(basePathParams) %}
+                <a class="nav-link {{ (params.mode == 'day') ? "active" : "" }}" href="{{ path('worktime_tracker_display', dayPathParams) }}" >Day view</a>
+            </li>
+        </ul>
+    </div>
+</div>
