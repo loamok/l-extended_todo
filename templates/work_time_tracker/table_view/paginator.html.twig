@@ -1,17 +1,16 @@
-{# empty Twig template #}
 {% if params.mode == "month" %}
     {% set pathParams = basePathParams|merge({ 'mode': "month" }) %}
     {% set paginator = { 'previous': {}, 'next': {}, 'pages': [] } %}
     {% if params.month *1 == 1 %}
-        {% set previous = { 'year': (params.year * 1) -1, 'month': 12, 'week': null, 'day': null } %}
+        {% set previous = { 'year': (params.year * 1) -1, 'month': 12, 'week': 0, 'day': 0 } %}
     {% else %}
-        {% set previous = { 'year': (params.year * 1), 'month': (params.month * 1) -1, 'week': null, 'day': null } %}
+        {% set previous = { 'year': (params.year * 1), 'month': (params.month * 1) -1, 'week': 0, 'day': 0 } %}
     {% endif %}
     {% set paginator = paginator|merge({ 'previous': previous }) %}
     {% if params.month *1 == 12 %}
-        {% set next = { 'year': (params.year * 1) +1, 'month': 1, 'week': null, 'day': null } %}
+        {% set next = { 'year': (params.year * 1) +1, 'month': 1, 'week': 0, 'day': 0 } %}
     {% else %}
-        {% set next = { 'year': (params.year * 1), 'month': (params.month * 1) +1, 'week': null, 'day': null } %}
+        {% set next = { 'year': (params.year * 1), 'month': (params.month * 1) +1, 'week': 0, 'day': 0 } %}
     {% endif %}
     {% set paginator = paginator|merge({ 'next': next }) %}
     {% set pages = [] %}
@@ -25,19 +24,49 @@
             {% set y = y + 1 %}
             {% set mm = mm - 12 %}
         {% endif %}
-        {% set pages = pages|merge([{ 'year': y, 'month': mm, 'week': null, 'day': null }]) %}
+        {% set pages = pages|merge([{'label': mm, 'params': { 'year': y, 'month': mm, 'week': 0, 'day': 0 }}]) %}
     {% endfor %}
-    {% set paginator = paginator|merge({'pages': pages}) %}
 {% elseif params.mode == "week" %}
-    
+    {% set pathParams = basePathParams|merge({ 'mode': "week" }) %}
+    {% set paginator = { 'previous': {}, 'next': {}, 'pages': [] } %}
+    {% if params.week * 1 == 1 %}
+        {% set previous = { 'year': (params.year * 1) -1, 'month': 0, 'week': params.maxWeeksMinus, 'day': 0 } %}
+    {% else %}
+        {% set previous = { 'year': (params.year * 1), 'month': 0, 'week': (params.week * 1) - 1 , 'day': 0 } %}
+    {% endif %}
+    {% set paginator = paginator|merge({ 'previous': previous }) %}
+    {% if params.week * 1 == params.maxWeeks %}
+        {% set next = { 'year': (params.year * 1) + 1, 'month': 0, 'week': 1, 'day': 0 } %}
+    {% else %}
+        {% set next = { 'year': (params.year * 1), 'month': 0, 'week': (params.week * 1) + 1 , 'day': 0 } %}
+    {% endif %}
+    {% set paginator = paginator|merge({ 'next': next }) %}
+    {% set pages = [] %}
+    {% set y = params.year * 1 %}
+    {% for w in -2..2 %}
+        {% set ww = (params.week * 1) + w %}
+        {% if ww < 1 %}
+            {% set yy = y - 1 %}
+            {% set ww = ww + (params.maxWeeksMinus * 1) %}
+        {% elseif ww > params.maxWeeks %}
+            {% set yy = y + 1 %}
+            {% set ww = ww - params.maxWeeks %}
+        {% else %}
+            {% set yy = y %}
+        {% endif %}
+        {% set pages = pages|merge([{'label': ww, 'params': { 'year': yy, 'month': 0, 'week': ww, 'day': 0 }}]) %}
+    {% endfor %}
 {% elseif params.mode == "day" %}
+    {% set pathParams = basePathParams|merge({ 'mode': "day" }) %}
+    {% set paginator = { 'previous': {}, 'next': {}, 'pages': [] } %}
     
 {% endif %}
+{% set paginator = paginator|merge({'pages': pages}) %}
 <div class="row">
     <div class="col-12">
         <ul class="pagination">
             <li class="page-item">
-                {% set ppPath = pathParams|merge({ 'year': (params.year * 1) - 1, 'month': 12, 'week': null, 'day': null }) %}
+                {% set ppPath = pathParams|merge({ 'year': (params.year * 1) - 1, 'month': 12, 'week': 0, 'day': 0 }) %}
                 <a class="page-link" href="{{ path('worktime_tracker_display', ppPath) }}">{{ (params.year * 1) - 1 }}</a>
             </li>
             <li class="page-item">
@@ -45,10 +74,16 @@
                 <a class="page-link" href="{{ path('worktime_tracker_display', pPath) }}">Previous</a>
             </li>
             {% for page in paginator.pages %}
-                <li class="page-item {{ ((params.month * 1) == page.month) ? "active" : "" }}">
-                    {% set pPath = pathParams|merge(page) %}
+                {% if params.mode == 'month' %}
+                    <li class="page-item {{ ((params.month * 1) == page.params.month) ? "active" : "" }}">
+                {% elseif params.mode == 'week' %}
+                    <li class="page-item {{ ((params.week * 1) == page.params.week) ? "active" : "" }}">
+                {% elseif params.mode == 'day' %}
+                    <li class="page-item {{ ((params.day * 1) == page.params.day) ? "active" : "" }}">
+                {% endif %}
+                    {% set pPath = pathParams|merge(page.params) %}
                     <a class="page-link" href="{{ path('worktime_tracker_display', pPath) }}">
-                        {{ ((pPath.month * 1) < 10) ? "0" : "" }}{{ pPath.month  }}
+                        {{ ((page.label * 1) < 10) ? "0" : "" }}{{ page.label  }}
                     </a>
                 </li>
             {% endfor %}
@@ -57,7 +92,7 @@
                 <a class="page-link" href="{{ path('worktime_tracker_display', nPath) }}">Next</a>
             </li>
             <li class="page-item">
-                {% set pnPath = pathParams|merge({ 'year': (params.year * 1) + 1, 'month': 1, 'week': null, 'day': null }) %}
+                {% set pnPath = pathParams|merge({ 'year': (params.year * 1) + 1, 'month': 1, 'week': 0, 'day': 0 }) %}
                 <a class="page-link" href="{{ path('worktime_tracker_display', pnPath) }}">{{ (params.year * 1) + 1 }}</a>
             </li>
         </ul>
