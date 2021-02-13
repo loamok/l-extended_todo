@@ -24,9 +24,10 @@ doctrine:
                 st_buffer: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\STBuffer
                 point: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Point
 services:
-    App\Swagger\SwaggerDecorator:
+    App\OpenApi\JwtDecorator:
+#        decorates: 'api_platform.openapi.factory'
         decorates: 'api_platform.swagger.normalizer.documentation'
-        arguments: ['@App\Swagger\SwaggerDecorator.inner']
+        arguments: [ '@App\OpenApi\OpenApiFactory.inner' ]
         autoconfigure: false
     LET.security.delegations:
         class: App\Security\Delegations
@@ -42,10 +43,11 @@ api_platform:
              apiKey:
                 name: Authorization
                 type: header
+    defaults:
+        pagination_items_per_page: true # Disabled by default
     collection:
         pagination:
 #            client_enabled: true
-            client_items_per_page: true # Disabled by default
             items_per_page: 10
             items_per_page_parameter_name: itemsPerPage # Default value  
             maximum_items_per_page: 20

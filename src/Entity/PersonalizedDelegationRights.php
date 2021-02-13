@@ -9,6 +9,9 @@ use ApiPlatform\Core\Annotation\ApiProperty;
 use App\DTO\DelegationInput;
 use App\DTO\Delegation as DelegationOutput;
 
+use App\DTO\PersonalizedDelegationRights as PersonalizedDelegationRightsOutput;
+use App\DTO\PersonalizedDelegationRightsInput;
+
 use App\Repository\PersonalizedDelegationRightsRepository;
 use Doctrine\ORM\Mapping as ORM;
 
