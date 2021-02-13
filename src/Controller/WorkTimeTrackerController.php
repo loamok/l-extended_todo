@@ -150,6 +150,22 @@ class WorkTimeTrackerController extends AbstractController {
     }
     
     /**
+     * Set the selected day for display
+     * 
+     * @param array $params
+     * @return array
+     */
+    protected function selectedDateFromParams(array $params) {
+        $params['selected'] = \DateTimeImmutable::createFromFormat('dmY', "{$params['day']}{$params['month']}{$params['year']}");
+        
+        if($params['selected']->format('W') != $params['week'] && $params['mode'] == 'week') {
+            $params['selected'] = $params['selected']->setISODate($params['year'], $params['week']);
+        }
+        
+        return $params;
+    }
+    
+    /**
      * Define params from parameters in the called route (paginator)
      * 
      * @param array $params
@@ -242,6 +258,7 @@ class WorkTimeTrackerController extends AbstractController {
         $params['week']     = ($params['week']  == 0 || is_null($params['week']))   ? intval($now->format('W')) : $params['week'];
         $params['day']      = ($params['day']   == 0 || is_null($params['day']))    ? intval($now->format('d')) : $params['day'];
         $params['current']  = $now;
+        $params['selected']  = $now;
         
         $params = $this->paramsFromCalledParameters($params, $now);
         
@@ -297,6 +314,7 @@ class WorkTimeTrackerController extends AbstractController {
      */
     public function display(Agenda $agenda, ?User $u = null, ?string $mode = null, ?int $year = null, ?int $month = null, ?int $week = null, ?int $day = null): Response {
         $params = $this->defaultsDisplayParameters(['mode' => $mode, 'year' => $year, 'month' => $month, 'week' => $week, 'day' => $day]);
+        $params = $this->selectedDateFromParams($params);
         
         /* @var $user UserInterface */
         $user = $u ?? $this->getUser();

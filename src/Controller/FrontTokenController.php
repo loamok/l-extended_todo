@@ -18,7 +18,6 @@ class FrontTokenController extends AbstractController {
      */
     public function GetMyTokenAction(UserInterface $user, JWTTokenManagerInterface $JWTManager) {
         $dir = [realpath(__DIR__ . "/../../config/jwt/")];
-//        dump($dir);
         $locator = new FileLocator($dir);
         try {
             $filePath = $locator->locate("public.pem", null, false);

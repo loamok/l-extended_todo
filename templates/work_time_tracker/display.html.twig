@@ -59,7 +59,6 @@
 
 {% block body %}
     {{ parent() }}
-{#    {{ dump(params) }}#}
     {% set basePathParams = { 'id': app.request.attributes.get('_route_params')['id'], 
         'year': params.year ?? null, 'month': params.month ?? null, 'week': params.week ?? null, 'day': params.day ?? null } %}
     {% include 'work_time_tracker/table_view/mode_tabs.html.twig' %}

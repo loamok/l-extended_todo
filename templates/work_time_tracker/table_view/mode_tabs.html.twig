@@ -1,5 +1,5 @@
 <div class="row">
-    <div class="col-12">
+    <div class="col-5">
         <ul class="nav nav-tabs" id="mode_tabs" role="tablist">
             <li class="nav-item">
                 {% set monthPathParams = { 'mode': "month", 'year': null, 'month': null, 'week': null, 'day': null }|merge(basePathParams) %}
@@ -14,5 +14,20 @@
                 <a class="nav-link {{ (params.mode == 'day') ? "active" : "" }}" href="{{ path('worktime_tracker_display', dayPathParams) }}" >Day view</a>
             </li>
         </ul>
+    </div>
+    <div class="col-2">
+        Year : {{ params.selected|date('Y') }}
+    </div>
+    <div class="col-1">
+        Month : {{ params.selected|date('m') }}
+    </div>
+    <div class="col-1">
+        Week : {{ params.selected|date('W') }}
+    </div>
+    <div class="col-1">
+        Day : {{ params.selected|date('d') }}
+    </div>
+    <div class="col-2">
+        Today : {{ params.current|date('Y-m-d') }}
     </div>
 </div>
