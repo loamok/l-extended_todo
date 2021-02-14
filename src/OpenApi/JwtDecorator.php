@@ -1,6 +1,6 @@
 <?php
 
-declare(strict_types=1);
+//declare(strict_types=1);
 
 namespace App\OpenApi;
 
@@ -10,7 +10,8 @@ use ApiPlatform\Core\OpenApi\Model;
 
 use Symfony\Component\HttpFoundation\Response;
 
-final class JwtDecorator implements OpenApiFactoryInterface {
+/*final */
+class JwtDecorator implements OpenApiFactoryInterface {
     
     private OpenApiFactoryInterface $decorated;
 
@@ -19,8 +20,13 @@ final class JwtDecorator implements OpenApiFactoryInterface {
     }
     
     public function __invoke(array $context = []): OpenApi {
+        /* @var $openApi OpenApi */
         $openApi = ($this->decorated)($context);
         $schemas = $openApi->getComponents()->getSchemas();
+        /* @var $pathItem Model\PathItem */
+        $pathItem = $openApi->getPaths()->getPath('/api/authentication_token');
+        /* @var $operation Model\Operation */
+        $operation = $pathItem->getPost();
         
         $schemas['Token'] = new ArrayObject([
             'type' => 'object',
@@ -45,13 +51,11 @@ final class JwtDecorator implements OpenApiFactoryInterface {
             ],
         ]);
 
-        $pathItem = new Model\PathItem(
-            'JWT Token',
-            null, null, null, null, 
-            new Model\Operation(
-                'postCredentialsItem',
-                [], 
-                [
+        $openApi = $openApi->withComponents($openApi->getComponents()->withSchemas($schemas));
+        
+        $openApi->getPaths()->addPath('/api/authentication_token', $pathItem->withPost(
+            $operation->withOperationId('postCredentialsItem')
+                ->withResponses([
                     Response::HTTP_OK => [
                         'description' => 'Get JWT token',
                         'content' => [
@@ -62,10 +66,9 @@ final class JwtDecorator implements OpenApiFactoryInterface {
                             ],
                         ],
                     ],
-                ], 
-                'Get JWT token to login.', 
-                '', null, [], 
-                new Model\RequestBody(
+                ])
+                ->withSummary('Get JWT token to login.')
+                ->withRequestBody(new Model\RequestBody(
                     'Create new JWT Token', 
                     new \ArrayObject([
                         'application/json' => [
@@ -74,10 +77,10 @@ final class JwtDecorator implements OpenApiFactoryInterface {
                             ],
                         ],
                     ])
-                )
-            )
-        );
-        $openApi->getPaths()->addPath('/api/authentication_token', $pathItem);
+                ))
+        ));
+        
+//        $openApi->getPaths()->addPath('/api/authentication_token', $pathItem);
         
 //        dump($openApi);
         

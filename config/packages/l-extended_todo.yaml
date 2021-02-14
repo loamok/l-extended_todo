@@ -25,8 +25,8 @@ doctrine:
                 point: CrEOF\Spatial\ORM\Query\AST\Functions\MySql\Point
 services:
     App\OpenApi\JwtDecorator:
-#        decorates: 'api_platform.openapi.factory'
-        decorates: 'api_platform.swagger.normalizer.documentation'
+        decorates: 'api_platform.openapi.factory'
+#        decorates: 'api_platform.swagger.normalizer.documentation'
         arguments: [ '@App\OpenApi\OpenApiFactory.inner' ]
         autoconfigure: false
     LET.security.delegations:
