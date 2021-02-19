@@ -12,19 +12,24 @@ prepareTableEvent.handler = function (obj, event) {
     sendPostPrepareQuery();
 };
 
-var prepareParams = {
+const prepareParams = {
     agenda: null,
-    wtParameters: null,
     dayParameters: null,
-    mode: 'month',    
+    paginateParams: null,
+    wtParameters: null
 };
 
 function sendPostPrepareQuery() {
-    prepareParams.agenda = JSON.parse($('script#agenda').text()).id;
-    prepareParams.wtParameters = JSON.parse($('script#globalParam').text()).id;
-    prepareParams.dayParameters = JSON.parse($('script#dayParameters').text()).id;
+    var toSend = {
+        ...prepareParams, 
+        ...{
+            agenda: JSON.parse($('script#agenda').text()).id, 
+            dayParameters: JSON.parse($('script#dayParameters').text()).id,
+            paginateParams: JSON.parse($('script#paginateParams').text()),
+            wtParameters: JSON.parse($('script#globalParam').text()).id
+        }};
     
-    postPrepareQuery(prepareParams, function(data) {
+    postPrepareQuery(toSend, function(data) {
         console.log('prepareMe : ', data);
     });
 }

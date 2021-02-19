@@ -14,16 +14,16 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class AsyncWttActionsController extends AbstractController {
     
     /**
-     * @Route("/wtt_actions/prepare", methods={"POST"}, options = { "expose" = true }, name="async_wtt_actions_prepare")
+     * @Route("/api/async_actions/wtt_actions/prepare", methods={"POST"}, options = { "expose" = true }, name="async_wtt_actions_prepare")
      * @IsGranted("ROLE_USER")
      */
     public function prepare(Request $request, UserInterface $user, WtViewPrepare $wVps): Response {
         $requestParams = $request->toArray();
         $parameters = [
-            'wtParameters' => $requestParams['wtParameters'],
-            'dayParameters' => $requestParams['dayParameters'],
-            'agenda' => $requestParams['agenda'],
-            'mode' => $requestParams['mode'],
+            'agenda' => $requestParams['agenda'] ?? null,
+            'dayParameters' => $requestParams['dayParameters'] ?? null,
+            'paginateParams' => $requestParams['paginateParams'] ?? null,
+            'wtParameters' => $requestParams['wtParameters'] ?? null,
             'user' => $user,
         ];
         

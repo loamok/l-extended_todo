@@ -71,3 +71,21 @@
         {% include 'work_time_tracker/table_view/day.html.twig' %}
     {% endif %}
 {% endblock %}
+
+{% block templates %}
+    {{ parent() }}
+    <script type="application/json" id="paginateParams">
+        {% if params is not null %}
+{#            ?string $mode = null, ?int $year = null, ?int $month = null, ?int $week = null, ?int $day = null#}
+            {
+                "mode": "{{ params.mode }}",
+                "year": "{{ params.selected | date('Y') }}",
+                "month": "{{ params.selected | date('m') }}",
+                "week": "{{ params.selected | date('W') }}",
+                "day": "{{ params.selected | date('d') }}"
+            }
+        {% else %}
+            {}
+        {% endif %}
+    </script>
+{% endblock %}
