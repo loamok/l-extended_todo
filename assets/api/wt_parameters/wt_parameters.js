@@ -2,7 +2,6 @@ import { baseCallback, postOne, putOne, getOne } from '../commons/functions';
 
 const debug = false;
 
-
 export function postOneWtParameter(values, successCallback, errorCallback) {
     postOne(values, successCallback, errorCallback, Routing.generate('api_wt_parameters_post_collection'));
 }

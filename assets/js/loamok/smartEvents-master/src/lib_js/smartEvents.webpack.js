@@ -224,8 +224,8 @@ var smartEventManager = {
      * @returns {void}
      */
     triggerMeOn: function (/*[Object])*/ event) {
-        console.log("trigger", smartEventManager.smartEvents);
-        console.log("event", event);
+//        console.log("trigger", smartEventManager.smartEvents);
+//        console.log("event", event);
         if(event.data.obj.attr('id')) { // do nothing wihtout a definition
             var smartE = smartEventManager.smartEvents[event.data.obj.attr('id')];
             if(smartE === undefined)

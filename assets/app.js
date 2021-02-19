@@ -67,6 +67,7 @@ import './api/ag_types/getAgTypes';
 import './formActions/params/times_selectors';
 import './formActions/params/wt/actions';
 import './formActions/params/day/actions';
+import './interfaceActions/workTimeTracker/details/prepare';
 
 // Animations
 import './interfaces_animations/wtt/interfaces_animations';

@@ -19,12 +19,13 @@ class FrontTokenController extends AbstractController {
     public function GetMyTokenAction(UserInterface $user, JWTTokenManagerInterface $JWTManager) {
         $dir = [realpath(__DIR__ . "/../../config/jwt/")];
         $locator = new FileLocator($dir);
+        
         try {
             $filePath = $locator->locate("public.pem", null, false);
         } catch (FileLocatorFileNotFoundException $e) {
             $filePath = null;
         }
         
-        return new JsonResponse(['token' => $JWTManager->create($user), 'pem' => !is_null($filePath) ? file_get_contents($filePath[0]) : $dir]);
+        return $this->json(['token' => $JWTManager->create($user), 'pem' => !is_null($filePath) ? file_get_contents($filePath[0]) : $dir]);
     }
 }
