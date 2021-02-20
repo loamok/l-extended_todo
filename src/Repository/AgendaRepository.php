@@ -3,10 +3,12 @@
 namespace App\Repository;
 
 use App\Entity\Agenda;
+use App\Entity\Todo;
 use App\Entity\User;
 use App\Repository\BehavioursTraits\UuidIdentifiable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Uid\Uuid;
 
 /**
  * @method Agenda|null find($id, $lockMode = null, $lockVersion = null)
@@ -56,6 +58,26 @@ class AgendaRepository extends ServiceEntityRepository {
             ->getResult();    
     }
     
+    /**
+     * Get one Agenda for a user
+     * 
+     * @param User $user
+     * @param string $rightCode
+     * @param string $agendaId
+     * @return Agenda|null
+     */
+    public function getOneAgendaForUser(User $user, string $rightCode, string $agendaId) : ?Agenda {
+        $qb = $this->getUserAgendasByRightCodeQuery($user, $rightCode);
+        
+        /* @var $agenda Agenda */
+        $agenda = $qb
+            ->andWhere($qb->expr()->eq('a.id', ':auid'))
+            ->setParameter('auid', Uuid::fromString($agendaId)->toBinary())
+            ->getQuery()
+            ->getOneOrNullResult();
+        
+        return $agenda;
+    }
     
     // /**
     //  * @return Agenda[] Returns an array of Agenda objects

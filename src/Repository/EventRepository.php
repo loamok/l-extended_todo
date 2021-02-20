@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Agenda;
 use App\Entity\Event;
 use App\Entity\User;
 use App\Repository\BehavioursTraits\UuidIdentifiable;
@@ -51,6 +52,29 @@ class EventRepository extends ServiceEntityRepository {
         return $this->getUserEventByRightCodeQuery($user, $rightCode)
             ->getQuery()
             ->getResult();    
+    }
+    
+    /**
+     * Get Events in range for an Agenda
+     * 
+     * @param Agenda $agenda
+     * @param array $params
+     * @return array
+     */
+    public function getFromAgendaInRange(Agenda $agenda, array $params) : array {
+        $qb = $this->createQueryBuilder('e');
+        
+        $qb 
+            ->leftJoin('e.agenda', 'ea')
+            ->where($qb->expr()->eq('ea.id', ':agenda'))
+            ->andWhere($qb->expr()->between('e.startAt', ':start', ':end'))
+            ->andWhere($qb->expr()->between('e.endAt', ':start', ':end'))
+            ->setParameter('agenda', $agenda->getId()->toBinary())
+            ->setParameter('start', $params['start'])
+            ->setParameter('end', $params['end'])
+            ;
+        
+        return $qb->getQuery()->getResult();
     }
     
     // /**

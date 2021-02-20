@@ -2,6 +2,7 @@
 
 namespace App\Repository;
 
+use App\Entity\Agenda;
 use App\Entity\Todo;
 use App\Entity\User;
 use App\Repository\BehavioursTraits\UuidIdentifiable;
@@ -51,6 +52,30 @@ class TodoRepository extends ServiceEntityRepository {
         return $this->getUserTodoByRightCodeQuery($user, $rightCode)
             ->getQuery()
             ->getResult();    
+    }
+    
+    /**
+     * Get Todos in range for an Agenda
+     * 
+     * @param Agenda $agenda
+     * @param array $params
+     * @return array
+     */
+    public function getFromAgendaInRange(Agenda $agenda, array $params) : array {
+        $qb = $this->createQueryBuilder('t');
+        
+        $qb 
+            ->leftJoin('t.agenda', 'ta')
+            ->where($qb->expr()->eq('ta.id', ':agenda'))
+            ->andWhere($qb->expr()->between('t.startAt', ':start', ':end'))
+            ->andWhere($qb->expr()->between('t.endAt', ':start', ':end'))
+            ->setParameter('agenda', $agenda->getId()->toBinary())
+            ->setParameter('start', $params['start'])
+            ->setParameter('end', $params['end'])
+            ;
+        
+//        dump($qb->getQuery()->getResult()); exit();
+        return $qb->getQuery()->getResult();
     }
     
     // /**
