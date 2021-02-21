@@ -1,7 +1,30 @@
 {# empty Twig template #}
-<td>{{ day|date('l') }}</td>
-<td>{{ day|date('d/m/Y') }}</td>
-<td>Start</td>
-<td>End AM</td>
-<td>Start PM</td>
-<td>End</td>
+{#<table><tr>#}
+        
+<td id='wd_{{ day|date('Ymd') }}' class="weekday">
+    {#  Week day  #}
+{#    <time datetime="{{ (day|date('Y-m-d'))~'T00:00:00.000'~(day|date('P')) }}">#}
+{#    <time datetime="{{ (day|date("Y-m-d\\TH:i:s.vP")) }}">#}
+    <time datetime="{{ (day|date('Y-m-d\\T00:00:00.000P')) }}">
+        {{ day|date('l') }}
+    </time>
+</td>
+<td id='dr_{{ day|date('Ymd') }}' class="dayrow">
+    <time datetime="{{ (day|date('Y-m-d\\T00:00:00.000P')) }}">
+        {{ day|date('d/m/Y') }}
+    </time>
+</td>
+<td>
+    Start
+</td>
+<td>
+    End AM
+</td>
+<td>
+    Start PM
+</td>
+<td>
+    End
+</td>
+
+{#</tr></table>#}

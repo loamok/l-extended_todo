@@ -19,6 +19,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 use App\Filters\UuidSearchFilter;
 use App\Entity\BehavioursTraits\BlameableEntity;
+use App\Entity\BehavioursTraits\Categorizable;
 use App\Entity\BehavioursTraits\SoftDeleteable;
 use App\Entity\BehavioursTraits\Timestampable;
 use App\Entity\BehavioursTraits\UTCDatetimeAble;
@@ -85,15 +86,21 @@ class Event {
      */
     private $relateds;
     
+    /**
+     * @ORM\ManyToMany(targetEntity=Category::class)
+     */
+    private $categories;
+    
     use UuidIdentifiable,
         BlameableEntity, 
+        Categorizable,
+        Descriptable,
+        Durationable,
+        Geolocable,
+        Locationable,
+        Relatable,
         SoftDeleteable,
         Timestampable, 
-        Durationable,
-        Locationable,
-        Descriptable,
-        Geolocable,
-        Relatable,
         UTCDatetimeAble {
             UTCDatetimeAble::getTimezone insteadof SoftDeleteable, Timestampable, Durationable;
         }
@@ -103,12 +110,7 @@ class Event {
      * @ORM\JoinColumn(nullable=false)
      */
     private $agenda;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Category::class)
-     */
-    private $categories;
-
+    
     /**
      * @ORM\ManyToOne(targetEntity=Status::class)
      * @ORM\JoinColumn(nullable=false)
@@ -126,27 +128,6 @@ class Event {
 
     public function setAgenda(?Agenda $agenda): self {
         $this->agenda = $agenda;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Category[]
-     */
-    public function getCategories(): Collection {
-        return $this->categories;
-    }
-
-    public function addCategory(Category $category): self {
-        if (!$this->categories->contains($category)) {
-            $this->categories[] = $category;
-        }
-
-        return $this;
-    }
-
-    public function removeCategory(Category $category): self {
-        $this->categories->removeElement($category);
 
         return $this;
     }

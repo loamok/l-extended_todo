@@ -17,6 +17,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 use App\Filters\UuidSearchFilter;
 use App\Entity\BehavioursTraits\BlameableEntity;
+use App\Entity\BehavioursTraits\Categorizable;
 use App\Entity\BehavioursTraits\SoftDeleteable;
 use App\Entity\BehavioursTraits\Timestampable;
 use App\Entity\BehavioursTraits\UTCDatetimeAble;
@@ -75,9 +76,15 @@ class Freebusy {
      * @ApiSubresource
      */
     private $relateds;
+        
+    /**
+     * @ORM\ManyToMany(targetEntity=Category::class)
+     */
+    private $categories;
     
     use UuidIdentifiable,
         BlameableEntity, 
+        Categorizable,
         SoftDeleteable,
         Timestampable, 
         Durationable,

@@ -26,3 +26,15 @@ non-working-employer:
     code: non-working-employer
     label: Non working payable by the Employer
     agtype: work_track
+am-break:
+    code: am-break
+    label: Am Break
+    agtype: work_track
+meridian-break:
+    code: meridian-break
+    label: Meridain Break
+    agtype: work_track
+pm-break:
+    code: pm-break
+    label: Pm Break
+    agtype: work_track

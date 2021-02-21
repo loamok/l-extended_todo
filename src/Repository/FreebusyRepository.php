@@ -14,10 +14,9 @@ use Doctrine\Persistence\ManagerRegistry;
  * @method Freebusy[]    findAll()
  * @method Freebusy[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
-class FreebusyRepository extends ServiceEntityRepository
-{
-    public function __construct(ManagerRegistry $registry)
-    {
+class FreebusyRepository extends ServiceEntityRepository {
+    
+    public function __construct(ManagerRegistry $registry) {
         parent::__construct($registry, Freebusy::class);
     }
 
@@ -50,7 +49,7 @@ class FreebusyRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();    
     }
-    
+        
     // /**
     //  * @return Freebusy[] Returns an array of Freebusy objects
     //  */

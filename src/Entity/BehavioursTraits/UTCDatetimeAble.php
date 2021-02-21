@@ -2,11 +2,11 @@
 
 namespace App\Entity\BehavioursTraits;
 
-use Doctrine\ORM\Mapping as ORM;
 use DateInterval;
 use DateTime;
 use DateTimeInterface;
 use DateTimeZone;
+use Doctrine\ORM\Mapping as ORM;
 use Gedmo\Mapping\Annotation as Gedmo;
 use Symfony\Component\Serializer\Annotation\Groups;
 
@@ -57,6 +57,18 @@ trait UTCDatetimeAble {
         return $this->localized[$name];
     }
     
+    protected function setDefaultTimeZone(DateTimeInterface $datetime) : DateTimeZone {
+        $utc = new DateTimeZone('UTC');
+        $nowUtc = new DateTime();
+        $nowUtc->setTimezone($utc);
+        $default = new DateTimeZone('Europe/Paris');
+        if($datetime->getOffset() == $nowUtc->getOffset()) {
+            return $default;
+        }
+        
+        return $datetime->getTimezone();
+    }
+    
     /**
      * 
      * @param string $name
@@ -67,7 +79,7 @@ trait UTCDatetimeAble {
         $this->setLocalized($name);
         if(!is_null($datetime) && !$this->isLocalized($name)) {
             $this->setLocalized($name, true);
-            $this->timezone = $datetime->getTimeZone()->getName();
+            $this->timezone = $this->setDefaultTimeZone($datetime)->getName()                       ;
         }
         $this->{$name} = $datetime;
         

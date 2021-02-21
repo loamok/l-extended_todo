@@ -51,8 +51,18 @@ trait Relatable {
 
     public function removeRelated(Related $related): self {
         if ($this->relateds->removeElement($related)) {
+            if(is_a($this, Event::class)) {
+                $entityType = ucfirst('event');
+            } elseif(is_a($this, Todo::class)) {
+                $entityType = ucfirst('todo');
+            } elseif(is_a($this, Journal::class)) {
+                $entityType = ucfirst('journal');
+            } elseif(is_a($this, Freebusy::class)) {
+                $entityType = ucfirst('freebusy');
+            }
+            
             // set the owning side to null (unless already changed)
-            if ($related->getParent($this->parentType) === $this) {
+            if ($related->getParent($this->parentType) === $entityType) {
                 $related->setParent(null, $this->parentType);
             }
         }

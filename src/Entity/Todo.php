@@ -19,6 +19,7 @@ use Symfony\Component\Serializer\Annotation\Groups;
 
 use App\Filters\UuidSearchFilter;
 use App\Entity\BehavioursTraits\BlameableEntity;
+use App\Entity\BehavioursTraits\Categorizable;
 use App\Entity\BehavioursTraits\SoftDeleteable;
 use App\Entity\BehavioursTraits\Timestampable;
 use App\Entity\BehavioursTraits\UTCDatetimeAble;
@@ -79,16 +80,22 @@ class Todo {
      * @ApiSubresource
      */
     private $relateds;
-    
+        
+    /**
+     * @ORM\ManyToMany(targetEntity=Category::class)
+     */
+    private $categories;
+        
     use UuidIdentifiable,
-        Descriptable,
-        Locationable,
-        Geolocable,
         BlameableEntity, 
+        Categorizable,
+        Descriptable,
+        Durationable,
+        Geolocable,
+        Locationable,
+        Relatable,
         SoftDeleteable,
         Timestampable, 
-        Durationable,
-        Relatable,
         UTCDatetimeAble {
             UTCDatetimeAble::getTimezone insteadof SoftDeleteable, Timestampable, Durationable;
         }
@@ -119,12 +126,7 @@ class Todo {
      * @ORM\JoinColumn(nullable=false)
      */
     private $agenda;
-
-    /**
-     * @ORM\ManyToMany(targetEntity=Category::class)
-     */
-    private $categories;
-
+    
     /**
      * @ORM\ManyToOne(targetEntity=Status::class)
      * @ORM\JoinColumn(nullable=false)
@@ -137,6 +139,63 @@ class Todo {
         $this->priority = 0;
         $this->categories = new ArrayCollection();
         $this->initRelatable();
+    }
+    
+    public function getAmBreak() : ?Freebusy {
+        $res = null;
+        /* @var $related Related */
+        foreach ($this->getRelateds() as $related) {
+            /* @var $c Category */
+            foreach($related->getFreebusy()->getCategories() as $c) {
+                if($c->getCode() == "am-break") {
+                    $res = $related->getFreebusy();
+                    break;
+                }
+            }
+            if(!is_null($res)) {
+                break;
+            }
+        }
+        
+        return $res;
+    }
+    
+    public function getMeridianBreak() : ?Freebusy {
+        $res = null;
+        /* @var $related Related */
+        foreach ($this->getRelateds() as $related) {
+            /* @var $c Category */
+            foreach($related->getFreebusy()->getCategories() as $c) {
+                if($c->getCode() == "meridian-break") {
+                    $res = $related->getFreebusy();
+                    break;
+                }
+            }
+            if(!is_null($res)) {
+                break;
+            }
+        }
+        
+        return $res;
+    }
+    
+    public function getPmBreak() : ?Freebusy {
+        $res = null;
+        /* @var $related Related */
+        foreach ($this->getRelateds() as $related) {
+            /* @var $c Category */
+            foreach($related->getFreebusy()->getCategories() as $c) {
+                if($c->getCode() == "pm-break") {
+                    $res = $related->getFreebusy();
+                    break;
+                }
+            }
+            if(!is_null($res)) {
+                break;
+            }
+        }
+        
+        return $res;
     }
     
     /**
@@ -233,27 +292,6 @@ class Todo {
 
     public function setAgenda(?Agenda $agenda): self {
         $this->agenda = $agenda;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection|Category[]
-     */
-    public function getCategories(): Collection {
-        return $this->categories;
-    }
-
-    public function addCategory(Category $category): self {
-        if (!$this->categories->contains($category)) {
-            $this->categories[] = $category;
-        }
-
-        return $this;
-    }
-
-    public function removeCategory(Category $category): self {
-        $this->categories->removeElement($category);
 
         return $this;
     }
