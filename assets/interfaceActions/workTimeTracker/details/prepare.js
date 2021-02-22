@@ -3,6 +3,8 @@
 const smartEventDefine = global.smartEventDefine;
 const debug = false;
 
+require('./edit_row');
+
 import { postPrepareQuery } from '../../../api/asyncWttActions/prepareAction';
 
 import { getAllCategories } from '../../../api/categories/categories';
@@ -97,7 +99,6 @@ function dateTimeObjFromDateTimeStr(str) {
     res.minutes = timeParts[1];
     res.seconds = timeParts[2].split('.')[0].substring(0,2);
     
-    
     return res;
 }
 
@@ -136,11 +137,12 @@ function setDateTableElement(key, elem) {
     setTimeHtmlTimeElem($dayAmEndTime, elemMeridBreakStart);
     setTimeHtmlTimeElem($dayPmStartTime, elemMeridBreakEnd);
     
-    const cat = elem.object.categories.shift().split('/').pop();
+    var categories = elem.object.categories.slice(0);
+    const cat = categories.shift().split('/').pop();
     if($('#tableView_categories').length > 0) {
         const cats = JSON.parse($('#tableView_categories').text());
         if(cats[cat] !== undefined) {
-            $('#stat_' + key).parent().addClass('category_' + cats[cat].code);
+            $('#stat_' + key).parent().addClass('category_' + cats[cat].code.replace(/-/g, '_'));
             $('#stat_' + key).html(cats[cat].label);
         }
     }
