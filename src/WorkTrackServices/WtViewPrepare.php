@@ -120,45 +120,29 @@ class WtViewPrepare {
         return $freeFb;
     }
     
+    protected function setBreak(string $name, DateTimeInterface $baseTime, DateTimeInterface $start, DateTimeInterface $end, string $timezone) : array {
+        return [
+            'type' => $name,
+            'start' => DateTimeImmutable::createFromFormat(
+                DateTimeImmutable::RFC3339_EXTENDED, 
+                $baseTime->format('Y-m-d\T').$start->format('H:i:s.v').$timezone
+            ),
+            'end' => DateTimeImmutable::createFromFormat(
+                DateTimeImmutable::RFC3339_EXTENDED, 
+                $baseTime->format('Y-m-d\T').$end->format('H:i:s.v').$timezone
+            ),
+        ];
+    }
+    
     protected function fromTodoToRelateds(array $params, Todo $todo) : array {
         $relateds = $todo->getRelateds();
         /* @var $workCat Category */
         $workCat = $this->em->getRepository(Category::class)->findOneBy(['code' => "worktime"]);
         if((empty($relateds) || is_null($relateds) || count($relateds) == 0) && $todo->hasCategory($workCat)) {
             $pauses = [
-                'am' => [
-                    'type' => "am-break",
-                    'start' => DateTimeImmutable::createFromFormat(
-                        DateTimeImmutable::RFC3339_EXTENDED, 
-                        $todo->getStartAt()->format('Y-m-d\T').$params['dayParametersObj']->getAmPauseStart()->format('H:i:s.v').$todo->getStartAt()->getTimezone()->getName()
-                    ),
-                    'end' => DateTimeImmutable::createFromFormat(
-                        DateTimeImmutable::RFC3339_EXTENDED, 
-                        $todo->getStartAt()->format('Y-m-d\T').$params['dayParametersObj']->getAmPauseEnd()->format('H:i:s.v').$todo->getStartAt()->getTimezone()->getName()
-                    ),
-                ],
-                'meridian' => [
-                    'type' => "meridian-break",
-                    'start' => DateTimeImmutable::createFromFormat(
-                        DateTimeImmutable::RFC3339_EXTENDED, 
-                        $todo->getStartAt()->format('Y-m-d\T').$params['dayParametersObj']->getAmEnd()->format('H:i:s.v').$todo->getStartAt()->getTimezone()->getName()
-                    ),
-                    'end' => DateTimeImmutable::createFromFormat(
-                        DateTimeImmutable::RFC3339_EXTENDED, 
-                        $todo->getStartAt()->format('Y-m-d\T').$params['dayParametersObj']->getPmStart()->format('H:i:s.v').$todo->getStartAt()->getTimezone()->getName()
-                    ),
-                ],
-                'pm' => [
-                    'type' => "pm-break",
-                    'start' => DateTimeImmutable::createFromFormat(
-                        DateTimeImmutable::RFC3339_EXTENDED, 
-                        $todo->getStartAt()->format('Y-m-d\T').$params['dayParametersObj']->getPmPauseStart()->format('H:i:s.v').$todo->getStartAt()->getTimezone()->getName()
-                    ),
-                    'end' => DateTimeImmutable::createFromFormat(
-                        DateTimeImmutable::RFC3339_EXTENDED, 
-                        $todo->getStartAt()->format('Y-m-d\T').$params['dayParametersObj']->getPmPauseEnd()->format('H:i:s.v').$todo->getStartAt()->getTimezone()->getName()
-                    ),
-                ]
+                'am' => $this->setBreak('am-break', $todo->getStartAt(), $params['dayParametersObj']->getAmPauseStart(), $params['dayParametersObj']->getAmPauseEnd(), $todo->getStartAt()->getTimezone()->getName()),
+                'meridian' => $this->setBreak("meridian-break", $todo->getStartAt(), $params['dayParametersObj']->getAmEnd(), $params['dayParametersObj']->getPmStart(), $todo->getStartAt()->getTimezone()->getName()),
+                'pm' => $this->setBreak("pm-break", $todo->getStartAt(), $params['dayParametersObj']->getPmPauseStart(), $params['dayParametersObj']->getPmPauseEnd(), $todo->getStartAt()->getTimezone()->getName()),
             ];
             $relateds = [];
             

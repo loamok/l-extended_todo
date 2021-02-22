@@ -14,17 +14,18 @@
         {{ day|date('d/m/Y') }}
     </time>
 </td>
-<td>
-    Start
+<td id='ds_{{ day|date('Ymd') }}' class="daystart">
+    <time datetime=""></time>
 </td>
-<td>
-    End AM
+<td id='dame_{{ day|date('Ymd') }}' class="dayamend">
+    <time datetime=""></time>
 </td>
-<td>
-    Start PM
+<td id='dpms_{{ day|date('Ymd') }}' class="daypmstart">
+    <time datetime=""></time>
 </td>
-<td>
-    End
+<td id='de_{{ day|date('Ymd') }}' class="dayend">
+    <time datetime=""></time>
 </td>
+<td id='stat_{{ day|date('Ymd') }}'></td>
 
 {#</tr></table>#}

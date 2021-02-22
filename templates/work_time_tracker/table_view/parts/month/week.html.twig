@@ -1,7 +1,7 @@
 {% for day in dates %}
 <tr>
     {% if loop.first %}
-        <td rowspan="7">{{ weekNumber }}</td>
+        <th scope="row" rowspan="7">{{ weekNumber }}</th>
     {% endif %}
     {% include 'work_time_tracker/table_view/parts/month/day.html.twig' with { day: day } only %}
 </tr>

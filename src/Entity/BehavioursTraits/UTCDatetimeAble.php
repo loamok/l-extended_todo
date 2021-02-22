@@ -76,10 +76,10 @@ trait UTCDatetimeAble {
      * @return self
      */
     protected function setDatetime(string $name, ?\DateTimeInterface $datetime) : self {
-        $this->setLocalized($name);
-        if(!is_null($datetime) && !$this->isLocalized($name)) {
-            $this->setLocalized($name, true);
-            $this->timezone = $this->setDefaultTimeZone($datetime)->getName()                       ;
+//        $this->setLocalized($name);
+        if(!is_null($datetime) && is_null($this->timezone)) {// && !$this->isLocalized($name)) {
+//            $this->setLocalized($name, true);
+            $this->timezone = $this->setDefaultTimeZone($datetime)->getName();
         }
         $this->{$name} = $datetime;
         
@@ -92,8 +92,9 @@ trait UTCDatetimeAble {
      * @return \DateTimeInterface|null
      */
     protected function getDatetime(string $name) : ?\DateTimeInterface {
-        if(!$this->isLocalized($name) && !is_null($this->{$name}) && $this->{$name} instanceof \DateTimeInterface) {
-            $this->{$name}->setTimeZone(new \DateTimeZone($this->timezone));
+        if(!is_null($this->{$name}) && $this->{$name} instanceof \DateTimeInterface) {
+//            $this->{$name}->setTimeZone(new \DateTimeZone($this->timezone));
+            $this->{$name}->setTimeZone(new \DateTimeZone($this->getTimezone()));
             $this->setLocalized($name, true);
         }
         
@@ -116,6 +117,10 @@ trait UTCDatetimeAble {
      * @return string|null
      */
     public function getTimezone() : ?string {
+        if(is_null($this->timezone)) {
+            $default = new DateTimeZone('Europe/Paris');
+            $this->timezone = $default->getName();
+        }
         return $this->timezone;
     }
 }

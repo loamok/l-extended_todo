@@ -93,7 +93,7 @@ trait Durationable {
         if (!is_null($this->duration) && !is_null($this->startAt) && is_null($this->endAt)) {
             $endAt = clone $this->startAt;
             $endAt = $endAt->add($this->duration);
-            $endAt = $endAt->setTimezone($this->startAt->getTimezone());
+            $endAt = $endAt->setTimezone(new \DateTimeZone($this->getTimezone()));
             $this->setDatetime('endAt', $endAt);
         }
         if(!$this->isLocalized('startAt')) {
