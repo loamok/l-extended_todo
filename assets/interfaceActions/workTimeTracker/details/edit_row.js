@@ -52,6 +52,7 @@ function makeStatusesSelectIn(elem) {
     saveStatusEvent.event = 'click';
     saveStatusEvent.handler = function(obj, event) {
         event.elemId = $(elem).attr('id');
+        // @todo différencier todos de events
         saveStatusTodo(obj, event);
     };
     $iBtn.smartEvent(saveStatusEvent);

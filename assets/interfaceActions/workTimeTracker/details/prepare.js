@@ -123,6 +123,8 @@ export function setDateTableElement(key, elem) {
     var $trRow = $('#dr_' + key).parent();
     $trRow.attr('data-rowid', elem.object.id);
     $trRow.attr('id', 'rowid_' + key);
+    // @todo indiquer le type de ligne (todo, event)
+    $trRow.attr('data-type', elem.type);
     
     var $drTime = $('#dr_' + key + ' time');
     var $dsTime = $('#ds_' + key + ' time');
