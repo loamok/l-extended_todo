@@ -102,7 +102,7 @@ function dateTimeObjFromDateTimeStr(str) {
     return res;
 }
 
-function populateTable(elemsInRange) {
+export function populateTable(elemsInRange) {
     
     for (const [key, elem] of Object.entries(elemsInRange)) {
         setDateTableElement(key, elem);
@@ -119,7 +119,11 @@ function setTimeHtmlTimeElem($elem, dateDesc) {
     $elem.html(dateDesc.hours + ':' + dateDesc.minutes + ':' + dateDesc.seconds);
 }
 
-function setDateTableElement(key, elem) {
+export function setDateTableElement(key, elem) {
+    var $trRow = $('#dr_' + key).parent();
+    $trRow.attr('data-rowid', elem.object.id);
+    $trRow.attr('id', 'rowid_' + key);
+    
     var $drTime = $('#dr_' + key + ' time');
     var $dsTime = $('#ds_' + key + ' time');
     var $dayAmEndTime = $('#dame_' + key + ' time');
