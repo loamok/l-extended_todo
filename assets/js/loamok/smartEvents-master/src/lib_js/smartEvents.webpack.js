@@ -122,6 +122,16 @@ var smartEventManager = {
         return definition;
     },
     
+    deRegister: function (/*[Object])*/ definition) {
+        if(definition.owner) {
+            if(definition.owner.attr('id')) { 
+                var smartE = smartEventManager.smartEvents[definition.owner.attr('id')];
+                $(definition.owner).off(definition.event);
+                delete smartEventManager.smartEvents[definition.owner.attr('id')];
+            }
+        }
+    },
+    
     /**
      * Register an ordered handler in the smartEvent system
      * only the "definition" parameter is mandatory
@@ -255,6 +265,14 @@ var smartEventManager = {
 
 
 (function ($) {
+    $.fn.smartEventDeRegister = function(/*[Object])*/ definition) {
+        var $this = $(this);
+        var def = {...definition};
+        
+        def = smartEventManager.ownerForPlugin(def, $this);
+        smartEventManager.deRegister(def);
+    };
+    
     $.fn.smartEvent = function(/*[Object])*/ definition, /*integer*/ order, /*Boolean*/ isLast, /*Boolean*/ isFirst) {
         
         var $this = $(this);
