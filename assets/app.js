@@ -35,7 +35,7 @@ import { showAlert, dissmissAlert } from './js/alerts';
 global.showAlert = showAlert;
 global.dissmissAlert = dissmissAlert;
 
-import { smartEventDefine } from './js/loamok/smartEvents-master/src/lib_js/smartEvents.webpack';
+import { smartEventDefine } from 'smartEvents';
 global.smartEventDefine = smartEventDefine;
 
 var allCBEnded = true;
