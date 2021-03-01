@@ -141,6 +141,25 @@ class Todo {
         $this->initRelatable();
     }
     
+    public function getBreaks() : ?array {
+        $am = $this->getAmBreak();
+        $meridian = $this->getMeridianBreak();
+        $pm = $this->getPmBreak();
+        
+        $res = [];
+        if(!is_null($am)) {
+            $res['am-break'] = $am;
+        }
+        if(!is_null($meridian)) {
+            $res['meridian-break'] = $meridian;
+        }
+        if(!is_null($pm)) {
+            $res['pm-break'] = $pm;
+        }
+            
+        return !empty($res) ? $res : null;
+    }
+    
     public function getAmBreak() : ?Freebusy {
         $res = null;
         /* @var $related Related */

@@ -23,18 +23,46 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 
 /**
- * Description of WtViewPrepare
+ * WtViewPrepare Service for preparing a view content
  *
  * @author symio
  */
 class WtViewPrepare {
     
+    /**
+     * 
+     * @var Security
+     */
     protected $security;
+    /**
+     * 
+     * @var EntityManagerInterface
+     */
     protected $em;
+    /**
+     * 
+     * @var AgendaService
+     */
     protected $as;
+    /**
+     * 
+     * @var WtParametersService
+     */
     protected $wttPs;
+    /**
+     * 
+     * @var WTDaysRangeCalculator
+     */
     protected $wDrCalc;
 
+    /**
+     * 
+     * @param Security $security
+     * @param EntityManagerInterface $em
+     * @param AgendaService $as
+     * @param WtParametersService $wttPs
+     * @param WTDaysRangeCalculator $wDrCalc
+     */
     public function __construct(Security $security, EntityManagerInterface $em, AgendaService $as, WtParametersService $wttPs, WTDaysRangeCalculator $wDrCalc) {
         $this->security = $security;
         $this->em = $em;
@@ -42,6 +70,7 @@ class WtViewPrepare {
         $this->wttPs = $wttPs;
         $this->wDrCalc = $wDrCalc;
     }
+    
     /**
      * Set parameters and get needed objects
      * 
@@ -75,6 +104,12 @@ class WtViewPrepare {
         
     }
     
+    /**
+     * 
+     * @param type $params
+     * @param ServiceEntityRepository $repo
+     * @return void
+     */
     protected function getElements(&$params, ServiceEntityRepository $repo) {
         $eType = null;
         
@@ -96,6 +131,12 @@ class WtViewPrepare {
         }
     }
     
+    /**
+     * 
+     * @param Todo $todo
+     * @param array $def
+     * @return Freebusy
+     */
     protected function addFreeFbToTodo(Todo &$todo, array $def) : Freebusy {
         /* @var $freetimeType FbType */
         $freetimeType = $this->em->getRepository(FbType::class)->findOneBy(['code' => "free"]);
@@ -120,29 +161,45 @@ class WtViewPrepare {
         return $freeFb;
     }
     
+    /**
+     * 
+     * @param string $name
+     * @param DateTimeInterface $baseTime
+     * @param DateTimeInterface $start
+     * @param DateTimeInterface $end
+     * @param string $timezone
+     * @return array
+     */
     protected function setBreak(string $name, DateTimeInterface $baseTime, DateTimeInterface $start, DateTimeInterface $end, string $timezone) : array {
         return [
             'type' => $name,
-            'start' => DateTimeImmutable::createFromFormat(
-                DateTimeImmutable::RFC3339_EXTENDED, 
+            'start' => DateTimeImmutable::createFromFormat(DateTimeImmutable::RFC3339_EXTENDED, 
                 $baseTime->format('Y-m-d\T').$start->format('H:i:s.v').$timezone
             ),
-            'end' => DateTimeImmutable::createFromFormat(
-                DateTimeImmutable::RFC3339_EXTENDED, 
+            'end' => DateTimeImmutable::createFromFormat(DateTimeImmutable::RFC3339_EXTENDED, 
                 $baseTime->format('Y-m-d\T').$end->format('H:i:s.v').$timezone
             ),
         ];
     }
     
+    /**
+     * 
+     * @param array $params
+     * @param Todo $todo
+     * @return array
+     */
     protected function fromTodoToRelateds(array $params, Todo $todo) : array {
         $relateds = $todo->getRelateds();
         /* @var $workCat Category */
         $workCat = $this->em->getRepository(Category::class)->findOneBy(['code' => "worktime"]);
         if((empty($relateds) || is_null($relateds) || count($relateds) == 0) && $todo->hasCategory($workCat)) {
             $pauses = [
-                'am' => $this->setBreak('am-break', $todo->getStartAt(), $params['dayParametersObj']->getAmPauseStart(), $params['dayParametersObj']->getAmPauseEnd(), $todo->getStartAt()->getTimezone()->getName()),
-                'meridian' => $this->setBreak("meridian-break", $todo->getStartAt(), $params['dayParametersObj']->getAmEnd(), $params['dayParametersObj']->getPmStart(), $todo->getStartAt()->getTimezone()->getName()),
-                'pm' => $this->setBreak("pm-break", $todo->getStartAt(), $params['dayParametersObj']->getPmPauseStart(), $params['dayParametersObj']->getPmPauseEnd(), $todo->getStartAt()->getTimezone()->getName()),
+                'am' => $this->setBreak('am-break', $todo->getStartAt(), $params['dayParametersObj']->getAmPauseStart(), 
+                    $params['dayParametersObj']->getAmPauseEnd(), $todo->getStartAt()->getTimezone()->getName()),
+                'meridian' => $this->setBreak("meridian-break", $todo->getStartAt(), $params['dayParametersObj']->getAmEnd(), 
+                    $params['dayParametersObj']->getPmStart(), $todo->getStartAt()->getTimezone()->getName()),
+                'pm' => $this->setBreak("pm-break", $todo->getStartAt(), $params['dayParametersObj']->getPmPauseStart(), 
+                    $params['dayParametersObj']->getPmPauseEnd(), $todo->getStartAt()->getTimezone()->getName()),
             ];
             $relateds = [];
             
@@ -154,25 +211,25 @@ class WtViewPrepare {
         $this->em->flush();
         $this->em->refresh($todo);
         
-        $relateds['am-break'] = $todo->getAmBreak();
-        $relateds['meridian-break'] = $todo->getMeridianBreak();
-        $relateds['pm-break'] = $todo->getPmBreak();
-        
-        return ['type' => 'todo', 'object' => $todo, 'relateds' => $relateds];
+        return ['type' => 'todo', 'object' => $todo, 'relateds' => array_merge($relateds, $todo->getBreaks())];
     }
     
+    /**
+     * 
+     * @param array $params
+     * @param DateTimeInterface $day
+     * @return Todo|null
+     */
     protected function createTodo(array &$params, DateTimeInterface $day) : ?Todo {
         $todo = new Todo();
         /* @var $workCat Category */
         $workCat = $this->em->getRepository(Category::class)->findOneBy(['code' => "worktime"]);
         
         $todo->setAgenda($params['agendaObj']);
-        $start = DateTimeImmutable::createFromFormat(
-                DateTimeImmutable::RFC3339_EXTENDED, 
+        $start = DateTimeImmutable::createFromFormat(DateTimeImmutable::RFC3339_EXTENDED, 
                 $day->format('Y-m-d')."T".$params['dayParametersObj']->getAmStart()->format('H:i:s.v')."+01:00");
         $todo->setStartAt($start);
-        $end = DateTimeImmutable::createFromFormat(
-                DateTimeImmutable::RFC3339_EXTENDED, 
+        $end = DateTimeImmutable::createFromFormat(DateTimeImmutable::RFC3339_EXTENDED, 
                 $day->format('Y-m-d')."T".$params['dayParametersObj']->getPmEnd()->format('H:i:s.v')."+01:00");
         $todo->setEndAt($end);
         
@@ -184,20 +241,32 @@ class WtViewPrepare {
         return $todo;
     }
     
-    protected function completeElems(array &$params) {
+    /**
+     * 
+     * @param array $params
+     * @param bool|null $autoCreate
+     */
+    protected function completeElems(array &$params, ?bool $autoCreate = true) {
         /* @var $week array */
         foreach ($params['calculatedRange']['dates'] as $week) {
             /* @var $day DateTimeInterface */
             foreach ($week as $day) {
                 $did = $day->format('Ymd');
-                if(!array_key_exists($did, $params['elemsInRange'])) {            
+                if(!array_key_exists($did, $params['elemsInRange']) && $autoCreate) {
                     $params['elemsInRange']["{$did}"] = $this->fromTodoToRelateds($params, $this->createTodo($params, $day));
                 }
             }
         }
     }
     
-    public function prepareMe(array $params) {
+    /**
+     * Prepare the range for workTrack
+     * 
+     * @param array $params
+     * @param bool|null $autoCreate
+     * @return array
+     */
+    public function prepareMe(array $params, ?bool $autoCreate = true) : array {
         $this->setParams($params);
         
         /* @var $agRep AgendaRepository */
@@ -213,8 +282,9 @@ class WtViewPrepare {
         $this->getElements($params, $todosRep);
         $this->getElements($params, $eventsRep);
         
-        $this->completeElems($params);
+        $this->completeElems($params, $autoCreate);
         $this->em->flush();
         return $params;
     }
+    
 }
