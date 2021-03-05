@@ -1,6 +1,7 @@
 {# empty Twig template #}
 {#<table><tr>#}
-        
+{% set dayKey = day|date('Ymd') %}
+{% set dayPrepared = (dayKey in prepared.elemsInRange|keys) ? prepared.elemsInRange[dayKey] : null %}
 <td id='wd_{{ day|date('Ymd') }}' class="weekday">
     {#  Week day  #}
 {#    <time datetime="{{ (day|date('Y-m-d'))~'T00:00:00.000'~(day|date('P')) }}">#}
@@ -15,16 +16,24 @@
     </time>
 </td>
 <td id='ds_{{ day|date('Ymd') }}' class="daystart">
-    <time datetime=""></time>
+    {% set dsTs = (dayPrepared) ? dayPrepared.object.startAt|date('Y-m-d\\TH:i:s.000P') : "" %}
+    {% set dsDis = (dayPrepared) ? dayPrepared.object.startAt|date('H:i:s') : "" %}
+    <time datetime="{{ (dsTs) }}">{{ (dsDis) }}</time>
 </td>
 <td id='dame_{{ day|date('Ymd') }}' class="dayamend">
-    <time datetime=""></time>
+    {% set dameTs = (dayPrepared) ? dayPrepared.relateds['meridian-break'].startAt|date('Y-m-d\\TH:i:s.000P') : "" %}
+    {% set dameDis = (dayPrepared) ? dayPrepared.relateds['meridian-break'].startAt|date('H:i:s') : "" %}
+    <time datetime="{{ (dameTs) }}">{{ (dameDis) }}</time>
 </td>
 <td id='dpms_{{ day|date('Ymd') }}' class="daypmstart">
-    <time datetime=""></time>
+    {% set dpmsTs = (dayPrepared) ? dayPrepared.relateds['meridian-break'].endAt|date('Y-m-d\\TH:i:s.000P') : "" %}
+    {% set dpmsDis = (dayPrepared) ? dayPrepared.relateds['meridian-break'].endAt|date('H:i:s') : "" %}
+    <time datetime="{{ (dpmsTs) }}">{{ (dpmsDis) }}</time>
 </td>
 <td id='de_{{ day|date('Ymd') }}' class="dayend">
-    <time datetime=""></time>
+    {% set deTs = (dayPrepared) ? dayPrepared.object.endAt|date('Y-m-d\\TH:i:s.000P') : "" %}
+    {% set deDis = (dayPrepared) ? dayPrepared.object.endAt|date('H:i:s') : "" %}
+    <time datetime="{{ (deTs) }}">{{ (deDis) }}</time>
 </td>
 <td id='stat_{{ day|date('Ymd') }}' class="rowstatus"></td>
 

@@ -3,7 +3,7 @@
     <tbody>
     {% for week, days in params.dates %}
         {% include 'work_time_tracker/table_view/parts/month/week.html.twig' with { 
-            dates: days, weekNumber: week
+            dates: days, weekNumber: week, prepared
         } only %}
     {% endfor %}
     </tbody>

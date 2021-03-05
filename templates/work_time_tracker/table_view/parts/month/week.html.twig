@@ -3,6 +3,6 @@
     {% if loop.first %}
         <th scope="row" rowspan="7">{{ weekNumber }}</th>
     {% endif %}
-    {% include 'work_time_tracker/table_view/parts/month/day.html.twig' with { day: day } only %}
+    {% include 'work_time_tracker/table_view/parts/month/day.html.twig' with { day: day, prepared } only %}
 </tr>
 {% endfor %}

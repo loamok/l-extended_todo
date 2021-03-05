@@ -8,13 +8,14 @@ use App\Entity\WtParameters;
 use App\Form\AgendaFormType;
 use App\Form\WtParametersType;
 use App\Repository\AgendaRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use App\WorkTrackServices\AgendaService;
 use App\WorkTrackServices\WTDaysRangeCalculator;
 use App\WorkTrackServices\WtParametersService;
+use App\WorkTrackServices\WtViewPrepare;
 use DateInterval;
 use DateTime;
 use DateTimeImmutable;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -143,6 +144,7 @@ class WorkTimeTrackerController extends AbstractController {
      * @IsGranted("ROLE_USER")
      * 
      * @param Agenda $agenda
+     * @param WtViewPrepare $wVps
      * @param User|null $u
      * @param string|null $mode
      * @param int|null $year
@@ -151,19 +153,27 @@ class WorkTimeTrackerController extends AbstractController {
      * @param int|null $day
      * @return Response
      */
-    public function display(Agenda $agenda, ?User $u = null, ?string $mode = null, ?int $year = null, ?int $month = null, ?int $week = null, ?int $day = null): Response {
+    public function display(Agenda $agenda, WtViewPrepare $wVps, ?User $u = null, ?string $mode = null, ?int $year = null, ?int $month = null, ?int $week = null, ?int $day = null): Response {
         /* @var $user UserInterface */
         $user = $u ?? $this->getUser();
         $this->denyAccessUnlessGranted('read', $agenda);
         
-        $params = $this->wTDaysRangeCalculator->defaultsDisplayParameters(['mode' => $mode, 'year' => $year, 'month' => $month, 'week' => $week, 'day' => $day]);
+        $params = $this->wTDaysRangeCalculator->defaultsDisplayParameters([
+            'mode' => $mode, 'year' => $year, 'month' => $month, 'week' => $week, 'day' => $day
+        ]);
         $params = $this->wTDaysRangeCalculator->selectedDateFromParams($params);
+        $cv = $this->getCommonVariables($user, $agenda);
+        $p = [ 'paginateParams' => [
+                "mode"  => $params['mode'], "year"  => $params['selected']->format('Y'),
+                "month" => $params['selected']->format('m'), "week"  => $params['selected']->format('W'),
+                "day"   => $params['selected']->format('d')
+            ],
+            'dayParameters' => $cv['globalParam']->getDayParameters()->getId()->toRfc4122(), 'user' => $user,
+            'agenda' => $agenda->getId()->toRfc4122(), 'wtParameters' => $cv['globalParam']->getId()->toRfc4122(),
+        ];
         
         return $this->render('work_time_tracker/display.html.twig',  array_merge([
-                'agenda' => $agenda,
-            ], 
-            $this->getCommonVariables($user, $agenda),
-            ['params' => $params]
+            'agenda' => $agenda, ], $cv, ['params' => $params, 'prepared' => $wVps->prepareMe($p, false)]
         ));
     }
     

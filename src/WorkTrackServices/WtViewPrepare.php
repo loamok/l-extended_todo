@@ -19,6 +19,7 @@ use App\Repository\TodoRepository;
 use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Security\Core\Security;
 
@@ -69,6 +70,7 @@ class WtViewPrepare {
         $this->as = $as;
         $this->wttPs = $wttPs;
         $this->wDrCalc = $wDrCalc;
+        
     }
     
     /**
@@ -129,6 +131,7 @@ class WtViewPrepare {
             $esdid = $elem->getStartAt()->format('Ymd');
             $params['elemsInRange']["{$esdid}"] = ($eType == 'todo') ? $this->fromTodoToRelateds($params, $elem) : ['type' => $eType, 'object' => $elem];
         }
+        
     }
     
     /**
@@ -171,6 +174,7 @@ class WtViewPrepare {
      * @return array
      */
     protected function setBreak(string $name, DateTimeInterface $baseTime, DateTimeInterface $start, DateTimeInterface $end, string $timezone) : array {
+        
         return [
             'type' => $name,
             'start' => DateTimeImmutable::createFromFormat(DateTimeImmutable::RFC3339_EXTENDED, 
@@ -189,7 +193,8 @@ class WtViewPrepare {
      * @return array
      */
     protected function fromTodoToRelateds(array $params, Todo $todo) : array {
-        $relateds = $todo->getRelateds();
+        $relateds = $todo->getRelateds()->toArray();
+        
         /* @var $workCat Category */
         $workCat = $this->em->getRepository(Category::class)->findOneBy(['code' => "worktime"]);
         if((empty($relateds) || is_null($relateds) || count($relateds) == 0) && $todo->hasCategory($workCat)) {
@@ -211,7 +216,7 @@ class WtViewPrepare {
         $this->em->flush();
         $this->em->refresh($todo);
         
-        return ['type' => 'todo', 'object' => $todo, 'relateds' => array_merge($relateds, $todo->getBreaks())];
+        return ['type' => 'todo', 'object' => $todo, 'relateds' => new ArrayCollection(array_merge($relateds, $todo->getBreaks()))];
     }
     
     /**
@@ -238,6 +243,7 @@ class WtViewPrepare {
         $todo->addCategory($workCat);
         
         $this->em->persist($todo);
+        
         return $todo;
     }
     
@@ -257,6 +263,7 @@ class WtViewPrepare {
                 }
             }
         }
+        
     }
     
     /**
@@ -284,6 +291,7 @@ class WtViewPrepare {
         
         $this->completeElems($params, $autoCreate);
         $this->em->flush();
+        
         return $params;
     }
     
