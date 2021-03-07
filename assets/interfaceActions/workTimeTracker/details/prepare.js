@@ -43,11 +43,14 @@ function sendPostPrepareQuery() {
         console.log('prepareMe : ', data);
         populateTable(data.params.elemsInRange);
     });
-    getAllCategories(function(data) {
-        var event = $.Event(TableEventStatusLoad);
-        event.cbData = data;
-        $('#btn-calculator-action').trigger(event);
-    });
+    var catTableScripts = $('#tableView_categories');
+    if(catTableScripts.text().length == 0)  {
+        getAllCategories(function(data) {
+            var event = $.Event(TableEventStatusLoad);
+            event.cbData = data;
+            $('#btn-calculator-action').trigger(event);
+        });
+    }
 }
 
 function setTableRowsStatuses(event) {
@@ -56,6 +59,10 @@ function setTableRowsStatuses(event) {
     for(const cat of event.cbData) {
         cats[cat.id] = cat;
     }
+    var catTableScripts = $('#tableView_categories');
+    if(catTableScripts.length > 0) 
+        $(catTableScripts).remove();
+    
     $('#tableView').parent().append('<script type="application/json" id="tableView_categories">'+JSON.stringify(cats)+'</script>')
 }
 

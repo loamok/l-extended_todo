@@ -2,7 +2,7 @@
     {% include 'work_time_tracker/table_view/parts/headers.html.twig' %}
     <tbody>
     {% for week, days in params.dates %}
-        {% include 'work_time_tracker/table_view/parts/month/week.html.twig' with { 
+        {% include 'work_time_tracker/table_view/parts/month/weekPart.html.twig' with { 
             dates: days, weekNumber: week, prepared
         } only %}
     {% endfor %}

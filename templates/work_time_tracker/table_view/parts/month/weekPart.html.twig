@@ -1,0 +1,16 @@
+{% for day in dates %}
+    {% set dayKey = day|date('Ymd') %}
+    {% set dayPrepared = (dayKey in prepared.elemsInRange|keys) ? prepared.elemsInRange[dayKey] : null %}
+    {% set rowPrep = { id: "rowid_" ~ dayKey, dataRowId: "", dataType: "", catClass: ""} %}
+    {% if dayPrepared is not null %}
+        {% set rowPrep = {
+            id: rowPrep.id, dataRowId: dayPrepared.object.id, dataType: dayPrepared.type, 
+            catClass: "category_" ~ ((dayPrepared.object.categories|first).code|split('-')|join('_'))} %}
+    {% endif %}
+    <tr id="{{ rowPrep.id }}" data-rowid="{{ rowPrep.dataRowId }}" data-type="{{ rowPrep.dataType }}" class="{{ rowPrep.catClass }}">
+        {% if loop.first %}
+            <th scope="row" rowspan="7">{{ weekNumber }}</th>
+        {% endif %}
+        {% include 'work_time_tracker/table_view/parts/month/dayPart.html.twig' with { day: day, prepared } only %}
+    </tr>
+{% endfor %}

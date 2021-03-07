@@ -2,17 +2,16 @@
 {#<table><tr>#}
 {% set dayKey = day|date('Ymd') %}
 {% set dayPrepared = (dayKey in prepared.elemsInRange|keys) ? prepared.elemsInRange[dayKey] : null %}
+{% set statusObj = (dayPrepared is not null) ? (dayPrepared.object.categories|first) : null %}
+{% set status = (statusObj is not null) ? {id: statusObj.id, label:statusObj.label} : {id: "", label: ""} %}
 <td id='wd_{{ day|date('Ymd') }}' class="weekday">
-    {#  Week day  #}
-{#    <time datetime="{{ (day|date('Y-m-d'))~'T00:00:00.000'~(day|date('P')) }}">#}
-{#    <time datetime="{{ (day|date("Y-m-d\\TH:i:s.vP")) }}">#}
     <time datetime="{{ (day|date('Y-m-d\\T00:00:00.000P')) }}">
         {{ day|date('l') }}
     </time>
 </td>
 <td id='dr_{{ day|date('Ymd') }}' class="dayrow">
     <time datetime="{{ (day|date('Y-m-d\\T00:00:00.000P')) }}">
-        {{ day|date('d/m/Y') }}
+        {{ day|date('Y-m-d') }}
     </time>
 </td>
 <td id='ds_{{ day|date('Ymd') }}' class="daystart">
@@ -35,6 +34,7 @@
     {% set deDis = (dayPrepared) ? dayPrepared.object.endAt|date('H:i:s') : "" %}
     <time datetime="{{ (deTs) }}">{{ (deDis) }}</time>
 </td>
-<td id='stat_{{ day|date('Ymd') }}' class="rowstatus"></td>
-
+<td id='stat_{{ day|date('Ymd') }}' class="rowstatus" data-statusid="{{ status.id }}">
+    {{ status.label }}
+</td>
 {#</tr></table>#}

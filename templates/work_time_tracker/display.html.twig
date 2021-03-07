@@ -73,7 +73,7 @@
 {% endblock %}
 
 {% block templates %}
-    {{ dump(prepared) }}
+{#    {{ dump(prepared) }}#}
     {{ parent() }}
     <script type="application/json" id="paginateParams">
         {% if params is not null %}
