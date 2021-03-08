@@ -37,5 +37,38 @@ class Category {
     
     use UuidIdentifiable,
         CodeAble;
+
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $forTypes = [];
+    
+    public function __construct() {
+        $this->forTypes = [];
+    }
+
+    public function getForTypes(): array {
+        
+        return $this->forTypes;
+    }
+
+    public function setForTypes(array $forTypes): self {
+        $this->forTypes = $forTypes;
+
+        return $this;
+    }
+    
+    public function addForType(string $forType) : self {
+        if(!in_array($forType, $this->forTypes) && ForType::isValidValue($forType)) {
+            $this->forTypes[strtoupper($forType)] = $forType;
+        }
+        
+        return $this;
+    }
+    
+    public function hasForType(string $forType) : bool {
+        
+        return in_array($forType, $this->forTypes);
+    }
     
 }

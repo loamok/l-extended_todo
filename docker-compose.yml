@@ -47,7 +47,10 @@ services:
   encore:
     build:
       context: ./docker/encore/
-      args: {}
+      args:
+        docker_proxy: '${PROXY}'
+        dockers_proxy: '${PROXYS}'
+        no_proxy: '${NO_PROXY}'
     image: 'node:12'
     volumes:
       - './:/var/www/l-extended_todo/'
