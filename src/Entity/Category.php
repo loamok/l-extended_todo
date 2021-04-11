@@ -39,7 +39,7 @@ class Category {
         CodeAble;
 
     /**
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="json", nullable=true)
      */
     private $forTypes = [];
     
@@ -47,12 +47,12 @@ class Category {
         $this->forTypes = [];
     }
 
-    public function getForTypes(): array {
+    public function getForTypes(): ?array {
         
         return $this->forTypes;
     }
 
-    public function setForTypes(array $forTypes): self {
+    public function setForTypes(?array $forTypes = null): self {
         $this->forTypes = $forTypes;
 
         return $this;
